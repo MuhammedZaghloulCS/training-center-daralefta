@@ -1,0 +1,64 @@
+﻿using Domain.Enums;
+using Microsoft.AspNetCore.Identity;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
+
+namespace Domain.Entities
+{
+    public class ApplicationUser : IdentityUser<Guid>
+    {
+     
+        public String FirstName { get; set; }
+        public String LastName { get; set; }
+        public string FullName => $"{FirstName} {LastName}";
+        public string Gender { get; set; }
+        [Required]
+        public PersonType PersonType { get; set; }
+
+        [Required]
+
+        [MaxLength(300)]
+        public string JobTitle { get; set; }
+
+        [MaxLength(500)]
+        public string AcademicTitle { get; set; }
+
+        [MaxLength(500)]
+        public string Organization { get; set; }
+
+        [MaxLength(500)]
+        public string Specialization { get; set; }
+
+        [MaxLength(500)]
+        public string Skills { get; set; }
+
+        [MaxLength(50)]
+        public string WhatsappNumber { get; set; }
+
+        public DateTime? BirthDate { get; set; }
+
+        public string NationalIdImage { get; set; }
+
+        [MaxLength(500)]
+        public string AddressInsideCairo { get; set; }
+
+        [MaxLength(500)]
+        public string AddressOutsideCairo { get; set; }
+
+        public string Doctrine { get; set; }
+        public string MaritalState { get; set; }
+        public string AcademicQualification { get; set; }
+        public string Appreciation { get; set; }
+
+
+        public ICollection<Training> Trainings { get; set; }
+        public ICollection<Course> Courses { get; set; }
+
+        public ICollection<Survey> CreatedSurveys { get; set; } = new List<Survey>();
+
+        // Surveys answered by the user (Many-to-Many via SurveyResponse)
+        public ICollection<SurveyResponse> SurveyResponses { get; set; }
+    }
+}

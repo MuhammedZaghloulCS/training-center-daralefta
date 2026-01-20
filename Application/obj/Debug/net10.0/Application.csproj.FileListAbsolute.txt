@@ -1,0 +1,5 @@
+E:\Muhammed\NewTrainingCenterWebsite\Traning Center\Application\obj\Debug\net10.0\Application.csproj.AssemblyReference.cache
+E:\Muhammed\NewTrainingCenterWebsite\Traning Center\Application\obj\Debug\net10.0\Application.GeneratedMSBuildEditorConfig.editorconfig
+E:\Muhammed\NewTrainingCenterWebsite\Traning Center\Application\obj\Debug\net10.0\Application.AssemblyInfoInputs.cache
+E:\Muhammed\NewTrainingCenterWebsite\Traning Center\Application\obj\Debug\net10.0\Application.AssemblyInfo.cs
+E:\Muhammed\NewTrainingCenterWebsite\Traning Center\Application\obj\Debug\net10.0\Application.csproj.CoreCompileInputs.cache
