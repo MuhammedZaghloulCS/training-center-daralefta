@@ -1,5 +1,13 @@
+E:\Muhammed\NewTrainingCenterWebsite\Traning Center\Domain\bin\Debug\net10.0\Domain.deps.json
+E:\Muhammed\NewTrainingCenterWebsite\Traning Center\Domain\bin\Debug\net10.0\Domain.dll
+E:\Muhammed\NewTrainingCenterWebsite\Traning Center\Domain\bin\Debug\net10.0\Domain.pdb
 E:\Muhammed\NewTrainingCenterWebsite\Traning Center\Domain\obj\Debug\net10.0\Domain.csproj.AssemblyReference.cache
 E:\Muhammed\NewTrainingCenterWebsite\Traning Center\Domain\obj\Debug\net10.0\Domain.GeneratedMSBuildEditorConfig.editorconfig
 E:\Muhammed\NewTrainingCenterWebsite\Traning Center\Domain\obj\Debug\net10.0\Domain.AssemblyInfoInputs.cache
 E:\Muhammed\NewTrainingCenterWebsite\Traning Center\Domain\obj\Debug\net10.0\Domain.AssemblyInfo.cs
 E:\Muhammed\NewTrainingCenterWebsite\Traning Center\Domain\obj\Debug\net10.0\Domain.csproj.CoreCompileInputs.cache
+E:\Muhammed\NewTrainingCenterWebsite\Traning Center\Domain\obj\Debug\net10.0\Domain.sourcelink.json
+E:\Muhammed\NewTrainingCenterWebsite\Traning Center\Domain\obj\Debug\net10.0\Domain.dll
+E:\Muhammed\NewTrainingCenterWebsite\Traning Center\Domain\obj\Debug\net10.0\refint\Domain.dll
+E:\Muhammed\NewTrainingCenterWebsite\Traning Center\Domain\obj\Debug\net10.0\Domain.pdb
+E:\Muhammed\NewTrainingCenterWebsite\Traning Center\Domain\obj\Debug\net10.0\ref\Domain.dll

@@ -20,9 +20,16 @@ namespace Domain.Entities
         [ForeignKey(nameof(CreatedByUserId))]
         public ApplicationUser CreatedByUser { get; set; }
 
-        // Responses
-        public ICollection<SurveyResponse> Responses { get; set; }
+        public int TrainingId { get; set; }
+        [ForeignKey(nameof(TrainingId))]
+        public Training Training { get; set; }
 
-        public SurveyCategory Category { get; set; }
+        // Responses
+        public ICollection<SurveyResponse> SurveyResponses { get; set; }
+        public ICollection<SurveyQuestion> SurveyQuestions { get; set; }
+
+        public SurveyCategory SurveyCategory { get; set; }
+       
+
     }
 }

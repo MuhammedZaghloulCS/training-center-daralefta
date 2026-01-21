@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Infrastructure.Abstractions.IRepositories
 {
-    internal interface ICourseRepository
+    public interface ICourseRepository :IGenericRepository<Course,int>
     {
     }
 }

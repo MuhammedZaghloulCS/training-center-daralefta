@@ -1,4 +1,5 @@
 using Infrastructure.Context;
+using Infrastructure.Dependencies;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,7 +15,10 @@ builder.Services.AddDbContext<ApplicationContext>(option =>
 {
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
-
+// Adding Infrastructure Dependencies
+builder.Services.AddedModuleInfraStructureDependencies();
+// Adding Infrastructure Dependencies
+builder.Services.AddedModuleApplicationDependencies();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -20,13 +20,19 @@ namespace Domain.Entities
         public string Hint { get; set; }
         public string answer { get; set; }
 
+        public bool Active { get; set; }
 
 
-   
+
         public int surveyId { get; set; }
 
         [ForeignKey(nameof(surveyId))]
         public  Survey Survey { get; set; }
-        public bool  Active { get; set; }
+        public int answerId { get; set; }
+
+        [ForeignKey(nameof(answerId))]
+        public  SurveyAnswers SurveyAnswer { get; set; }
+
+
     }
 }

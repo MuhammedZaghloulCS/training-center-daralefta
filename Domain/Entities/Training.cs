@@ -14,5 +14,6 @@ namespace Domain.Entities
         public DateTime EndDate { get; set; }
         public ICollection<Session> Sessions { get; set; }
         public ICollection<ApplicationUser> Users { get; set; }
+        public ICollection<Survey> Surveys { get; set; }
     }
 }
