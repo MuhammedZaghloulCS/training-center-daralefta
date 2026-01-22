@@ -1,0 +1,34 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Infrastructure.Configurations
+{
+    using Domain.Entities;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+    namespace Infrastructure.Configurations
+    {
+        public class SurveyConfigurations : IEntityTypeConfiguration<Survey>
+        {
+            public void Configure(EntityTypeBuilder<Survey> builder)
+            {
+                builder.HasKey(s => s.Id);
+
+                builder
+                    .HasOne(s => s.CreatedByUser)
+                    .WithMany(u => u.CreatedSurveys)
+                    .HasForeignKey(s => s.CreatedByUserId)
+                    .OnDelete(DeleteBehavior.NoAction); 
+
+                builder
+                    .HasOne(s => s.Training)
+                    .WithMany(t => t.Surveys)
+                    .HasForeignKey(s => s.TrainingId)
+                    .OnDelete(DeleteBehavior.NoAction);
+            }
+        }
+    }
+
+}

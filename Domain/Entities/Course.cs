@@ -23,7 +23,7 @@ namespace Domain.Entities
         [ForeignKey(nameof(TrainingId))]
         public Training Training { get; set; }
 
-        public ICollection<ApplicationUser> applicationUsers { get; set; }
+    
 
     }
 

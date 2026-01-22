@@ -17,6 +17,7 @@ namespace Infrastructure.Abstractions.IUnitOfWork
         ISurveyCategoryRepository ISurveyCategory { get; }
         ISurveyQuestionRepository ISurveyQuestion { get; }
         ISurveyAnswerRepository ISurveyAnswer { get; }
+        ISurveyResponseRepository ISurveyResponse { get; }
 
 
         #endregion

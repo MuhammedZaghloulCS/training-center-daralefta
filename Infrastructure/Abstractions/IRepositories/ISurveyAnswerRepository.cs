@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Infrastructure.Abstractions.IRepositories
 {
-    public interface ISurveyAnswerRepository : IGenericRepository<SurveyAnswers, int>
+    public interface ISurveyAnswerRepository : IGenericRepository<QuestionAnswer, int>
     {
     }
 }

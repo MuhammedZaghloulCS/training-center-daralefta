@@ -22,21 +22,6 @@ namespace Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ApplicationUserCourse", b =>
-                {
-                    b.Property<int>("CoursesId")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("applicationUsersId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("CoursesId", "applicationUsersId");
-
-                    b.HasIndex("applicationUsersId");
-
-                    b.ToTable("ApplicationUserCourse");
-                });
-
             modelBuilder.Entity("ApplicationUserTraining", b =>
                 {
                     b.Property<int>("TrainingsId")
@@ -238,6 +223,9 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<Guid?>("ApplicationUserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -272,9 +260,52 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ApplicationUserId");
+
                     b.HasIndex("TrainingId");
 
                     b.ToTable("Course");
+                });
+
+            modelBuilder.Entity("Domain.Entities.QuestionAnswer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Answer")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("SurveyQuestionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SurveyResponseId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SurveyQuestionId");
+
+                    b.HasIndex("SurveyResponseId", "SurveyQuestionId")
+                        .IsUnique();
+
+                    b.ToTable("SurveyAnswers", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Room", b =>
@@ -310,9 +341,6 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
-
-                    b.Property<int?>("SessionId")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -354,18 +382,12 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("SessionDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("SessionId")
-                        .HasColumnType("int");
-
                     b.Property<TimeSpan>("StartTime")
                         .HasColumnType("time");
 
                     b.Property<string>("Topic")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("TrainingId")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -378,10 +400,6 @@ namespace Infrastructure.Migrations
                     b.HasIndex("CourseId");
 
                     b.HasIndex("RoomId");
-
-                    b.HasIndex("SessionId");
-
-                    b.HasIndex("TrainingId");
 
                     b.ToTable("Session");
                 });
@@ -435,46 +453,6 @@ namespace Infrastructure.Migrations
                     b.HasIndex("TrainingId");
 
                     b.ToTable("Survey");
-                });
-
-            modelBuilder.Entity("Domain.Entities.SurveyAnswers", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("QuestionId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("answer")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("QuestionId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("SurveyAnswers");
                 });
 
             modelBuilder.Entity("Domain.Entities.SurveyCategory", b =>
@@ -544,22 +522,18 @@ namespace Infrastructure.Migrations
                     b.Property<int>("QuestionType")
                         .HasColumnType("int");
 
+                    b.Property<int>("SurveyId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("answer")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("surveyId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("surveyId");
+                    b.HasIndex("SurveyId");
 
                     b.ToTable("SurveyQuestions");
                 });
@@ -577,6 +551,9 @@ namespace Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("SubmittedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("SurveyId")
@@ -767,21 +744,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("ApplicationUserCourse", b =>
-                {
-                    b.HasOne("Domain.Entities.Course", null)
-                        .WithMany()
-                        .HasForeignKey("CoursesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("applicationUsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("ApplicationUserTraining", b =>
                 {
                     b.HasOne("Domain.Entities.Training", null)
@@ -799,11 +761,34 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Course", b =>
                 {
+                    b.HasOne("Domain.Entities.ApplicationUser", null)
+                        .WithMany("Courses")
+                        .HasForeignKey("ApplicationUserId");
+
                     b.HasOne("Domain.Entities.Training", "Training")
-                        .WithMany()
+                        .WithMany("Courses")
                         .HasForeignKey("TrainingId");
 
                     b.Navigation("Training");
+                });
+
+            modelBuilder.Entity("Domain.Entities.QuestionAnswer", b =>
+                {
+                    b.HasOne("Domain.Entities.SurveyQuestion", "SurveyQuestion")
+                        .WithMany("Answers")
+                        .HasForeignKey("SurveyQuestionId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.SurveyResponse", "SurveyResponse")
+                        .WithMany("Answers")
+                        .HasForeignKey("SurveyResponseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SurveyQuestion");
+
+                    b.Navigation("SurveyResponse");
                 });
 
             modelBuilder.Entity("Domain.Entities.Room", b =>
@@ -824,18 +809,10 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.Room", "Room")
-                        .WithMany()
+                        .WithMany("Sessions")
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Domain.Entities.Room", null)
-                        .WithMany("Sessions")
-                        .HasForeignKey("SessionId");
-
-                    b.HasOne("Domain.Entities.Training", null)
-                        .WithMany("Sessions")
-                        .HasForeignKey("TrainingId");
 
                     b.Navigation("Course");
 
@@ -847,11 +824,11 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.ApplicationUser", "CreatedByUser")
                         .WithMany("CreatedSurveys")
                         .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.SurveyCategory", "SurveyCategory")
-                        .WithMany("Survies")
+                        .WithMany("Surveys")
                         .HasForeignKey("SurveyCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -859,7 +836,7 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.Training", "Training")
                         .WithMany("Surveys")
                         .HasForeignKey("TrainingId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("CreatedByUser");
@@ -869,31 +846,12 @@ namespace Infrastructure.Migrations
                     b.Navigation("Training");
                 });
 
-            modelBuilder.Entity("Domain.Entities.SurveyAnswers", b =>
-                {
-                    b.HasOne("Domain.Entities.SurveyQuestion", "SurveyQuestion")
-                        .WithMany()
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("SurveyQuestion");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Domain.Entities.SurveyQuestion", b =>
                 {
                     b.HasOne("Domain.Entities.Survey", "Survey")
-                        .WithMany()
-                        .HasForeignKey("surveyId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithMany("SurveyQuestions")
+                        .HasForeignKey("SurveyId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Survey");
@@ -904,13 +862,13 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.Survey", "Survey")
                         .WithMany("SurveyResponses")
                         .HasForeignKey("SurveyId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.ApplicationUser", "User")
                         .WithMany("SurveyResponses")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Survey");
@@ -971,6 +929,8 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.ApplicationUser", b =>
                 {
+                    b.Navigation("Courses");
+
                     b.Navigation("CreatedSurveys");
 
                     b.Navigation("SurveyResponses");
@@ -993,17 +953,29 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Survey", b =>
                 {
+                    b.Navigation("SurveyQuestions");
+
                     b.Navigation("SurveyResponses");
                 });
 
             modelBuilder.Entity("Domain.Entities.SurveyCategory", b =>
                 {
-                    b.Navigation("Survies");
+                    b.Navigation("Surveys");
+                });
+
+            modelBuilder.Entity("Domain.Entities.SurveyQuestion", b =>
+                {
+                    b.Navigation("Answers");
+                });
+
+            modelBuilder.Entity("Domain.Entities.SurveyResponse", b =>
+                {
+                    b.Navigation("Answers");
                 });
 
             modelBuilder.Entity("Domain.Entities.Training", b =>
                 {
-                    b.Navigation("Sessions");
+                    b.Navigation("Courses");
 
                     b.Navigation("Surveys");
                 });

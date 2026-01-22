@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Infrastructure.Implementations.Repository
 {
-    public class SurveyAnswerRepository : GenericRepository<SurveyAnswers, int>, ISurveyAnswerRepository
+    public class SurveyAnswerRepository : GenericRepository<QuestionAnswer, int>, ISurveyAnswerRepository
     {
         public SurveyAnswerRepository(Infrastructure.Context.ApplicationContext context) : base(context)
         {

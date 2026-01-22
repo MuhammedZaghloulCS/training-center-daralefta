@@ -11,11 +11,14 @@ namespace Domain.Entities
         public TimeSpan StartTime { get; set; }
         public TimeSpan EndTime { get; set; }
         public string Topic { get; set; }
-        public int CourseId { get; set; }
-        [ForeignKey("CourseId")]
-        public Course Course { get; set; }
+
         public int RoomId { get; set; }
-        [ForeignKey("RoomId")]
+        [ForeignKey(nameof(RoomId))]
         public Room Room { get; set; }
+
+
+        public int CourseId { get; set; }
+        [ForeignKey(nameof(CourseId))]
+        public Course Course { get; set; }
     }
 }

@@ -18,20 +18,14 @@ namespace Domain.Entities
         // Optional default value or hint
         [MaxLength(300)]
         public string Hint { get; set; }
-        public string answer { get; set; }
-
         public bool Active { get; set; }
 
 
 
-        public int surveyId { get; set; }
-
-        [ForeignKey(nameof(surveyId))]
+        public int SurveyId { get; set; }
+        [ForeignKey(nameof(SurveyId))]
         public  Survey Survey { get; set; }
-        public int answerId { get; set; }
-
-        [ForeignKey(nameof(answerId))]
-        public  SurveyAnswers SurveyAnswer { get; set; }
+        public ICollection<QuestionAnswer>? Answers { get; set; }
 
 
     }

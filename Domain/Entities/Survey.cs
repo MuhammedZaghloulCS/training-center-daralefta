@@ -24,12 +24,16 @@ namespace Domain.Entities
         [ForeignKey(nameof(TrainingId))]
         public Training Training { get; set; }
 
-        // Responses
-        public ICollection<SurveyResponse> SurveyResponses { get; set; }
-        public ICollection<SurveyQuestion> SurveyQuestions { get; set; }
+
+        public int SurveyCategoryId { get; set; }
+        [ForeignKey(nameof(SurveyCategoryId))]
 
         public SurveyCategory SurveyCategory { get; set; }
-       
+
+        public ICollection<SurveyQuestion> SurveyQuestions { get; set; }
+        public ICollection<SurveyResponse> SurveyResponses { get; set; }
+
+
 
     }
 }

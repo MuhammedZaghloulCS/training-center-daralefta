@@ -17,6 +17,6 @@ namespace Domain.Entities
         public string Description { get; set; }
 
         // Navigation property
-        public virtual ICollection<Survey> Survies { get; set; }
+        public virtual ICollection<Survey> Surveys { get; set; }
     }
 }

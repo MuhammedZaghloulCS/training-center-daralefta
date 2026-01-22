@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Domain.Entities
@@ -55,10 +56,10 @@ namespace Domain.Entities
 
         public ICollection<Training> Trainings { get; set; }
         public ICollection<Course> Courses { get; set; }
-
+        [InverseProperty(nameof(Survey.CreatedByUser))]
         public ICollection<Survey> CreatedSurveys { get; set; } = new List<Survey>();
+        public ICollection<SurveyResponse> SurveyResponses { get; set; } = new List<SurveyResponse>();
 
-        // Surveys answered by the user (Many-to-Many via SurveyResponse)
-        public ICollection<SurveyResponse> SurveyResponses { get; set; }
+
     }
 }

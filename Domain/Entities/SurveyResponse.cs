@@ -5,18 +5,21 @@ using System.Text;
 
 namespace Domain.Entities
 {
-    public class SurveyResponse :BaseClass
+    public class SurveyResponse : BaseClass
     {
-        public int Id { get; set; }
-
         public Guid UserId { get; set; }
-        [ForeignKey(nameof(UserId))]
 
+        [ForeignKey(nameof(UserId))]
         public ApplicationUser User { get; set; }
 
         public int SurveyId { get; set; }
-        [ForeignKey(nameof(SurveyId))]
 
+        [ForeignKey(nameof(SurveyId))]
         public Survey Survey { get; set; }
+
+        public DateTime SubmittedAt { get; set; }
+
+        public ICollection<QuestionAnswer> Answers { get; set; }
     }
+
 }

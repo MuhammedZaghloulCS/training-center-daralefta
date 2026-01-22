@@ -1,4 +1,5 @@
-﻿using Infrastructure.Abstractions.IRepositories;
+﻿using Azure;
+using Infrastructure.Abstractions.IRepositories;
 using Infrastructure.Abstractions.IUnitOfWork;
 using Infrastructure.Context;
 using Infrastructure.Implementations.Repository;
@@ -21,6 +22,7 @@ namespace Infrastructure.Implementations.UnitOfWork
         private SurveyCategoryRepository surveyCategoryRepository;
         private SurveyQuestionRepository surveyQuestionRepository;
         private SurveyAnswerRepository surveyAnswerRepository;
+        private SurveyResponseRepository surveyResponseRepository;
         private readonly ApplicationContext context;
         #endregion
         //CTOR
@@ -133,6 +135,18 @@ namespace Infrastructure.Implementations.UnitOfWork
                     surveyAnswerRepository = new SurveyAnswerRepository(context);
                 }
                 return surveyAnswerRepository;
+
+            }
+        }
+        public ISurveyResponseRepository ISurveyResponse    
+        {
+            get
+            {
+                if (surveyResponseRepository == null)
+                {
+                    surveyResponseRepository = new SurveyResponseRepository(context);
+                }
+                return surveyResponseRepository;
 
             }
         }

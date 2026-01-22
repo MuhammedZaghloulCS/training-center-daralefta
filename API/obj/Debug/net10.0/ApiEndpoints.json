@@ -1,1 +1,12 @@
-[]
+[
+  {
+    "ContainingType": "API.Controllers.BuildingController",
+    "Method": "GetAsync",
+    "RelativePath": "api/Building",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  }
+]

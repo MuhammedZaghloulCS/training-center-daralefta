@@ -25,13 +25,13 @@ namespace Infrastructure.Context
         public DbSet<Survey> Survey { get; set; }
         public DbSet<SurveyQuestion> SurveyQuestions { get; set; }
         public DbSet<SurveyCategory> SurveyCategories { get; set; }
-        public DbSet<SurveyAnswers> SurveyAnswers { get; set; }
+        public DbSet<QuestionAnswer> SurveyAnswers { get; set; }
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
         }
     }

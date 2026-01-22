@@ -13,12 +13,12 @@ namespace Domain.Entities
         [MaxLength(500)]
         public string Location { get; set; }
         public int? BuildId { get; set; }
-        public int? SessionId { get; set; }
         public bool? HaveProjector { get; set; } = false;
         
         [ForeignKey(nameof(BuildId))]
         public Building Building { get; set; }
-        [ForeignKey(nameof(SessionId))]
+
+
         public ICollection<Session> Sessions { get; set; }
     }
 }
