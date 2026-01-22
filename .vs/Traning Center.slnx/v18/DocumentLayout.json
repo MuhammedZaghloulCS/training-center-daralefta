@@ -3,8 +3,48 @@
   "WorkspaceRootPath": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|API\\API.csproj|e:\\muhammed\\newtrainingcenterwebsite\\traning center\\api\\controllers\\roomcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|API\\API.csproj|solutionrelative:api\\controllers\\roomcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|API\\API.csproj|e:\\muhammed\\newtrainingcenterwebsite\\traning center\\api\\controllers\\buildingcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|API\\API.csproj|solutionrelative:api\\controllers\\buildingcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E528BBC3-1C26-8C35-F682-23718816ADCD}|Domain\\Domain.csproj|e:\\muhammed\\newtrainingcenterwebsite\\traning center\\domain\\entities\\survey.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E528BBC3-1C26-8C35-F682-23718816ADCD}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\survey.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F80C4E72-27A0-12B5-0634-DD5C11CFB0C1}|Application\\Application.csproj|e:\\muhammed\\newtrainingcenterwebsite\\traning center\\application\\features\\building\\commands\\update\\updatebuildinghandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F80C4E72-27A0-12B5-0634-DD5C11CFB0C1}|Application\\Application.csproj|solutionrelative:application\\features\\building\\commands\\update\\updatebuildinghandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F80C4E72-27A0-12B5-0634-DD5C11CFB0C1}|Application\\Application.csproj|e:\\muhammed\\newtrainingcenterwebsite\\traning center\\application\\features\\building\\commands\\delete\\deletebuildingcommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F80C4E72-27A0-12B5-0634-DD5C11CFB0C1}|Application\\Application.csproj|solutionrelative:application\\features\\building\\commands\\delete\\deletebuildingcommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F80C4E72-27A0-12B5-0634-DD5C11CFB0C1}|Application\\Application.csproj|e:\\muhammed\\newtrainingcenterwebsite\\traning center\\application\\features\\building\\commands\\delete\\deletebuildinghandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F80C4E72-27A0-12B5-0634-DD5C11CFB0C1}|Application\\Application.csproj|solutionrelative:application\\features\\building\\commands\\delete\\deletebuildinghandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F80C4E72-27A0-12B5-0634-DD5C11CFB0C1}|Application\\Application.csproj|e:\\muhammed\\newtrainingcenterwebsite\\traning center\\application\\features\\building\\commands\\create\\createbuildinghandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F80C4E72-27A0-12B5-0634-DD5C11CFB0C1}|Application\\Application.csproj|solutionrelative:application\\features\\building\\commands\\create\\createbuildinghandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F80C4E72-27A0-12B5-0634-DD5C11CFB0C1}|Application\\Application.csproj|e:\\muhammed\\newtrainingcenterwebsite\\traning center\\application\\features\\building\\commands\\create\\createbuildingcommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F80C4E72-27A0-12B5-0634-DD5C11CFB0C1}|Application\\Application.csproj|solutionrelative:application\\features\\building\\commands\\create\\createbuildingcommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5872AEB3-BAA3-FE31-B0EB-0FB6DBEDCF83}|Infrastructure\\Infrastructure.csproj|e:\\muhammed\\newtrainingcenterwebsite\\traning center\\infrastructure\\implementations\\repository\\genericrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5872AEB3-BAA3-FE31-B0EB-0FB6DBEDCF83}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\implementations\\repository\\genericrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5872AEB3-BAA3-FE31-B0EB-0FB6DBEDCF83}|Infrastructure\\Infrastructure.csproj|e:\\muhammed\\newtrainingcenterwebsite\\traning center\\infrastructure\\abstractions\\irepositories\\igenericrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5872AEB3-BAA3-FE31-B0EB-0FB6DBEDCF83}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\abstractions\\irepositories\\igenericrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F80C4E72-27A0-12B5-0634-DD5C11CFB0C1}|Application\\Application.csproj|e:\\muhammed\\newtrainingcenterwebsite\\traning center\\application\\common\\baseresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F80C4E72-27A0-12B5-0634-DD5C11CFB0C1}|Application\\Application.csproj|solutionrelative:application\\common\\baseresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|API\\API.csproj|e:\\muhammed\\newtrainingcenterwebsite\\traning center\\api\\api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
@@ -35,10 +75,6 @@
       "RelativeMoniker": "D:0:0:{5872AEB3-BAA3-FE31-B0EB-0FB6DBEDCF83}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\abstractions\\irepositories\\isurveyresponserepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{5872AEB3-BAA3-FE31-B0EB-0FB6DBEDCF83}|Infrastructure\\Infrastructure.csproj|e:\\muhammed\\newtrainingcenterwebsite\\traning center\\infrastructure\\abstractions\\irepositories\\igenericrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5872AEB3-BAA3-FE31-B0EB-0FB6DBEDCF83}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\abstractions\\irepositories\\igenericrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{E528BBC3-1C26-8C35-F682-23718816ADCD}|Domain\\Domain.csproj|e:\\muhammed\\newtrainingcenterwebsite\\traning center\\domain\\entities\\training.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E528BBC3-1C26-8C35-F682-23718816ADCD}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\training.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -53,10 +89,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{E528BBC3-1C26-8C35-F682-23718816ADCD}|Domain\\Domain.csproj|e:\\muhammed\\newtrainingcenterwebsite\\traning center\\domain\\entities\\surveycategory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E528BBC3-1C26-8C35-F682-23718816ADCD}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\surveycategory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E528BBC3-1C26-8C35-F682-23718816ADCD}|Domain\\Domain.csproj|e:\\muhammed\\newtrainingcenterwebsite\\traning center\\domain\\entities\\survey.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E528BBC3-1C26-8C35-F682-23718816ADCD}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\survey.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{E528BBC3-1C26-8C35-F682-23718816ADCD}|Domain\\Domain.csproj|e:\\muhammed\\newtrainingcenterwebsite\\traning center\\domain\\entities\\session.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -154,11 +186,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 8,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 26,
               "Title": "Building.cs",
               "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Domain\\Entities\\Building.cs",
               "RelativeDocumentMoniker": "Domain\\Entities\\Building.cs",
@@ -171,19 +203,135 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Application.csproj",
-              "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Application\\Application.csproj",
-              "RelativeDocumentMoniker": "Application\\Application.csproj",
-              "ToolTip": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Application\\Application.csproj",
-              "RelativeToolTip": "Application\\Application.csproj",
+              "DocumentIndex": 0,
+              "Title": "RoomController.cs",
+              "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\API\\Controllers\\RoomController.cs",
+              "RelativeDocumentMoniker": "API\\Controllers\\RoomController.cs",
+              "ToolTip": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\API\\Controllers\\RoomController.cs",
+              "RelativeToolTip": "API\\Controllers\\RoomController.cs",
+              "ViewState": "AgIAABUAAAAAAAAAAAA5wAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-22T10:57:36.958Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "UpdateBuildingHandler.cs",
+              "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Application\\Features\\Building\\Commands\\Update\\UpdateBuildingHandler.cs",
+              "RelativeDocumentMoniker": "Application\\Features\\Building\\Commands\\Update\\UpdateBuildingHandler.cs",
+              "ToolTip": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Application\\Features\\Building\\Commands\\Update\\UpdateBuildingHandler.cs",
+              "RelativeToolTip": "Application\\Features\\Building\\Commands\\Update\\UpdateBuildingHandler.cs",
+              "ViewState": "AgIAADAAAAAAAAAAAAAowAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-22T10:19:48.049Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "CreateBuildingCommand.cs",
+              "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Application\\Features\\Building\\Commands\\Create\\CreateBuildingCommand.cs",
+              "RelativeDocumentMoniker": "Application\\Features\\Building\\Commands\\Create\\CreateBuildingCommand.cs",
+              "ToolTip": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Application\\Features\\Building\\Commands\\Create\\CreateBuildingCommand.cs",
+              "RelativeToolTip": "Application\\Features\\Building\\Commands\\Create\\CreateBuildingCommand.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-01-22T08:09:14.059Z"
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-22T10:19:07.312Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "CreateBuildingHandler.cs",
+              "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Application\\Features\\Building\\Commands\\Create\\CreateBuildingHandler.cs",
+              "RelativeDocumentMoniker": "Application\\Features\\Building\\Commands\\Create\\CreateBuildingHandler.cs",
+              "ToolTip": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Application\\Features\\Building\\Commands\\Create\\CreateBuildingHandler.cs",
+              "RelativeToolTip": "Application\\Features\\Building\\Commands\\Create\\CreateBuildingHandler.cs",
+              "ViewState": "AgIAABkAAAAAAAAAAAAgwA0AAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-22T09:48:13.995Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "GenericRepository.cs",
+              "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Infrastructure\\Implementations\\Repository\\GenericRepository.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\Implementations\\Repository\\GenericRepository.cs",
+              "ToolTip": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Infrastructure\\Implementations\\Repository\\GenericRepository.cs",
+              "RelativeToolTip": "Infrastructure\\Implementations\\Repository\\GenericRepository.cs",
+              "ViewState": "AgIAAE8AAAAAAAAAAAAUwG0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-22T09:20:18.919Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Survey.cs",
+              "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Domain\\Entities\\Survey.cs",
+              "RelativeDocumentMoniker": "Domain\\Entities\\Survey.cs",
+              "ToolTip": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Domain\\Entities\\Survey.cs",
+              "RelativeToolTip": "Domain\\Entities\\Survey.cs",
+              "ViewState": "AgIAABYAAAAAAAAAAAAywBMAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-21T12:41:57.955Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "BuildingController.cs",
+              "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\API\\Controllers\\BuildingController.cs",
+              "RelativeDocumentMoniker": "API\\Controllers\\BuildingController.cs",
+              "ToolTip": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\API\\Controllers\\BuildingController.cs",
+              "RelativeToolTip": "API\\Controllers\\BuildingController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-21T12:25:45.041Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
+              "Title": "DeleteBuildingCommand.cs",
+              "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Application\\Features\\Building\\Commands\\Delete\\DeleteBuildingCommand.cs",
+              "RelativeDocumentMoniker": "Application\\Features\\Building\\Commands\\Delete\\DeleteBuildingCommand.cs",
+              "ToolTip": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Application\\Features\\Building\\Commands\\Delete\\DeleteBuildingCommand.cs",
+              "RelativeToolTip": "Application\\Features\\Building\\Commands\\Delete\\DeleteBuildingCommand.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-22T10:19:26.171Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "DeleteBuildingHandler.cs",
+              "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Application\\Features\\Building\\Commands\\Delete\\DeleteBuildingHandler.cs",
+              "RelativeDocumentMoniker": "Application\\Features\\Building\\Commands\\Delete\\DeleteBuildingHandler.cs",
+              "ToolTip": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Application\\Features\\Building\\Commands\\Delete\\DeleteBuildingHandler.cs",
+              "RelativeToolTip": "Application\\Features\\Building\\Commands\\Delete\\DeleteBuildingHandler.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-22T10:19:26.801Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "BaseResponse.cs",
+              "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Application\\Common\\BaseResponse.cs",
+              "RelativeDocumentMoniker": "Application\\Common\\BaseResponse.cs",
+              "ToolTip": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Application\\Common\\BaseResponse.cs",
+              "RelativeToolTip": "Application\\Common\\BaseResponse.cs",
+              "ViewState": "AgIAAE4AAAAAAAAAAAAUwGwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-22T09:19:42.771Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
               "Title": "IUnitOfWork.cs",
               "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Infrastructure\\Abstractions\\IUnitOfWork\\IUnitOfWork.cs",
               "RelativeDocumentMoniker": "Infrastructure\\Abstractions\\IUnitOfWork\\IUnitOfWork.cs",
@@ -195,7 +343,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 16,
               "Title": "SurveyRepository.cs",
               "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Infrastructure\\Implementations\\Repository\\SurveyRepository.cs",
               "RelativeDocumentMoniker": "Infrastructure\\Implementations\\Repository\\SurveyRepository.cs",
@@ -207,7 +355,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 15,
               "Title": "SurveyResponseRepository.cs",
               "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Infrastructure\\Implementations\\Repository\\SurveyResponseRepository.cs",
               "RelativeDocumentMoniker": "Infrastructure\\Implementations\\Repository\\SurveyResponseRepository.cs",
@@ -219,19 +367,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "Survey.cs",
-              "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Domain\\Entities\\Survey.cs",
-              "RelativeDocumentMoniker": "Domain\\Entities\\Survey.cs",
-              "ToolTip": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Domain\\Entities\\Survey.cs",
-              "RelativeToolTip": "Domain\\Entities\\Survey.cs",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAkwCcAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-21T12:41:57.955Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 21,
               "Title": "SurveyCategory.cs",
               "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Domain\\Entities\\SurveyCategory.cs",
               "RelativeDocumentMoniker": "Domain\\Entities\\SurveyCategory.cs",
@@ -243,7 +379,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 20,
               "Title": "SurveyQuestion.cs",
               "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Domain\\Entities\\SurveyQuestion.cs",
               "RelativeDocumentMoniker": "Domain\\Entities\\SurveyQuestion.cs",
@@ -255,20 +391,31 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "BuildingController.cs",
-              "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\API\\Controllers\\BuildingController.cs",
-              "RelativeDocumentMoniker": "API\\Controllers\\BuildingController.cs",
-              "ToolTip": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\API\\Controllers\\BuildingController.cs",
-              "RelativeToolTip": "API\\Controllers\\BuildingController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAJAAAAAAAAAA==",
+              "DocumentIndex": 9,
+              "Title": "IGenericRepository.cs",
+              "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Infrastructure\\Abstractions\\IRepositories\\IGenericRepository.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\Abstractions\\IRepositories\\IGenericRepository.cs",
+              "ToolTip": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Infrastructure\\Abstractions\\IRepositories\\IGenericRepository.cs",
+              "RelativeToolTip": "Infrastructure\\Abstractions\\IRepositories\\IGenericRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-21T12:25:45.041Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-01-22T08:00:50.184Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 12,
+              "Title": "Application.csproj",
+              "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Application\\Application.csproj",
+              "RelativeDocumentMoniker": "Application\\Application.csproj",
+              "ToolTip": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Application\\Application.csproj",
+              "RelativeToolTip": "Application\\Application.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-01-22T08:09:14.059Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
               "Title": "API.csproj",
               "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\API\\API.csproj",
               "RelativeDocumentMoniker": "API\\API.csproj",
@@ -280,7 +427,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 22,
               "Title": "Session.cs",
               "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Domain\\Entities\\Session.cs",
               "RelativeDocumentMoniker": "Domain\\Entities\\Session.cs",
@@ -292,7 +439,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 19,
               "Title": "SurveyResponse.cs",
               "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Domain\\Entities\\SurveyResponse.cs",
               "RelativeDocumentMoniker": "Domain\\Entities\\SurveyResponse.cs",
@@ -304,7 +451,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 13,
               "Title": "UnitOfWork.cs",
               "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Infrastructure\\Implementations\\UnitOfWork\\UnitOfWork.cs",
               "RelativeDocumentMoniker": "Infrastructure\\Implementations\\UnitOfWork\\UnitOfWork.cs",
@@ -316,7 +463,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 23,
               "Title": "Room.cs",
               "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Domain\\Entities\\Room.cs",
               "RelativeDocumentMoniker": "Domain\\Entities\\Room.cs",
@@ -328,7 +475,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 18,
               "Title": "Training.cs",
               "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Domain\\Entities\\Training.cs",
               "RelativeDocumentMoniker": "Domain\\Entities\\Training.cs",
@@ -340,19 +487,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "IGenericRepository.cs",
-              "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Infrastructure\\Abstractions\\IRepositories\\IGenericRepository.cs",
-              "RelativeDocumentMoniker": "Infrastructure\\Abstractions\\IRepositories\\IGenericRepository.cs",
-              "ToolTip": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Infrastructure\\Abstractions\\IRepositories\\IGenericRepository.cs",
-              "RelativeToolTip": "Infrastructure\\Abstractions\\IRepositories\\IGenericRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAgAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-22T08:00:50.184Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 17,
               "Title": "ISurveyResponseRepository.cs",
               "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Infrastructure\\Abstractions\\IRepositories\\ISurveyResponseRepository.cs",
               "RelativeDocumentMoniker": "Infrastructure\\Abstractions\\IRepositories\\ISurveyResponseRepository.cs",
@@ -364,7 +499,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 24,
               "Title": "QuestionAnswer.cs",
               "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Domain\\Entities\\QuestionAnswer.cs",
               "RelativeDocumentMoniker": "Domain\\Entities\\QuestionAnswer.cs",
@@ -376,7 +511,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 25,
               "Title": "Course.cs",
               "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Domain\\Entities\\Course.cs",
               "RelativeDocumentMoniker": "Domain\\Entities\\Course.cs",
@@ -388,7 +523,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 27,
               "Title": "BaseClass.cs",
               "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Domain\\Entities\\BaseClass.cs",
               "RelativeDocumentMoniker": "Domain\\Entities\\BaseClass.cs",
@@ -400,7 +535,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 35,
+              "DocumentIndex": 43,
               "Title": "20260122075517_ModifySchema.cs",
               "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Infrastructure\\Migrations\\20260122075517_ModifySchema.cs",
               "RelativeDocumentMoniker": "Infrastructure\\Migrations\\20260122075517_ModifySchema.cs",
@@ -412,7 +547,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 29,
               "Title": "SurveyConfigurations .cs",
               "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Infrastructure\\Configurations\\SurveyConfigurations .cs",
               "RelativeDocumentMoniker": "Infrastructure\\Configurations\\SurveyConfigurations .cs",
@@ -424,7 +559,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 30,
               "Title": "SurveyResponseConfigurations .cs",
               "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Infrastructure\\Configurations\\SurveyResponseConfigurations .cs",
               "RelativeDocumentMoniker": "Infrastructure\\Configurations\\SurveyResponseConfigurations .cs",
@@ -436,7 +571,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 31,
               "Title": "SurveyQuestionConfigurations.cs",
               "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Infrastructure\\Configurations\\SurveyQuestionConfigurations.cs",
               "RelativeDocumentMoniker": "Infrastructure\\Configurations\\SurveyQuestionConfigurations.cs",
@@ -448,7 +583,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 25,
+              "DocumentIndex": 33,
               "Title": "20260122075140_ModifySchema.cs",
               "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Infrastructure\\Migrations\\20260122075140_ModifySchema.cs",
               "RelativeDocumentMoniker": "Infrastructure\\Migrations\\20260122075140_ModifySchema.cs",
@@ -460,7 +595,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 26,
+              "DocumentIndex": 34,
               "Title": "20260122074656_ModifySchema.cs",
               "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Infrastructure\\Migrations\\20260122074656_ModifySchema.cs",
               "RelativeDocumentMoniker": "Infrastructure\\Migrations\\20260122074656_ModifySchema.cs",
@@ -472,7 +607,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 28,
               "Title": "ApplicationContext.cs",
               "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Infrastructure\\Context\\ApplicationContext.cs",
               "RelativeDocumentMoniker": "Infrastructure\\Context\\ApplicationContext.cs",
@@ -484,7 +619,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 27,
+              "DocumentIndex": 35,
               "Title": "20260122074206_ModifySchema.cs",
               "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Infrastructure\\Migrations\\20260122074206_ModifySchema.cs",
               "RelativeDocumentMoniker": "Infrastructure\\Migrations\\20260122074206_ModifySchema.cs",
@@ -496,7 +631,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 32,
               "Title": "QuestionAnswerConfigurations.cs",
               "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Infrastructure\\Configurations\\QuestionAnswerConfigurations.cs",
               "RelativeDocumentMoniker": "Infrastructure\\Configurations\\QuestionAnswerConfigurations.cs",
@@ -508,7 +643,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 28,
+              "DocumentIndex": 36,
               "Title": "ApplicationUser.cs",
               "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Domain\\Entities\\ApplicationUser.cs",
               "RelativeDocumentMoniker": "Domain\\Entities\\ApplicationUser.cs",
@@ -520,7 +655,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 31,
+              "DocumentIndex": 39,
               "Title": "Program.cs",
               "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\API\\Program.cs",
               "RelativeDocumentMoniker": "API\\Program.cs",
@@ -532,7 +667,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 29,
+              "DocumentIndex": 37,
               "Title": "ModuleApplicationDependencies.cs",
               "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Application\\ModuleApplicationDependencies.cs",
               "RelativeDocumentMoniker": "Application\\ModuleApplicationDependencies.cs",
@@ -544,7 +679,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 32,
+              "DocumentIndex": 40,
               "Title": "ModuleInfraStructureDependencies.cs",
               "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Infrastructure\\ModuleInfraStructureDependencies.cs",
               "RelativeDocumentMoniker": "Infrastructure\\ModuleInfraStructureDependencies.cs",
@@ -556,7 +691,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 30,
+              "DocumentIndex": 38,
               "Title": "GetAllBuildingsListHandler.cs",
               "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Application\\Features\\Building\\Queries\\Handler\\GetAllBuildingsListHandler.cs",
               "RelativeDocumentMoniker": "Application\\Features\\Building\\Queries\\Handler\\GetAllBuildingsListHandler.cs",
@@ -568,7 +703,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 33,
+              "DocumentIndex": 41,
               "Title": "BuildingListDTO.cs",
               "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Application\\Features\\Building\\DTOs\\BuildingListDTO.cs",
               "RelativeDocumentMoniker": "Application\\Features\\Building\\DTOs\\BuildingListDTO.cs",
@@ -580,7 +715,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 34,
+              "DocumentIndex": 42,
               "Title": "GetAllBuildingsListQuery.cs",
               "DocumentMoniker": "E:\\Muhammed\\NewTrainingCenterWebsite\\Traning Center\\Application\\Features\\Building\\Queries\\Model\\GetAllBuildingsListQuery.cs",
               "RelativeDocumentMoniker": "Application\\Features\\Building\\Queries\\Model\\GetAllBuildingsListQuery.cs",

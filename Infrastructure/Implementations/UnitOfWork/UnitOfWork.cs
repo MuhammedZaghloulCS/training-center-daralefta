@@ -91,6 +91,18 @@ namespace Infrastructure.Implementations.UnitOfWork
             }
         }
 
+        public ISurveyRepository ISurvey
+        {
+            get
+            {
+                if (surveyRepository == null)
+                {
+                    surveyRepository = new SurveyRepository(context);
+                }
+                return surveyRepository;
+            }
+        }
+
         public ISessionRepository IServey
         {
             get

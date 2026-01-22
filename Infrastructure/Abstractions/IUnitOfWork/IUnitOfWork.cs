@@ -13,6 +13,7 @@ namespace Infrastructure.Abstractions.IUnitOfWork
         ISessionRepository ISession { get; }
         ICourseRepository ICourse { get; }
         ITrainingRepository ITraining { get; }
+        ISurveyRepository ISurvey { get; }
         ISessionRepository IServey { get; }
         ISurveyCategoryRepository ISurveyCategory { get; }
         ISurveyQuestionRepository ISurveyQuestion { get; }

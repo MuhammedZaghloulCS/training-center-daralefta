@@ -20,7 +20,7 @@ namespace Application.Features.Building.Queries.Handler
         }
         public async Task<BaseResponse<List<BuildingListDTO>>> Handle(GetAllBuildingsListQuery request, CancellationToken cancellationToken)
         {
-            var response = await _unitOfWork.IBuildings.GetAllAsync();
+            var response = await _unitOfWork.IBuildings.GetAllAsync(b => b.Rooms);
 
             if (response == null || !response.Any())
             {

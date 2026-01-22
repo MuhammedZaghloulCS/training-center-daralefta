@@ -1,0 +1,180 @@
+MASTER PROJECT PROMPT (Reusable Artifact)
+
+You are an AI assistant extending a .NET 10 Web API backend for a Training Center system. Your primary goal is to add/modify features without breaking existing architectural patterns. Follow the rules and conventions below exactly; if a request conflicts with these rules, ask clarifying questions before changing direction.
+
+
+1. Project Architecture Summary
+
+- Solution shape: 4-project solution structured as API + Application + Domain + Infrastructure.
+- Core patterns used:
+  - CQRS via MediatR (requests + handlers).
+  - Repository + Unit of Work for data access.
+  - Unified response envelope via BaseResponse<T>.
+- Persistence: EF Core (SQL Server) with a single DbContext (ApplicationContext) that also includes ASP.NET Identity tables.
+- Current implemented vertical slice: A sample “Building list” query:
+  - Controller calls MediatR.
+  - Handler uses IUnitOfWork repository.
+  - Handler maps Entities -> DTOs manually.
+  - Returns BaseResponse<List<...>>.
+
+
+2. Layer Responsibilities & Boundaries
+
+- API
+  - Composition root (DI + middleware).
+  - Controllers are thin: call _mediator.Send(...), then translate BaseResponse.Success to HTTP status.
+  - Swagger enabled in Development.
+  - Middleware is minimal (HTTPS redirection + Authorization).
+- Application
+  - Holds MediatR requests/handlers and DTOs.
+  - Holds the shared API response wrapper BaseResponse<T>.
+  - Handlers depend on IUnitOfWork to access data.
+  - No AutoMapper / no FluentValidation currently.
+- Domain
+  - Contains entity classes, enums, and small helpers (e.g., message constants, enum description helper).
+  - Entities commonly inherit BaseClass (Id, audit fields).
+  - Domain includes ApplicationUser : IdentityUser<Guid> (Identity is part of the Domain model in this repo).
+- Infrastructure
+  - EF Core ApplicationContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>.
+  - Repository interfaces + implementations (generic + per-entity).
+  - UnitOfWork implementation + DI registration.
+  - EF Core entity configuration classes (relationship/delete rules) + migrations.
+
+Important boundary note (actual dependency reality):
+- API references Application, Domain, Infrastructure.
+- Infrastructure references Domain.
+- Application references Domain and Infrastructure (so layering is not “strict Clean Architecture” in dependency direction—preserve this unless explicitly refactoring).
+
+
+3. CQRS Rules (Commands vs Queries)
+
+- All use-cases must be MediatR requests.
+- Queries
+  - Must not mutate state.
+  - Use IRequest<BaseResponse<TDto>>.
+  - Handler implements IRequestHandler<TQuery, BaseResponse<TDto>>.
+  - Use repositories via _unitOfWork.
+- Commands
+  - Command folders exist but are currently empty; when adding commands, mirror the query pattern:
+    - IRequest<BaseResponse<TDtoOrPrimitive>> + handler.
+    - Use repositories + then call _unitOfWork.Complete() exactly once per successful command.
+- Handler output rules
+  - Return BaseResponse<T> using the provided static helpers (SuccessResponse, FailureResponse, etc.).
+  - Do not return domain entities as Data; return DTOs only.
+
+
+4. Pagination & Filtering Rules
+
+- Repository support exists via GetPaginatedAsync(...) returning (items, totalCount).
+- Paging convention
+  - pageNumber is 1-based (pagination logic uses (pageNumber - 1) * pageSize).
+- Response convention
+  - For paged endpoints, return BaseResponse<T>.SuccessResponse(data, currentPage, pageSize, totalItems, message) so the pagination fields populate.
+- Filtering/ordering convention
+  - Filtering is done via an expression predicate.
+  - Ordering is done via an expression orderBy + ascending boolean.
+  - Prefer server-side filtering/ordering (compose on IQueryable via repository method parameters).
+
+
+5. DTO Strategy (Anti-circular reference rules)
+
+- Never expose EF entities from API. Always map to DTOs in the handler.
+- DTO placement: DTOs live in the relevant feature area in the Application layer (feature-based organization).
+- Mapping: Mapping is currently manual (LINQ Select projections). There is no AutoMapper in the repo.
+- Avoid circular references
+  - Do not include navigation properties that form loops (e.g., Training -> Courses -> Training).
+  - Prefer:
+    - Scalar fields.
+    - Foreign key IDs (...Id) instead of full nested entities.
+    - If nesting DTOs is required, ensure the nested DTO does not include a back-reference to the parent.
+- Audit fields: Many DTOs will commonly include Id, CreatedBy, CreatedDate, UpdatedBy, UpdatedAt because entities inherit BaseClass.
+
+
+6. Repository & Data Access Rules
+
+- Data access entry point for handlers: IUnitOfWork.
+- Repository style
+  - GenericRepository<T, TKey> provides:
+    - AddAsync, Update, Delete
+    - GetAllAsync(...) (uses AsNoTracking)
+    - FindRowAsync(...) (supports includes + predicate; does not use AsNoTracking)
+    - GetByPkAsync(...)
+    - GetPaginatedAsync(...) (uses AsNoTracking)
+  - Concrete repositories per entity inherit GenericRepository<..., int>.
+- Transaction/save rule
+  - Repositories stage changes; saving is done via _unitOfWork.Complete() which calls DbContext.SaveChangesAsync().
+- UnitOfWork instantiation style
+  - Repositories are created lazily inside UnitOfWork using the shared ApplicationContext (not injected individually).
+- Critical consistency warning
+  - There is an ISurveyRepository and SurveyRepository, but IUnitOfWork does not cleanly expose it; there is a misspelled/mismatched IServey property typed as ISessionRepository.
+  - If you implement Survey CRUD via UnitOfWork, you must first align the UnitOfWork contract (do not assume Survey repository is already accessible in a correct way).
+
+
+7. API Interaction Flow
+
+- Routing convention: Controllers use:
+  - [ApiController]
+  - [Route("api/[controller]")]
+- Controller pattern
+  - Call _mediator.Send(request).
+  - Return:
+    - Ok(response) if response.Success == true
+    - otherwise BadRequest(response)
+- Startup/DI
+  - ApplicationContext registered with SQL Server using DefaultConnection.
+  - Infrastructure DI registers IUnitOfWork.
+  - Application DI registers MediatR scanning the Application assembly.
+- Auth pipeline status
+  - UseAuthorization() exists, but there is no UseAuthentication() and no visible auth configuration in the pipeline at present. Do not introduce auth flows unless explicitly requested.
+
+
+8. Validation & Error Handling Rules
+
+- Validation
+  - No FluentValidation and no MediatR pipeline behaviors are present.
+  - Domain uses DataAnnotations mainly for schema/constraints; handlers may perform manual checks.
+  - For invalid inputs/business conditions: return BaseResponse<T>.BadRequestResponse(...) or FailureResponse(...) as appropriate.
+- Error handling
+  - There is no global exception middleware/filter shown; expected failures should be represented through BaseResponse.
+  - Keep error responses consistent:
+    - Success = false
+    - meaningful Message
+    - optional Errors list when applicable.
+
+
+9. Coding Conventions & Standards
+
+- C# conventions
+  - PascalCase for public members and types.
+  - Private fields commonly use _camelCase (e.g., _unitOfWork, _mediator).
+- Naming patterns
+  - Queries: Get...Query
+  - Query Handlers: Get...Handler
+  - DTOs: ...DTO suffix
+  - Repositories: ...Repository
+  - Response wrapper: BaseResponse<T>
+- Nullability
+  - Nullable reference types are enabled; respect ? and avoid null-forgiving unless necessary.
+- Project style
+  - Minimal hosting model (Program.cs).
+  - Feature-based folders in Application (feature name, then DTOs/Queries/Commands, etc.).
+- Messages
+  - There are Arabic message constants available in Domain helpers, but existing handlers may also use hard-coded English messages—stay consistent within any new feature you add.
+
+
+10. DOs and DON'Ts for Future Development
+
+- DO
+  - Implement every new use-case as a MediatR request + handler.
+  - Keep controllers thin; keep application logic in handlers.
+  - Return BaseResponse<T> everywhere (handlers and API responses).
+  - Use DTOs; keep DTO graphs acyclic.
+  - Use IUnitOfWork + repositories for data access and _unitOfWork.Complete() for writes.
+  - Use the existing pagination mechanism (GetPaginatedAsync + BaseResponse pagination fields) for paged endpoints.
+  - Respect existing EF relationship delete behaviors for Survey/Response/Answer relationships.
+
+- DON’T
+  - Don’t return EF entities directly from controllers/handlers (prevents circular references and over-fetching).
+  - Don’t bypass UnitOfWork by injecting ApplicationContext into controllers/handlers unless explicitly refactoring architecture.
+  - Don’t introduce AutoMapper/FluentValidation/auth middleware/pipeline behaviors without an explicit architectural decision request.
+  - Don’t assume the Survey repository is correctly wired into UnitOfWork—verify/align the contract first.
