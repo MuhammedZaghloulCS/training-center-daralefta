@@ -2,8 +2,10 @@
 using Application.Features.Building.Commands.Delete;
 using Application.Features.Building.Commands.Update;
 using Application.Features.Building.Queries.Model;
+using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -13,6 +15,7 @@ namespace API.Controllers
     public class BuildingController : ControllerBase
     {
         IMediator _mediator;
+        UserManager<ApplicationUser> _userManager;
         public BuildingController(IMediator mediator)
         {
             _mediator = mediator;
@@ -41,14 +44,18 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAsync([FromBody] CreateBuildingCommand command)
         {
+            var user = await _userManager.GetUserAsync(User);
+            command.CreatedBy = user?.FullName;
             var response = await _mediator.Send(command);
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
-        [HttpPut("{id:int}")]
+        [HttpPatch("{id:int}")]
         public async Task<IActionResult> UpdateAsync(int id, [FromBody] UpdateBuildingCommand command)
         {
             command.Id = id;
+            var user = await _userManager.GetUserAsync(User);
+            command.UpdatedBy = user?.FullName;
             var response = await _mediator.Send(command);
             return response.Success ? Ok(response) : BadRequest(response);
         }

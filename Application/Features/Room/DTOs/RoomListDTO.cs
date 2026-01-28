@@ -1,3 +1,4 @@
+using Application.Features.Building.DTOs;
 using System;
 
 namespace Application.Features.Room.DTOs
@@ -14,5 +15,6 @@ namespace Application.Features.Room.DTOs
         public string Location { get; set; }
         public int? BuildId { get; set; }
         public bool? HaveProjector { get; set; }
+        public BuildingDto Building { get; set; }
     }
 }

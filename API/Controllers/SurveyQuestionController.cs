@@ -2,7 +2,9 @@ using Application.Features.SurveyQuestion.Commands.Create;
 using Application.Features.SurveyQuestion.Commands.Delete;
 using Application.Features.SurveyQuestion.Commands.Update;
 using Application.Features.SurveyQuestion.Queries.Model;
+using Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -12,6 +14,7 @@ namespace API.Controllers
     public class SurveyQuestionController : ControllerBase
     {
         IMediator _mediator;
+        UserManager<ApplicationUser> _userManager;
 
         public SurveyQuestionController(IMediator mediator)
         {
@@ -42,14 +45,18 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAsync([FromBody] CreateSurveyQuestionCommand command)
         {
+            var user = await _userManager.GetUserAsync(User);
+            command.CreatedBy = user?.FullName;
             var response = await _mediator.Send(command);
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
-        [HttpPut("{id:int}")]
+        [HttpPatch("{id:int}")]
         public async Task<IActionResult> UpdateAsync(int id, [FromBody] UpdateSurveyQuestionCommand command)
         {
             command.Id = id;
+            var user = await _userManager.GetUserAsync(User);
+            command.UpdatedBy = user?.FullName;
             var response = await _mediator.Send(command);
             return response.Success ? Ok(response) : BadRequest(response);
         }

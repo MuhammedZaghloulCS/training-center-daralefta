@@ -4,6 +4,7 @@ using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20260127104149_seedingRooms2")]
+    partial class seedingRooms2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -311,208 +314,6 @@ namespace Infrastructure.Migrations
                     b.HasIndex("TrainingId");
 
                     b.ToTable("Course");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "وصف مختصر للدورة رقم 1",
-                            Duration = 11,
-                            Name = "دورة رقم 1",
-                            Prerequisites = "لا يوجد"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "وصف مختصر للدورة رقم 2",
-                            Duration = 12,
-                            Name = "دورة رقم 2",
-                            Prerequisites = "لا يوجد"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "وصف مختصر للدورة رقم 3",
-                            Duration = 13,
-                            Name = "دورة رقم 3",
-                            Prerequisites = "أساسيات الحاسوب"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "وصف مختصر للدورة رقم 4",
-                            Duration = 14,
-                            Name = "دورة رقم 4",
-                            Prerequisites = "لا يوجد"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "وصف مختصر للدورة رقم 5",
-                            Duration = 15,
-                            Name = "دورة رقم 5",
-                            Prerequisites = "لا يوجد"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "وصف مختصر للدورة رقم 6",
-                            Duration = 16,
-                            Name = "دورة رقم 6",
-                            Prerequisites = "أساسيات الحاسوب"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "وصف مختصر للدورة رقم 7",
-                            Duration = 17,
-                            Name = "دورة رقم 7",
-                            Prerequisites = "لا يوجد"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "وصف مختصر للدورة رقم 8",
-                            Duration = 18,
-                            Name = "دورة رقم 8",
-                            Prerequisites = "لا يوجد"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "وصف مختصر للدورة رقم 9",
-                            Duration = 19,
-                            Name = "دورة رقم 9",
-                            Prerequisites = "أساسيات الحاسوب"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "وصف مختصر للدورة رقم 10",
-                            Duration = 20,
-                            Name = "دورة رقم 10",
-                            Prerequisites = "لا يوجد"
-                        },
-                        new
-                        {
-                            Id = 11,
-                            CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "وصف مختصر للدورة رقم 11",
-                            Duration = 21,
-                            Name = "دورة رقم 11",
-                            Prerequisites = "لا يوجد"
-                        },
-                        new
-                        {
-                            Id = 12,
-                            CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "وصف مختصر للدورة رقم 12",
-                            Duration = 22,
-                            Name = "دورة رقم 12",
-                            Prerequisites = "أساسيات الحاسوب"
-                        },
-                        new
-                        {
-                            Id = 13,
-                            CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "وصف مختصر للدورة رقم 13",
-                            Duration = 23,
-                            Name = "دورة رقم 13",
-                            Prerequisites = "لا يوجد"
-                        },
-                        new
-                        {
-                            Id = 14,
-                            CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "وصف مختصر للدورة رقم 14",
-                            Duration = 24,
-                            Name = "دورة رقم 14",
-                            Prerequisites = "لا يوجد"
-                        },
-                        new
-                        {
-                            Id = 15,
-                            CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "وصف مختصر للدورة رقم 15",
-                            Duration = 25,
-                            Name = "دورة رقم 15",
-                            Prerequisites = "أساسيات الحاسوب"
-                        },
-                        new
-                        {
-                            Id = 16,
-                            CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "وصف مختصر للدورة رقم 16",
-                            Duration = 26,
-                            Name = "دورة رقم 16",
-                            Prerequisites = "لا يوجد"
-                        },
-                        new
-                        {
-                            Id = 17,
-                            CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "وصف مختصر للدورة رقم 17",
-                            Duration = 27,
-                            Name = "دورة رقم 17",
-                            Prerequisites = "لا يوجد"
-                        },
-                        new
-                        {
-                            Id = 18,
-                            CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "وصف مختصر للدورة رقم 18",
-                            Duration = 28,
-                            Name = "دورة رقم 18",
-                            Prerequisites = "أساسيات الحاسوب"
-                        },
-                        new
-                        {
-                            Id = 19,
-                            CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "وصف مختصر للدورة رقم 19",
-                            Duration = 29,
-                            Name = "دورة رقم 19",
-                            Prerequisites = "لا يوجد"
-                        },
-                        new
-                        {
-                            Id = 20,
-                            CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "وصف مختصر للدورة رقم 20",
-                            Duration = 10,
-                            Name = "دورة رقم 20",
-                            Prerequisites = "لا يوجد"
-                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.QuestionAnswer", b =>

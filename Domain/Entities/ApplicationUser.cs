@@ -52,6 +52,9 @@ namespace Domain.Entities
         public string MaritalState { get; set; }
         public string AcademicQualification { get; set; }
         public string Appreciation { get; set; }
+        public string ImagePath { get; set; }
+
+
 
 
         public ICollection<Training> Trainings { get; set; }
@@ -60,6 +63,6 @@ namespace Domain.Entities
         public ICollection<Survey> CreatedSurveys { get; set; } = new List<Survey>();
         public ICollection<SurveyResponse> SurveyResponses { get; set; } = new List<SurveyResponse>();
 
-
+    
     }
 }

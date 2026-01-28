@@ -52,7 +52,7 @@ namespace Application.Features.Course.Commands.Update
             course.Prerequisites = request.Prerequisites;
             course.Duration = request.Duration;
             course.TrainingId = request.TrainingId;
-            course.UpdatedBy = request.UpdatedBy;
+            //.UpdatedBy = request.UpdatedBy;
             course.UpdatedAt = DateTime.UtcNow;
 
             _unitOfWork.ICourse.Update(course);

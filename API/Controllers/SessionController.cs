@@ -2,7 +2,9 @@ using Application.Features.Session.Commands.Create;
 using Application.Features.Session.Commands.Delete;
 using Application.Features.Session.Commands.Update;
 using Application.Features.Session.Queries.Model;
+using Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -12,7 +14,7 @@ namespace API.Controllers
     public class SessionController : ControllerBase
     {
         IMediator _mediator;
-
+        UserManager<ApplicationUser> _userManager;
         public SessionController(IMediator mediator)
         {
             _mediator = mediator;
@@ -42,14 +44,18 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAsync([FromBody] CreateSessionCommand command)
         {
+            var user = await _userManager.GetUserAsync(User);
+            command.CreatedBy = user?.FullName;
             var response = await _mediator.Send(command);
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
-        [HttpPut("{id:int}")]
+        [HttpPatch("{id:int}")]
         public async Task<IActionResult> UpdateAsync(int id, [FromBody] UpdateSessionCommand command)
         {
             command.Id = id;
+            var user = await _userManager.GetUserAsync(User);
+            command.UpdatedBy = user?.FullName;
             var response = await _mediator.Send(command);
             return response.Success ? Ok(response) : BadRequest(response);
         }

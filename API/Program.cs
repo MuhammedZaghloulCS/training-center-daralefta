@@ -19,8 +19,20 @@ builder.Services.AddDbContext<ApplicationContext>(option =>
 builder.Services.AddedModuleInfraStructureDependencies();
 // Adding Infrastructure Dependencies
 builder.Services.AddedModuleApplicationDependencies();
-var app = builder.Build();
 
+//CORS Policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
+var app = builder.Build();
+// Enable CORS
+app.UseCors("CorsPolicy");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

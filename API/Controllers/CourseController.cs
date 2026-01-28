@@ -2,7 +2,9 @@ using Application.Features.Course.Commands.Create;
 using Application.Features.Course.Commands.Delete;
 using Application.Features.Course.Commands.Update;
 using Application.Features.Course.Queries.Model;
+using Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -12,7 +14,7 @@ namespace API.Controllers
     public class CourseController : ControllerBase
     {
         IMediator _mediator;
-
+        UserManager<ApplicationUser> _userManager;
         public CourseController(IMediator mediator)
         {
             _mediator = mediator;
@@ -42,14 +44,18 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAsync([FromBody] CreateCourseCommand command)
         {
+            var user = await _userManager.GetUserAsync(User);
+            command.CreatedBy = user?.FullName;
             var response = await _mediator.Send(command);
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
-        [HttpPut("{id:int}")]
+        [HttpPatch("{id:int}")]
         public async Task<IActionResult> UpdateAsync(int id, [FromBody] UpdateCourseCommand command)
         {
             command.Id = id;
+            var user = await _userManager.GetUserAsync(User);
+            command.UpdatedBy = user?.FullName;
             var response = await _mediator.Send(command);
             return response.Success ? Ok(response) : BadRequest(response);
         }

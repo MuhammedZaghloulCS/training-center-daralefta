@@ -56,7 +56,13 @@ namespace Application.Features.Room.Queries.Handler
                 Capacity = r.Capacity,
                 Location = r.Location,
                 BuildId = r.BuildId,
-                HaveProjector = r.HaveProjector
+                HaveProjector = r.HaveProjector,
+                Building= new Building.DTOs.BuildingDto
+                {
+                    Id = r.Building.Id,
+                    Name = r.Building.Name,
+                   
+                }
             }).ToList();
 
             return BaseResponse<List<RoomListDTO>>.SuccessResponse(
