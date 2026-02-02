@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Infrastructure.Configurations
 {
-    public class CoursesConfiguration : IEntityTypeConfiguration<Course>
+    public class CoursesConfigurations : IEntityTypeConfiguration<Course>
     {
         public void Configure(EntityTypeBuilder<Course> builder)
         {

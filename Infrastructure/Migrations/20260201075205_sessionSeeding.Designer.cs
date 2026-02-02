@@ -4,6 +4,7 @@ using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20260201075205_sessionSeeding")]
+    partial class sessionSeeding
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1977,7 +1980,6 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CourseId = 1,
                             CreatedBy = "system",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EndTime = new TimeSpan(0, 11, 0, 0, 0),
@@ -1989,7 +1991,6 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 2,
-                            CourseId = 2,
                             CreatedBy = "system",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EndTime = new TimeSpan(0, 11, 0, 0, 0),
@@ -2001,7 +2002,6 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 3,
-                            CourseId = 3,
                             CreatedBy = "system",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EndTime = new TimeSpan(0, 11, 0, 0, 0),
@@ -2013,7 +2013,6 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 4,
-                            CourseId = 4,
                             CreatedBy = "system",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EndTime = new TimeSpan(0, 11, 0, 0, 0),
@@ -2025,7 +2024,6 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 5,
-                            CourseId = 5,
                             CreatedBy = "system",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EndTime = new TimeSpan(0, 11, 0, 0, 0),
@@ -2037,7 +2035,6 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 6,
-                            CourseId = 6,
                             CreatedBy = "system",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EndTime = new TimeSpan(0, 12, 0, 0, 0),
@@ -2049,7 +2046,6 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 7,
-                            CourseId = 7,
                             CreatedBy = "system",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EndTime = new TimeSpan(0, 12, 0, 0, 0),
@@ -2061,7 +2057,6 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 8,
-                            CourseId = 8,
                             CreatedBy = "system",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EndTime = new TimeSpan(0, 12, 0, 0, 0),
@@ -2073,7 +2068,6 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 9,
-                            CourseId = 9,
                             CreatedBy = "system",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EndTime = new TimeSpan(0, 12, 0, 0, 0),
@@ -2085,7 +2079,6 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 10,
-                            CourseId = 10,
                             CreatedBy = "system",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EndTime = new TimeSpan(0, 12, 0, 0, 0),
@@ -2097,7 +2090,6 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 11,
-                            CourseId = 11,
                             CreatedBy = "system",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EndTime = new TimeSpan(0, 13, 0, 0, 0),
@@ -2109,7 +2101,6 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 12,
-                            CourseId = 12,
                             CreatedBy = "system",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EndTime = new TimeSpan(0, 13, 0, 0, 0),
@@ -2121,7 +2112,6 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 13,
-                            CourseId = 13,
                             CreatedBy = "system",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EndTime = new TimeSpan(0, 13, 0, 0, 0),
@@ -2133,7 +2123,6 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 14,
-                            CourseId = 14,
                             CreatedBy = "system",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EndTime = new TimeSpan(0, 13, 0, 0, 0),
@@ -2145,7 +2134,6 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 15,
-                            CourseId = 15,
                             CreatedBy = "system",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EndTime = new TimeSpan(0, 13, 0, 0, 0),
@@ -2157,7 +2145,6 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 16,
-                            CourseId = 16,
                             CreatedBy = "system",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EndTime = new TimeSpan(0, 14, 0, 0, 0),
@@ -2169,7 +2156,6 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 17,
-                            CourseId = 17,
                             CreatedBy = "system",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EndTime = new TimeSpan(0, 14, 0, 0, 0),
@@ -2181,7 +2167,6 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 18,
-                            CourseId = 18,
                             CreatedBy = "system",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EndTime = new TimeSpan(0, 14, 0, 0, 0),
@@ -2193,7 +2178,6 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 19,
-                            CourseId = 19,
                             CreatedBy = "system",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EndTime = new TimeSpan(0, 14, 0, 0, 0),
@@ -2205,7 +2189,6 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 20,
-                            CourseId = 20,
                             CreatedBy = "system",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EndTime = new TimeSpan(0, 14, 0, 0, 0),

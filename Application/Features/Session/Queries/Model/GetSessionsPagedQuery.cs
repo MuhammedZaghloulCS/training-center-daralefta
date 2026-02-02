@@ -9,5 +9,6 @@ namespace Application.Features.Session.Queries.Model
     {
         public int PageNumber { get; set; }
         public int PageSize { get; set; }
+        public string Search { get; set; } = string.Empty;
     }
 }

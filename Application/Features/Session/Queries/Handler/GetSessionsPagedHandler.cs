@@ -3,10 +3,13 @@ using Application.Features.Session.DTOs;
 using Application.Features.Session.Queries.Model;
 using Infrastructure.Abstractions.IUnitOfWork;
 using MediatR;
+using Domain.Entities;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Application.Features.Session.Queries.Handler
 {
@@ -21,15 +24,41 @@ namespace Application.Features.Session.Queries.Handler
 
         public async Task<BaseResponse<List<SessionListDTO>>> Handle(GetSessionsPagedQuery request, CancellationToken cancellationToken)
         {
+
+            
+
             if (request.PageNumber < 1 || request.PageSize < 1)
             {
                 return BaseResponse<List<SessionListDTO>>.BadRequestResponse("Invalid pagination parameters");
             }
 
+
+            Expression<Func<Domain.Entities.Session, bool>> searchPredicate = null;
+
+            if (!string.IsNullOrWhiteSpace(request.Search))
+            {
+                var search = request.Search.Trim();
+
+                // جرّب parse من غير ما يطلع exception
+                if (int.TryParse(search, out var id))
+                {
+                    // لو رقم → ابحث بالـ ID
+                    searchPredicate = s => s.Id == id;
+                }
+                else
+                {
+                    // لو نص → ابحث نصي
+                    searchPredicate = s =>
+                        s.Topic.Contains(search) ||
+                        s.Room.Name.Contains(search) ||
+                        s.Course.Name.Contains(search);
+                }
+            }
+
             var (items, totalCount) = await _unitOfWork.ISession.GetPaginatedAsync(
                 request.PageNumber,
                 request.PageSize,
-                null,
+                searchPredicate,
                 s => s.Id,
                 true,
                 s => s.Room,

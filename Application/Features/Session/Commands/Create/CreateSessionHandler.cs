@@ -71,7 +71,7 @@ namespace Application.Features.Session.Commands.Create
                 EndTime = session.EndTime,
                 Topic = session.Topic,
                 RoomId = session.RoomId,
-                CourseId = session.CourseId
+                CourseId = session?.CourseId
             };
 
             return BaseResponse<SessionDto>.SuccessResponse(dto, "Session created successfully");

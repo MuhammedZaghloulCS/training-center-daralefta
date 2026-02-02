@@ -14,6 +14,6 @@ namespace Application.Features.Session.DTOs
         public TimeSpan EndTime { get; set; }
         public string Topic { get; set; }
         public int RoomId { get; set; }
-        public int CourseId { get; set; }
+        public int? CourseId { get; set; }
     }
 }

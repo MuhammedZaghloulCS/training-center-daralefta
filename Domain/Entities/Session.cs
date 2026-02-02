@@ -17,7 +17,7 @@ namespace Domain.Entities
         public Room Room { get; set; }
 
 
-        public int CourseId { get; set; }
+        public int? CourseId { get; set; }
         [ForeignKey(nameof(CourseId))]
         public Course Course { get; set; }
     }
