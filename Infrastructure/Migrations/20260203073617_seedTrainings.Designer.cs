@@ -4,6 +4,7 @@ using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20260203073617_seedTrainings")]
+    partial class seedTrainings
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2228,7 +2231,7 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("CreatedByUserId")
+                    b.Property<Guid>("CreatedByUserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedDate")
@@ -2239,7 +2242,7 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<int?>("SurveyCategoryId")
+                    b.Property<int>("SurveyCategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -2265,278 +2268,6 @@ namespace Infrastructure.Migrations
                     b.HasIndex("TrainingId");
 
                     b.ToTable("Survey");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedBy = "System",
-                            CreatedDate = new DateTime(2025, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Description for Survey 1",
-                            Title = "Survey 1",
-                            TrainingId = 2
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedBy = "System",
-                            CreatedDate = new DateTime(2025, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Description for Survey 2",
-                            Title = "Survey 2",
-                            TrainingId = 3
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedBy = "System",
-                            CreatedDate = new DateTime(2025, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Description for Survey 3",
-                            Title = "Survey 3",
-                            TrainingId = 4
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CreatedBy = "System",
-                            CreatedDate = new DateTime(2025, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Description for Survey 4",
-                            Title = "Survey 4",
-                            TrainingId = 5
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CreatedBy = "System",
-                            CreatedDate = new DateTime(2025, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Description for Survey 5",
-                            Title = "Survey 5",
-                            TrainingId = 1
-                        },
-                        new
-                        {
-                            Id = 6,
-                            CreatedBy = "System",
-                            CreatedDate = new DateTime(2025, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Description for Survey 6",
-                            Title = "Survey 6",
-                            TrainingId = 2
-                        },
-                        new
-                        {
-                            Id = 7,
-                            CreatedBy = "System",
-                            CreatedDate = new DateTime(2025, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Description for Survey 7",
-                            Title = "Survey 7",
-                            TrainingId = 3
-                        },
-                        new
-                        {
-                            Id = 8,
-                            CreatedBy = "System",
-                            CreatedDate = new DateTime(2025, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Description for Survey 8",
-                            Title = "Survey 8",
-                            TrainingId = 4
-                        },
-                        new
-                        {
-                            Id = 9,
-                            CreatedBy = "System",
-                            CreatedDate = new DateTime(2025, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Description for Survey 9",
-                            Title = "Survey 9",
-                            TrainingId = 5
-                        },
-                        new
-                        {
-                            Id = 10,
-                            CreatedBy = "System",
-                            CreatedDate = new DateTime(2025, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Description for Survey 10",
-                            Title = "Survey 10",
-                            TrainingId = 1
-                        },
-                        new
-                        {
-                            Id = 11,
-                            CreatedBy = "System",
-                            CreatedDate = new DateTime(2025, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Description for Survey 11",
-                            Title = "Survey 11",
-                            TrainingId = 2
-                        },
-                        new
-                        {
-                            Id = 12,
-                            CreatedBy = "System",
-                            CreatedDate = new DateTime(2025, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Description for Survey 12",
-                            Title = "Survey 12",
-                            TrainingId = 3
-                        },
-                        new
-                        {
-                            Id = 13,
-                            CreatedBy = "System",
-                            CreatedDate = new DateTime(2025, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Description for Survey 13",
-                            Title = "Survey 13",
-                            TrainingId = 4
-                        },
-                        new
-                        {
-                            Id = 14,
-                            CreatedBy = "System",
-                            CreatedDate = new DateTime(2025, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Description for Survey 14",
-                            Title = "Survey 14",
-                            TrainingId = 5
-                        },
-                        new
-                        {
-                            Id = 15,
-                            CreatedBy = "System",
-                            CreatedDate = new DateTime(2025, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Description for Survey 15",
-                            Title = "Survey 15",
-                            TrainingId = 1
-                        },
-                        new
-                        {
-                            Id = 16,
-                            CreatedBy = "System",
-                            CreatedDate = new DateTime(2025, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Description for Survey 16",
-                            Title = "Survey 16",
-                            TrainingId = 2
-                        },
-                        new
-                        {
-                            Id = 17,
-                            CreatedBy = "System",
-                            CreatedDate = new DateTime(2025, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Description for Survey 17",
-                            Title = "Survey 17",
-                            TrainingId = 3
-                        },
-                        new
-                        {
-                            Id = 18,
-                            CreatedBy = "System",
-                            CreatedDate = new DateTime(2025, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Description for Survey 18",
-                            Title = "Survey 18",
-                            TrainingId = 4
-                        },
-                        new
-                        {
-                            Id = 19,
-                            CreatedBy = "System",
-                            CreatedDate = new DateTime(2025, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Description for Survey 19",
-                            Title = "Survey 19",
-                            TrainingId = 5
-                        },
-                        new
-                        {
-                            Id = 20,
-                            CreatedBy = "System",
-                            CreatedDate = new DateTime(2025, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Description for Survey 20",
-                            Title = "Survey 20",
-                            TrainingId = 1
-                        },
-                        new
-                        {
-                            Id = 21,
-                            CreatedBy = "System",
-                            CreatedDate = new DateTime(2025, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Description for Survey 21",
-                            Title = "Survey 21",
-                            TrainingId = 2
-                        },
-                        new
-                        {
-                            Id = 22,
-                            CreatedBy = "System",
-                            CreatedDate = new DateTime(2025, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Description for Survey 22",
-                            Title = "Survey 22",
-                            TrainingId = 3
-                        },
-                        new
-                        {
-                            Id = 23,
-                            CreatedBy = "System",
-                            CreatedDate = new DateTime(2025, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Description for Survey 23",
-                            Title = "Survey 23",
-                            TrainingId = 4
-                        },
-                        new
-                        {
-                            Id = 24,
-                            CreatedBy = "System",
-                            CreatedDate = new DateTime(2025, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Description for Survey 24",
-                            Title = "Survey 24",
-                            TrainingId = 5
-                        },
-                        new
-                        {
-                            Id = 25,
-                            CreatedBy = "System",
-                            CreatedDate = new DateTime(2025, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Description for Survey 25",
-                            Title = "Survey 25",
-                            TrainingId = 1
-                        },
-                        new
-                        {
-                            Id = 26,
-                            CreatedBy = "System",
-                            CreatedDate = new DateTime(2025, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Description for Survey 26",
-                            Title = "Survey 26",
-                            TrainingId = 2
-                        },
-                        new
-                        {
-                            Id = 27,
-                            CreatedBy = "System",
-                            CreatedDate = new DateTime(2025, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Description for Survey 27",
-                            Title = "Survey 27",
-                            TrainingId = 3
-                        },
-                        new
-                        {
-                            Id = 28,
-                            CreatedBy = "System",
-                            CreatedDate = new DateTime(2025, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Description for Survey 28",
-                            Title = "Survey 28",
-                            TrainingId = 4
-                        },
-                        new
-                        {
-                            Id = 29,
-                            CreatedBy = "System",
-                            CreatedDate = new DateTime(2025, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Description for Survey 29",
-                            Title = "Survey 29",
-                            TrainingId = 5
-                        },
-                        new
-                        {
-                            Id = 30,
-                            CreatedBy = "System",
-                            CreatedDate = new DateTime(2025, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Description for Survey 30",
-                            Title = "Survey 30",
-                            TrainingId = 1
-                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.SurveyCategory", b =>
@@ -3178,11 +2909,14 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.ApplicationUser", "CreatedByUser")
                         .WithMany("CreatedSurveys")
                         .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("Domain.Entities.SurveyCategory", "SurveyCategory")
                         .WithMany("Surveys")
-                        .HasForeignKey("SurveyCategoryId");
+                        .HasForeignKey("SurveyCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Domain.Entities.Training", "Training")
                         .WithMany("Surveys")

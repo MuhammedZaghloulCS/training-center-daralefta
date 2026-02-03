@@ -15,7 +15,7 @@ namespace Domain.Entities
         public string Description { get; set; }
 
         // Creator
-        public Guid CreatedByUserId { get; set; }
+        public Guid? CreatedByUserId { get; set; }
 
         [ForeignKey(nameof(CreatedByUserId))]
         public ApplicationUser CreatedByUser { get; set; }
@@ -25,7 +25,7 @@ namespace Domain.Entities
         public Training Training { get; set; }
 
 
-        public int SurveyCategoryId { get; set; }
+        public int? SurveyCategoryId { get; set; }
         [ForeignKey(nameof(SurveyCategoryId))]
 
         public SurveyCategory SurveyCategory { get; set; }

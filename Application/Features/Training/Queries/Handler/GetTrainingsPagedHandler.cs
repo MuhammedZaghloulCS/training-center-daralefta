@@ -5,6 +5,7 @@ using Infrastructure.Abstractions.IUnitOfWork;
 using MediatR;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,15 +27,41 @@ namespace Application.Features.Training.Queries.Handler
                 return BaseResponse<List<TrainingListDTO>>.BadRequestResponse("Invalid pagination parameters");
             }
 
-            var (items, totalCount) = await _unitOfWork.ITraining.GetPaginatedAsync(
+
+            Expression<Func<Domain.Entities.Training, bool>> searchPredicate = null;
+
+            if (!string.IsNullOrWhiteSpace(request.Search))
+            {
+                var search = request.Search.Trim();
+
+                // جرّب parse من غير ما يطلع exception
+                if (int.TryParse(search, out var id))
+                {
+                    // لو رقم → ابحث بالـ ID
+                    searchPredicate = s => s.Id == id;
+                }
+                else
+                {
+                    // لو نص → ابحث نصي
+                    searchPredicate = s =>
+                        s.Title.Contains(search);
+                       
+                }
+            }
+
+            // Avoid deconstructing a tuple in the same statement as 'await' to prevent ENC0046.
+            var paged = await _unitOfWork.ITraining.GetPaginatedAsync(
                 request.PageNumber,
                 request.PageSize,
-                null,
+                searchPredicate,
                 t => t.Id,
                 true,
                 t => t.Courses,
                 t => t.Users,
                 t => t.Surveys);
+
+            var items = paged.items;
+            var totalCount = paged.totalCount;
 
             if (items == null || !items.Any())
             {

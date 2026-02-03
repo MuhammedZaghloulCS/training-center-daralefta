@@ -9,5 +9,8 @@ namespace Application.Features.Survey.Queries.Model
     {
         public int PageNumber { get; set; }
         public int PageSize { get; set; }
+        public string Search { get; set; } = string.Empty;
+        public int? TrainingId { get; set; }
+
     }
 }

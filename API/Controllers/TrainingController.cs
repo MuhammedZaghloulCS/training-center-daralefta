@@ -44,8 +44,8 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAsync([FromBody] CreateTrainingCommand command)
         {
-            var user = await _userManager.GetUserAsync(User);
-            command.CreatedBy = user?.FullName;
+            //var user = await _userManager.GetUserAsync(User);
+           // command.CreatedBy = user?.FullName;
             var response = await _mediator.Send(command);
             return response.Success ? Ok(response) : BadRequest(response);
         }
@@ -54,8 +54,8 @@ namespace API.Controllers
         public async Task<IActionResult> UpdateAsync(int id, [FromBody] UpdateTrainingCommand command)
         {
             command.Id = id;
-            var user = await _userManager.GetUserAsync(User);
-            command.UpdatedBy = user?.FullName;
+           // var user = await _userManager.GetUserAsync(User);
+            //command.UpdatedBy = user?.FullName;
             var response = await _mediator.Send(command);
             return response.Success ? Ok(response) : BadRequest(response);
         }

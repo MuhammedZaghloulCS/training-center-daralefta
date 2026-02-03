@@ -5,6 +5,7 @@ using Infrastructure.Abstractions.IUnitOfWork;
 using MediatR;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,15 +22,29 @@ namespace Application.Features.Survey.Queries.Handler
 
         public async Task<BaseResponse<List<SurveyListDTO>>> Handle(GetSurveysPagedQuery request, CancellationToken cancellationToken)
         {
+
             if (request.PageNumber < 1 || request.PageSize < 1)
             {
                 return BaseResponse<List<SurveyListDTO>>.BadRequestResponse("Invalid pagination parameters");
             }
 
+            Expression<Func<Domain.Entities.Survey, bool>>? trainingPredicate = null;
+            if (request.TrainingId.HasValue) { 
+                trainingPredicate = s => s.TrainingId == request.TrainingId.Value;
+            }
+
+            Expression<System.Func<Domain.Entities.Survey, bool>>? searchPredicate = null;
+            if(!string.IsNullOrEmpty(request.Search))
+            {
+                searchPredicate = s => s.Title.Contains(request.Search) || s.Description.Contains(request.Search) ;
+            }
+
+
+
             var (items, totalCount) = await _unitOfWork.ISurvey.GetPaginatedAsync(
                 request.PageNumber,
                 request.PageSize,
-                null,
+                trainingPredicate,
                 s => s.Id,
                 true,
                 s => s.CreatedByUser,
