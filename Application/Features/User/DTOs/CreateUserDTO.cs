@@ -1,17 +1,28 @@
 ﻿using Domain.Enums;
-using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace Domain.Entities
+namespace Application.Features.User.DTOs
 {
-    public class ApplicationUser : IdentityUser<Guid>
+    public class CreateUserDTO
     {
-        
-        
+     
+
+
+
+        public string Email { get; set; }
+        [RegularExpression(
+       @"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$",
+       ErrorMessage = 
+            "Password must be at least 8 characters and include uppercase, lowercase, digit, and special character.")]
+        public string Password { get; set; }
+
+        [Compare("Password", ErrorMessage = "Passwords do not match.")]
+        public string ConfirmPassword { get; set; }
+
+        public string PhoneNumber { get; set; }
         public String FirstName { get; set; }
         public String LastName { get; set; }
         public string FullName => $"{FirstName} {LastName}";
@@ -39,7 +50,7 @@ namespace Domain.Entities
         [MaxLength(50)]
         public string WhatsappNumber { get; set; }
 
-        public DateTime? BirthDate { get; set; }
+        public string BirthDate { get; set; }
 
         public string NationalIdImage { get; set; }
 
@@ -55,15 +66,5 @@ namespace Domain.Entities
         public string Appreciation { get; set; }
         public string ImagePath { get; set; }
 
-
-
-
-        public ICollection<Training> Trainings { get; set; }
-        public ICollection<Course> Courses { get; set; }
-        [InverseProperty(nameof(Survey.CreatedByUser))]
-        public ICollection<Survey> CreatedSurveys { get; set; } = new List<Survey>();
-        public ICollection<SurveyResponse> SurveyResponses { get; set; } = new List<SurveyResponse>();
-
-    
     }
 }
