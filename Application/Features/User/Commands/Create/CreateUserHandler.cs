@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Application.Features.User.Commands
+namespace Application.Features.User.Commands.Create
 {
     public class CreateUserHandler : IRequestHandler<CreateUserCommand,BaseResponse<UserDTO>>
     {
@@ -18,10 +18,12 @@ namespace Application.Features.User.Commands
         }
         public async Task<BaseResponse<UserDTO>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
 
-            var id = Guid.NewGuid();
+            if (await _userManager.FindByEmailAsync(request._dto.Email) != null)
+            {
+                return BaseResponse<UserDTO>.FailureResponse("الايميل مستخدم بالفعل");
+            }
+                var id = Guid.NewGuid();
             string userName = request._dto.FirstName + id.ToString("N")[..6];
             var newUser = new ApplicationUser
             {
@@ -39,7 +41,7 @@ namespace Application.Features.User.Commands
                 Specialization = request._dto.Specialization,
                 Skills = request._dto.Skills,
                 WhatsappNumber = request._dto.WhatsappNumber,
-                BirthDate = DateTime.Parse(request._dto.BirthDate),
+                BirthDate = request._dto.BirthDate,
                 NationalIdImage = request._dto.NationalIdImage,
                 AddressInsideCairo = request._dto.AddressInsideCairo,
                 AddressOutsideCairo = request._dto.AddressOutsideCairo,

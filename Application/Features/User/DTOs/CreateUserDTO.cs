@@ -13,10 +13,6 @@ namespace Application.Features.User.DTOs
 
 
         public string Email { get; set; }
-        [RegularExpression(
-       @"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$",
-       ErrorMessage = 
-            "Password must be at least 8 characters and include uppercase, lowercase, digit, and special character.")]
         public string Password { get; set; }
 
         [Compare("Password", ErrorMessage = "Passwords do not match.")]
@@ -50,7 +46,7 @@ namespace Application.Features.User.DTOs
         [MaxLength(50)]
         public string WhatsappNumber { get; set; }
 
-        public string BirthDate { get; set; }
+        public DateTime BirthDate { get; set; }
 
         public string NationalIdImage { get; set; }
 

@@ -26,6 +26,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
     options.Password.RequireLowercase = true;
     options.Password.RequireDigit = true;
     options.Password.RequireNonAlphanumeric = true;
+    options.User.RequireUniqueEmail = true;
+
 })
 .AddEntityFrameworkStores<ApplicationContext>()
 .AddDefaultTokenProviders();

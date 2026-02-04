@@ -1,10 +1,14 @@
 ﻿using Application.Common;
+using Application.Features.User.Commands.Create;
+using Application.Features.User.Commands.Delete;
 using Application.Features.User.DTOs;
+using Azure;
 using Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace API.Controllers
 {
@@ -13,9 +17,12 @@ namespace API.Controllers
     public class UsersController : ControllerBase
     {
         UserManager<ApplicationUser> _userManager;
-        public UsersController(UserManager<ApplicationUser> userManager)
+        MediatR.IMediator _mediator;
+
+        public UsersController(UserManager<ApplicationUser> userManager, MediatR.IMediator mediator)
         {
             _userManager = userManager;
+            _mediator = mediator;
         }
         [HttpGet]
         public async Task<IActionResult> GetUsers()
@@ -33,46 +40,42 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserDTO user)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var id=Guid.NewGuid();
-            string userName = user.FirstName + id.ToString("N")[..6];
-            var newUser = new ApplicationUser
+           
+            var response = await _mediator.Send(new CreateUserCommand{ _dto=user});
+            if (!response.Success)
             {
-              Id = id,
-              UserName = userName,
-              Email = user.Email,
-                PhoneNumber = user.PhoneNumber,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Gender =user.Gender,
-                PersonType = user.PersonType,
-                JobTitle = user.JobTitle,
-                AcademicTitle = user.AcademicTitle,
-                Organization = user.Organization,
-                Specialization = user.Specialization,
-                Skills = user.Skills,
-                WhatsappNumber = user.WhatsappNumber,
-                BirthDate = DateTime.Parse(user.BirthDate),
-                NationalIdImage = user.NationalIdImage,
-                AddressInsideCairo = user.AddressInsideCairo,
-                AddressOutsideCairo = user.AddressOutsideCairo,
-                Doctrine = user.Doctrine,
-                MaritalState = user.MaritalState,
-                AcademicQualification = user.AcademicQualification,
-                Appreciation = user.Appreciation,
-                ImagePath = user.ImagePath
-
-
-            };
-            var result = await _userManager.CreateAsync(newUser, user.Password);
-            if (!result.Succeeded)
-            {
-                var errors = result.Errors.Select(e => e.Description);
-                return BadRequest(errors);
+                return BadRequest(response);
             }
-                return Ok(user);
+            return Ok(response);
+        }
+
+        [HttpPatch]
+        public async Task<IActionResult> UpdateUser([FromBody] UserDTO user)
+        {
+            var response = await _mediator.Send(new Application.Features.User.Commands.Update.UpdateUserCommand { User = user });
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(Guid id)
+        {
+            var command = new DeleteUserCommand
+            {
+                UserId = id
+            };
+
+            var result = await _mediator.Send(command);
+
+            if (!result.Success)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
         }
 
     }
