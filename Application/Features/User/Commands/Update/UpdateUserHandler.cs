@@ -24,7 +24,7 @@ namespace Application.Features.User.Commands.Update
         public async Task<BaseResponse<UserDTO>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
             // Find the existing user
-            var existingUser = await _userManager.FindByIdAsync(request.User.Id.ToString());
+            var existingUser = await _userManager.FindByNameAsync(request.User.UserName);
             
             if (existingUser == null)
             {

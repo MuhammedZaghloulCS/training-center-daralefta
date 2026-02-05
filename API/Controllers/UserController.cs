@@ -1,0 +1,112 @@
+﻿using Application.Common;
+using Application.Features.User.Commands.Create;
+using Application.Features.User.Commands.Delete;
+using Application.Features.User.DTOs;
+using Application.Features.User.Queries.Model;
+using Azure;
+using Domain.Entities;
+using MediatR;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+
+namespace API.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class UserController : ControllerBase
+    {
+        UserManager<ApplicationUser> _userManager;
+        MediatR.IMediator _mediator;
+
+        public UserController(UserManager<ApplicationUser> userManager,IMediator mediator)
+        {
+            _userManager = userManager;
+            _mediator = mediator;
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetUsers()
+        {
+          var response=  await _mediator.Send(new Application.Features.User.Queries.Model.GetAllUsersQuery());
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateUser([FromBody] CreateUserDTO user)
+        {
+           
+            var response = await _mediator.Send(new CreateUserCommand{ _dto=user});
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+        [HttpGet("paged")]
+        public async Task<IActionResult> GetUsersPaged(int pageNumber = 1, int pageSize = 10,string search="")
+        {
+            var response = await _mediator.Send(new GetAllUsersPagedQuery { PageNumber = pageNumber, PageSize = pageSize,Search=search });
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+        [HttpGet("username/{userName}")]
+        public async Task<IActionResult> GetUserByUserName(string userName)
+        {
+            var response = await _mediator.Send(new GetUserByUserNameQuery { UserName = userName });
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+        [HttpGet("email/{email}")]
+        public async Task<IActionResult> GetUserByEmail(string email)
+        {
+            var response = await _mediator.Send(new GetUserByEmailQuery { Email = email });
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+
+        [HttpPatch("{userName}")]
+        public async Task<IActionResult> UpdateUser([FromRoute]string userName, [FromBody] UserDTO user)
+        {
+            user.UserName = userName; // Ensure the username in the URL is used
+            var response = await _mediator.Send(new Application.Features.User.Commands.Update.UpdateUserCommand { User = user });
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+
+        [HttpDelete("{userName}")]
+        public async Task<IActionResult> DeleteUser(string userName)
+        {
+            var command = new DeleteUserByUserNameCommand
+            {
+                UserName = userName
+            };
+
+            var result = await _mediator.Send(command);
+
+            if (!result.Success)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+
+    }
+}

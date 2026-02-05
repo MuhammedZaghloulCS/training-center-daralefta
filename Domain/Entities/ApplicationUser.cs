@@ -56,7 +56,9 @@ namespace Domain.Entities
         public string ImagePath { get; set; }
 
 
-
+        //refresh token
+        public string? RefreshToken { get; set; }
+        public DateTime RefreshTokenExpiryTime { get; set; }
 
         public ICollection<Training> Trainings { get; set; }
         public ICollection<Course> Courses { get; set; }

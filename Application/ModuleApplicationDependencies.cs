@@ -1,4 +1,6 @@
-﻿using FluentValidation;
+﻿using Application.Common.Abstraction;
+using Application.Common.Services;
+using FluentValidation;
 using Infrastructure.Abstractions.IUnitOfWork;
 using Infrastructure.Implementations.UnitOfWork;
 using MediatR;
@@ -22,7 +24,9 @@ namespace Infrastructure.Dependencies
             // Register Validation Behavior
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
-
+            //JWT Authentication and Authorization can be added here
+            // تسجيل الـ JWT Service
+            services.AddScoped<IJwtService, JwtService>();
             return services;
         }
     }

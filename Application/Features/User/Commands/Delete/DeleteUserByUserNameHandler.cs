@@ -9,16 +9,16 @@ using System.Threading.Tasks;
 
 namespace Application.Features.User.Commands.Delete
 {
-    public class DeleteUserHandler : IRequestHandler<DeleteUserCommand, BaseResponse<string>>
+    public class DeleteUserByUserNameHandler : IRequestHandler<DeleteUserByUserNameCommand, BaseResponse<string>>
     {
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public DeleteUserHandler(UserManager<ApplicationUser> userManager)
+        public DeleteUserByUserNameHandler(UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
         }
 
-        public async Task<BaseResponse<string>> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<string>> Handle(DeleteUserByUserNameCommand request, CancellationToken cancellationToken)
         {
             if ((request.UserId == null || request.UserId == Guid.Empty)&&(String.IsNullOrEmpty(request.UserName)))
             {
