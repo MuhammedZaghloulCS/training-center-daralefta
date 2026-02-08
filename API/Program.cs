@@ -52,6 +52,7 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
     options.Password.RequireNonAlphanumeric = true;
 })
 .AddRoles<IdentityRole<Guid>>()
+.AddSignInManager() 
 .AddEntityFrameworkStores<ApplicationContext>()
 .AddDefaultTokenProviders();
 
@@ -94,16 +95,16 @@ app.UseAuthorization();
 app.MapControllers();
 
 
-using (var scope = app.Services.CreateScope())
-{
-    var roleManager = scope.ServiceProvider
-        .GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+//using (var scope = app.Services.CreateScope())
+//{
+//    var roleManager = scope.ServiceProvider
+//        .GetRequiredService<RoleManager<IdentityRole<Guid>>>();
 
-    var userManager = scope.ServiceProvider
-        .GetRequiredService<UserManager<ApplicationUser>>();
+//    var userManager = scope.ServiceProvider
+//        .GetRequiredService<UserManager<ApplicationUser>>();
 
-    await IdentitySeeder.SeedAsync(roleManager, userManager);
-}
+//    await IdentitySeeder.SeedAsync(roleManager, userManager);
+//}
 
 
 app.Run();
