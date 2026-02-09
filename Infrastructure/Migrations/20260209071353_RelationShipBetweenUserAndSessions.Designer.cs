@@ -4,6 +4,7 @@ using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20260209071353_RelationShipBetweenUserAndSessions")]
+    partial class RelationShipBetweenUserAndSessions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1991,8 +1994,7 @@ namespace Infrastructure.Migrations
                             RoomId = 20,
                             SessionDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             StartTime = new TimeSpan(0, 9, 0, 0, 0),
-                            Topic = "Session 1",
-                            lecturerId = new Guid("df8a0113-3d20-4aed-b33d-2f5bef703863")
+                            Topic = "Session 1"
                         },
                         new
                         {
@@ -2004,8 +2006,7 @@ namespace Infrastructure.Migrations
                             RoomId = 21,
                             SessionDate = new DateTime(2024, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             StartTime = new TimeSpan(0, 9, 0, 0, 0),
-                            Topic = "Session 2",
-                            lecturerId = new Guid("df8a0113-3d20-4aed-b33d-2f5bef703863")
+                            Topic = "Session 2"
                         },
                         new
                         {
@@ -2017,8 +2018,7 @@ namespace Infrastructure.Migrations
                             RoomId = 22,
                             SessionDate = new DateTime(2024, 1, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             StartTime = new TimeSpan(0, 9, 0, 0, 0),
-                            Topic = "Session 3",
-                            lecturerId = new Guid("df8a0113-3d20-4aed-b33d-2f5bef703863")
+                            Topic = "Session 3"
                         },
                         new
                         {
@@ -2030,8 +2030,7 @@ namespace Infrastructure.Migrations
                             RoomId = 23,
                             SessionDate = new DateTime(2024, 1, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             StartTime = new TimeSpan(0, 9, 0, 0, 0),
-                            Topic = "Session 4",
-                            lecturerId = new Guid("df8a0113-3d20-4aed-b33d-2f5bef703863")
+                            Topic = "Session 4"
                         },
                         new
                         {
@@ -2043,8 +2042,7 @@ namespace Infrastructure.Migrations
                             RoomId = 24,
                             SessionDate = new DateTime(2024, 1, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             StartTime = new TimeSpan(0, 9, 0, 0, 0),
-                            Topic = "Session 5",
-                            lecturerId = new Guid("df8a0113-3d20-4aed-b33d-2f5bef703863")
+                            Topic = "Session 5"
                         },
                         new
                         {
@@ -2056,8 +2054,7 @@ namespace Infrastructure.Migrations
                             RoomId = 25,
                             SessionDate = new DateTime(2024, 1, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             StartTime = new TimeSpan(0, 10, 0, 0, 0),
-                            Topic = "Session 6",
-                            lecturerId = new Guid("df8a0113-3d20-4aed-b33d-2f5bef703863")
+                            Topic = "Session 6"
                         },
                         new
                         {
@@ -2069,8 +2066,7 @@ namespace Infrastructure.Migrations
                             RoomId = 26,
                             SessionDate = new DateTime(2024, 1, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             StartTime = new TimeSpan(0, 10, 0, 0, 0),
-                            Topic = "Session 7",
-                            lecturerId = new Guid("df8a0113-3d20-4aed-b33d-2f5bef703863")
+                            Topic = "Session 7"
                         },
                         new
                         {
@@ -2082,8 +2078,7 @@ namespace Infrastructure.Migrations
                             RoomId = 27,
                             SessionDate = new DateTime(2024, 1, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             StartTime = new TimeSpan(0, 10, 0, 0, 0),
-                            Topic = "Session 8",
-                            lecturerId = new Guid("df8a0113-3d20-4aed-b33d-2f5bef703863")
+                            Topic = "Session 8"
                         },
                         new
                         {
@@ -2095,8 +2090,7 @@ namespace Infrastructure.Migrations
                             RoomId = 28,
                             SessionDate = new DateTime(2024, 1, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             StartTime = new TimeSpan(0, 10, 0, 0, 0),
-                            Topic = "Session 9",
-                            lecturerId = new Guid("df8a0113-3d20-4aed-b33d-2f5bef703863")
+                            Topic = "Session 9"
                         },
                         new
                         {
@@ -2108,8 +2102,7 @@ namespace Infrastructure.Migrations
                             RoomId = 29,
                             SessionDate = new DateTime(2024, 1, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             StartTime = new TimeSpan(0, 10, 0, 0, 0),
-                            Topic = "Session 10",
-                            lecturerId = new Guid("df8a0113-3d20-4aed-b33d-2f5bef703863")
+                            Topic = "Session 10"
                         },
                         new
                         {
@@ -2121,8 +2114,7 @@ namespace Infrastructure.Migrations
                             RoomId = 30,
                             SessionDate = new DateTime(2024, 1, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             StartTime = new TimeSpan(0, 11, 0, 0, 0),
-                            Topic = "Session 11",
-                            lecturerId = new Guid("df8a0113-3d20-4aed-b33d-2f5bef703863")
+                            Topic = "Session 11"
                         },
                         new
                         {
@@ -2134,8 +2126,7 @@ namespace Infrastructure.Migrations
                             RoomId = 31,
                             SessionDate = new DateTime(2024, 1, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             StartTime = new TimeSpan(0, 11, 0, 0, 0),
-                            Topic = "Session 12",
-                            lecturerId = new Guid("df8a0113-3d20-4aed-b33d-2f5bef703863")
+                            Topic = "Session 12"
                         },
                         new
                         {
@@ -2147,8 +2138,7 @@ namespace Infrastructure.Migrations
                             RoomId = 32,
                             SessionDate = new DateTime(2024, 1, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             StartTime = new TimeSpan(0, 11, 0, 0, 0),
-                            Topic = "Session 13",
-                            lecturerId = new Guid("df8a0113-3d20-4aed-b33d-2f5bef703863")
+                            Topic = "Session 13"
                         },
                         new
                         {
@@ -2160,8 +2150,7 @@ namespace Infrastructure.Migrations
                             RoomId = 33,
                             SessionDate = new DateTime(2024, 1, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             StartTime = new TimeSpan(0, 11, 0, 0, 0),
-                            Topic = "Session 14",
-                            lecturerId = new Guid("df8a0113-3d20-4aed-b33d-2f5bef703863")
+                            Topic = "Session 14"
                         },
                         new
                         {
@@ -2173,8 +2162,7 @@ namespace Infrastructure.Migrations
                             RoomId = 34,
                             SessionDate = new DateTime(2024, 1, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             StartTime = new TimeSpan(0, 11, 0, 0, 0),
-                            Topic = "Session 15",
-                            lecturerId = new Guid("df8a0113-3d20-4aed-b33d-2f5bef703863")
+                            Topic = "Session 15"
                         },
                         new
                         {
@@ -2186,8 +2174,7 @@ namespace Infrastructure.Migrations
                             RoomId = 35,
                             SessionDate = new DateTime(2024, 1, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             StartTime = new TimeSpan(0, 12, 0, 0, 0),
-                            Topic = "Session 16",
-                            lecturerId = new Guid("df8a0113-3d20-4aed-b33d-2f5bef703863")
+                            Topic = "Session 16"
                         },
                         new
                         {
@@ -2199,8 +2186,7 @@ namespace Infrastructure.Migrations
                             RoomId = 36,
                             SessionDate = new DateTime(2024, 1, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             StartTime = new TimeSpan(0, 12, 0, 0, 0),
-                            Topic = "Session 17",
-                            lecturerId = new Guid("df8a0113-3d20-4aed-b33d-2f5bef703863")
+                            Topic = "Session 17"
                         },
                         new
                         {
@@ -2212,8 +2198,7 @@ namespace Infrastructure.Migrations
                             RoomId = 37,
                             SessionDate = new DateTime(2024, 1, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             StartTime = new TimeSpan(0, 12, 0, 0, 0),
-                            Topic = "Session 18",
-                            lecturerId = new Guid("df8a0113-3d20-4aed-b33d-2f5bef703863")
+                            Topic = "Session 18"
                         },
                         new
                         {
@@ -2225,8 +2210,7 @@ namespace Infrastructure.Migrations
                             RoomId = 38,
                             SessionDate = new DateTime(2024, 1, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             StartTime = new TimeSpan(0, 12, 0, 0, 0),
-                            Topic = "Session 19",
-                            lecturerId = new Guid("df8a0113-3d20-4aed-b33d-2f5bef703863")
+                            Topic = "Session 19"
                         },
                         new
                         {
@@ -2238,8 +2222,7 @@ namespace Infrastructure.Migrations
                             RoomId = 39,
                             SessionDate = new DateTime(2024, 1, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             StartTime = new TimeSpan(0, 12, 0, 0, 0),
-                            Topic = "Session 20",
-                            lecturerId = new Guid("df8a0113-3d20-4aed-b33d-2f5bef703863")
+                            Topic = "Session 20"
                         });
                 });
 

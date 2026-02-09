@@ -41,7 +41,6 @@ namespace Application.Features.User.Queries.Handler
                 FirstName = u.FirstName,
                 LastName = u.LastName,
                 Gender = u.Gender,
-                PersonType = u.PersonType,
 
                 JobTitle = u.JobTitle,
                 AcademicTitle = u.AcademicTitle,

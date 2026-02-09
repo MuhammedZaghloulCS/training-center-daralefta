@@ -42,10 +42,7 @@ namespace Application.Features.User.Validators
                 .IsInEnum()
                 .WithMessage("قيمة الجنس غير صحيحة");
 
-            RuleFor(x => x.User.PersonType)
-                .IsInEnum()
-                .WithMessage("نوع الشخص غير صحيح");
-
+        
             RuleFor(x => x.User.JobTitle)
                 .NotEmpty()
                 .WithMessage("المسمى الوظيفي مطلوب")

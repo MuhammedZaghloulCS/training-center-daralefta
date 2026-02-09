@@ -17,10 +17,6 @@ namespace Domain.Entities
         public string FullName => $"{FirstName} {LastName}";
         public Gender Gender { get; set; }
         [Required]
-        public PersonType PersonType { get; set; }
-
-        [Required]
-
         [MaxLength(300)]
         public string JobTitle { get; set; }
 
@@ -59,7 +55,7 @@ namespace Domain.Entities
         //refresh token
         public string? RefreshToken { get; set; }
         public DateTime RefreshTokenExpiryTime { get; set; }
-
+        public ICollection<Session> sessions { get; set; }
         public ICollection<Training> Trainings { get; set; }
         public ICollection<Course> Courses { get; set; }
         [InverseProperty(nameof(Survey.CreatedByUser))]

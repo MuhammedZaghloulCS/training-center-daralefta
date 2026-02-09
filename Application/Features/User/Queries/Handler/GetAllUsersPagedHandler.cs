@@ -52,7 +52,7 @@ namespace Application.Features.User.Queries.Handler
                     u.LastName.Contains(term) ||
 
                     // Enums
-                    (personTypeParsed && u.PersonType == personType) ||
+                   
                     (genderParsed && u.Gender == gender) ||
 
                     // Professional info
@@ -76,6 +76,7 @@ namespace Application.Features.User.Queries.Handler
                     // Dates
                     (dateParsed && u.BirthDate.HasValue &&
                      u.BirthDate.Value.Date == birthDate.Date);
+                    
             }
 
             var usersQuery = _userManager.Users.AsNoTracking();
@@ -108,8 +109,6 @@ namespace Application.Features.User.Queries.Handler
                 FirstName = u.FirstName,
                 LastName = u.LastName,
                 Gender = u.Gender,
-                PersonType = u.PersonType,
-
                 JobTitle = u.JobTitle,
                 AcademicTitle = u.AcademicTitle,
                 Organization = u.Organization,
@@ -127,7 +126,8 @@ namespace Application.Features.User.Queries.Handler
                 MaritalState = u.MaritalState,
                 AcademicQualification = u.AcademicQualification,
                 Appreciation = u.Appreciation,
-                ImagePath = u.ImagePath
+                ImagePath = u.ImagePath,
+               
 
             }).ToList();
 

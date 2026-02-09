@@ -4,6 +4,7 @@ using Application.Features.Session.Commands.Update;
 using Application.Features.Session.Queries.Model;
 using Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +12,8 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize(Roles = "Admin")]
+
     public class SessionController : ControllerBase
     {
         IMediator _mediator;

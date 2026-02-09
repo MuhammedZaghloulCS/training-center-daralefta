@@ -10,21 +10,24 @@ using System.Text;
 
 namespace Application.Features.User.Queries.Handler
 {
-    public class GetUserByUserNameHandler : IRequestHandler<GetUserByUserNameQuery, BaseResponse<UserDTO>>
+    public class GetUsersByRolesHandler : IRequestHandler<GetUsersByRolesQuery, BaseResponse<List<UserDTO>>>
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        public GetUserByUserNameHandler(UserManager<ApplicationUser> userManager)
+
+        public GetUsersByRolesHandler(UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
         }
-        public async Task<BaseResponse<UserDTO>> Handle(GetUserByUserNameQuery request, CancellationToken cancellationToken)
+
+        public async Task<BaseResponse<List<UserDTO>>> Handle(GetUsersByRolesQuery request, CancellationToken cancellationToken)
         {
-           var user= await _userManager.FindByNameAsync(request.UserName);
-            if (user == null)
+            var usersInRole = await _userManager.GetUsersInRoleAsync(request.roleName);
+            if (usersInRole == null)
             {
-                return BaseResponse<UserDTO>.NotFoundResponse("User not found");
+                return BaseResponse<List<UserDTO>>.NotFoundResponse($"No users found in role '{request.roleName}'.");
             }
-            var userDto = new UserDTO
+        
+            var userDTOs = usersInRole.Select(user => new UserDTO
             {
                 Id = user.Id,
                 UserName = user.UserName,
@@ -54,8 +57,9 @@ namespace Application.Features.User.Queries.Handler
                 AcademicQualification = user.AcademicQualification,
                 Appreciation = user.Appreciation,
                 ImagePath = user.ImagePath
-            };
-            return (BaseResponse<UserDTO>.SuccessResponse(userDto));
+            }).ToList();
+
+            return BaseResponse<List<UserDTO>>.SuccessResponse(userDTOs, $"Users in role '{request.roleName}' retrieved successfully.");
         }
     }
 }

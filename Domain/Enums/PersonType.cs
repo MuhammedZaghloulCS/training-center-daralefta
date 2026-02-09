@@ -13,8 +13,10 @@ namespace Domain.Enums
             [Description("محاضر")]
             Lecturer = 2,
             [Description("الكل")]
-            Both = 3
-        }
+            Both = 3,
+             [Description("ادمن")]
+            admin = 4
+    }
      public enum UsersRolesEnum
     {
         [Description("طالب")]

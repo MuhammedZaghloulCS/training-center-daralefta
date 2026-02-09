@@ -67,10 +67,31 @@ namespace API.Controllers
             }
             return Ok(response);
         }
+        [HttpGet("id/{id}")]
+        public async Task<IActionResult> GetUserById(Guid id)
+        {
+            var response = await _mediator.Send(new GetUserByIdQuery { Id = id });
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
         [HttpGet("email/{email}")]
         public async Task<IActionResult> GetUserByEmail(string email)
         {
             var response = await _mediator.Send(new GetUserByEmailQuery { Email = email });
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+
+        [HttpGet("role/{role}")]
+        public async Task<IActionResult> GetUsersByRole(string role) 
+        {
+            var response = await _mediator.Send(new GetUsersByRolesQuery { roleName = role });
             if (!response.Success)
             {
                 return BadRequest(response);

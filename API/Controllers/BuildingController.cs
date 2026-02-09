@@ -4,6 +4,7 @@ using Application.Features.Building.Commands.Update;
 using Application.Features.Building.Queries.Model;
 using Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,7 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize(Roles ="Admin")]
     public class BuildingController : ControllerBase
     {
         IMediator _mediator;

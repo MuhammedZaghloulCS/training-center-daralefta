@@ -37,7 +37,7 @@ namespace Application.Features.User.Commands.Update
             existingUser.FirstName = request.User.FirstName;
             existingUser.LastName = request.User.LastName;
             existingUser.Gender = request.User.Gender;
-            existingUser.PersonType = request.User.PersonType;
+            
             existingUser.JobTitle = request.User.JobTitle;
             existingUser.AcademicTitle = request.User.AcademicTitle;
             existingUser.Organization = request.User.Organization;
@@ -85,7 +85,6 @@ namespace Application.Features.User.Commands.Update
                 FirstName = existingUser.FirstName,
                 LastName = existingUser.LastName,
                 Gender = existingUser.Gender,
-                PersonType = existingUser.PersonType,
                 JobTitle = existingUser.JobTitle,
                 AcademicTitle = existingUser.AcademicTitle,
                 Organization = existingUser.Organization,

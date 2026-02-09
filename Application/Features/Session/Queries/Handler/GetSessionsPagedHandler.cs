@@ -86,7 +86,9 @@ namespace Application.Features.Session.Queries.Handler
                 EndTime = s.EndTime,
                 Topic = s.Topic,
                 RoomId = s.RoomId,
-                CourseId = s.CourseId
+                CourseId = s.CourseId,
+                LecturerId = s.lecturerId
+
             }).ToList();
 
             return BaseResponse<List<SessionListDTO>>.SuccessResponse(

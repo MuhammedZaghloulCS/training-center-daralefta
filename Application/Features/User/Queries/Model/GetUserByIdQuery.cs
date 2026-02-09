@@ -7,8 +7,8 @@ using System.Text;
 
 namespace Application.Features.User.Queries.Model
 {
-    public class GetUserByUserNameQuery : IRequest<BaseResponse<UserDTO>>
+    public class GetUserByIdQuery : IRequest<BaseResponse<UserDTO>>
     {
-       public string UserName { get; set; }
+       public Guid Id { get; set; }
     }
 }

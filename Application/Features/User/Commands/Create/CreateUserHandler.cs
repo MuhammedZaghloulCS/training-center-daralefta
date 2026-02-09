@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 
 namespace Application.Features.User.Commands.Create
@@ -34,7 +35,6 @@ namespace Application.Features.User.Commands.Create
                 FirstName = request._dto.FirstName,
                 LastName = request._dto.LastName,
                 Gender = request._dto.Gender,
-                PersonType = request._dto.PersonType,
                 JobTitle = request._dto.JobTitle,
                 AcademicTitle = request._dto.AcademicTitle,
                 Organization = request._dto.Organization,
@@ -59,6 +59,9 @@ namespace Application.Features.User.Commands.Create
                 var errors = result.Errors.Select(e => e.Description);
                 return BaseResponse<UserDTO>.FailureResponse("User creation failed", errors.ToList());
             }
+
+            await _userManager.AddToRolesAsync(newUser, request.Roles);
+
             return BaseResponse<UserDTO>.SuccessResponse(data:new UserDTO
             {
                 Id = newUser.Id,
@@ -68,7 +71,6 @@ namespace Application.Features.User.Commands.Create
                 FirstName = newUser.FirstName,
                 LastName = newUser.LastName,
                 Gender =newUser.Gender,
-                PersonType =newUser.PersonType,
                 JobTitle =newUser.JobTitle,
                 AcademicTitle =newUser.AcademicTitle,
                 Organization =newUser.Organization,

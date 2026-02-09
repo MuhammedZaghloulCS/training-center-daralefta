@@ -20,5 +20,10 @@ namespace Domain.Entities
         public int? CourseId { get; set; }
         [ForeignKey(nameof(CourseId))]
         public Course Course { get; set; }
+
+        public Guid? lecturerId { get; set; }
+        [ForeignKey(nameof(lecturerId))]
+        public ApplicationUser Lecturer { get; set; }
+
     }
 }

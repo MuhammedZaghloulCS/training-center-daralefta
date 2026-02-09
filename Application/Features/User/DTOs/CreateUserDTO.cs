@@ -23,8 +23,7 @@ namespace Application.Features.User.DTOs
         public String LastName { get; set; }
         public string FullName => $"{FirstName} {LastName}";
         public Gender Gender { get; set; }
-        [Required]
-        public PersonType PersonType { get; set; }
+
 
         [Required]
 
@@ -61,6 +60,8 @@ namespace Application.Features.User.DTOs
         public string AcademicQualification { get; set; }
         public string Appreciation { get; set; }
         public string ImagePath { get; set; }
+
+        
 
     }
 }

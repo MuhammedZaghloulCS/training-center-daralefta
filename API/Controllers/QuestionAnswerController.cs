@@ -4,6 +4,7 @@ using Application.Features.QuestionAnswer.Commands.Update;
 using Application.Features.QuestionAnswer.Queries.Model;
 using Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +12,7 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize(Roles = "Admin")]
     public class QuestionAnswerController : ControllerBase
     {
         IMediator _mediator;

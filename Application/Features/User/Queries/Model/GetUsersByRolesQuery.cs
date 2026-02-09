@@ -7,8 +7,8 @@ using System.Text;
 
 namespace Application.Features.User.Queries.Model
 {
-    public class GetUserByUserNameQuery : IRequest<BaseResponse<UserDTO>>
+    public class GetUsersByRolesQuery : IRequest<BaseResponse<List<UserDTO>>>
     {
-       public string UserName { get; set; }
+        public string roleName { get; set; }
     }
 }

@@ -10,16 +10,16 @@ using System.Text;
 
 namespace Application.Features.User.Queries.Handler
 {
-    public class GetUserByUserNameHandler : IRequestHandler<GetUserByUserNameQuery, BaseResponse<UserDTO>>
+    public class GetUserByIdHandler : IRequestHandler<GetUserByIdQuery, BaseResponse<UserDTO>>
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        public GetUserByUserNameHandler(UserManager<ApplicationUser> userManager)
+        public GetUserByIdHandler(UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
         }
-        public async Task<BaseResponse<UserDTO>> Handle(GetUserByUserNameQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<UserDTO>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
         {
-           var user= await _userManager.FindByNameAsync(request.UserName);
+           var user= await _userManager.FindByIdAsync(request.Id.ToString());
             if (user == null)
             {
                 return BaseResponse<UserDTO>.NotFoundResponse("User not found");

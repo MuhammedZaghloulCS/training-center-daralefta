@@ -53,7 +53,9 @@ namespace Application.Features.Session.Commands.Create
                 EndTime = request.EndTime,
                 Topic = request.Topic,
                 RoomId = request.RoomId,
-                CourseId = request.CourseId
+                CourseId = request.CourseId,
+               lecturerId = request.LecturerId
+
             };
 
             await _unitOfWork.ISession.AddAsync(session);
@@ -71,7 +73,8 @@ namespace Application.Features.Session.Commands.Create
                 EndTime = session.EndTime,
                 Topic = session.Topic,
                 RoomId = session.RoomId,
-                CourseId = session?.CourseId
+                CourseId = session?.CourseId,
+                LecturerId = session?.lecturerId
             };
 
             return BaseResponse<SessionDto>.SuccessResponse(dto, "Session created successfully");
