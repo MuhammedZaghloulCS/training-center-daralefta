@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Application.Features.User.Commands.Create
+namespace Application.Features.User.Commands.Create.CreateUser
 {
     public class CreateUserCommand :IRequest<BaseResponse<UserDTO>>
     {

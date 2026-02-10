@@ -26,6 +26,9 @@ namespace Infrastructure.Context
         public DbSet<SurveyQuestion> SurveyQuestions { get; set; }
         public DbSet<SurveyCategory> SurveyCategories { get; set; }
         public DbSet<QuestionAnswer> SurveyAnswers { get; set; }
+        public DbSet<UserSession> UserSessions { get; set; }
+        public DbSet<UsersTrainings> UsersTrainings { get; set; }
+        public DbSet<UsersCourse> UsersCourses { get; set; }
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

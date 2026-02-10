@@ -20,7 +20,7 @@ namespace Application.Features.Training.Queries.Handler
 
         public async Task<BaseResponse<TrainingDto>> Handle(GetTrainingByIdQuery request, CancellationToken cancellationToken)
         {
-            var trainings = await _unitOfWork.ITraining.FindRowAsync(t => t.Id == request.Id, t => t.Courses, t => t.Users, t => t.Surveys);
+            var trainings = await _unitOfWork.ITraining.FindRowAsync(t => t.Id == request.Id, t => t.Courses, t => t.UsersTrainings, t => t.Surveys);
             var training = trainings.FirstOrDefault();
 
             if (training == null)
@@ -37,7 +37,8 @@ namespace Application.Features.Training.Queries.Handler
                 UpdatedAt = training.UpdatedAt,
                 Title = training.Title,
                 StartDate = training.StartDate,
-                EndDate = training.EndDate
+                EndDate = training.EndDate,
+                UsersTrainings = training.UsersTrainings.ToList()
             };
 
             return BaseResponse<TrainingDto>.SuccessResponse(dto, "Training retrieved successfully");

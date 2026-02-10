@@ -18,6 +18,7 @@ namespace Domain.Entities
         public int Duration { get; set; }
 
         public ICollection<Session> Sessions { get; set; }
+        public ICollection<UsersCourse> UsersCourse { get; set; }
 
         public int? TrainingId { get; set; }
         [ForeignKey(nameof(TrainingId))]

@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Text;
 
-namespace Application.Features.User.Commands.Create
+namespace Application.Features.User.Commands.Create.CreateUser
 {
     public class CreateUserHandler : IRequestHandler<CreateUserCommand,BaseResponse<UserDTO>>
     {

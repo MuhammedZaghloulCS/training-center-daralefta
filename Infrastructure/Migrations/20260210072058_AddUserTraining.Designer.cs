@@ -4,6 +4,7 @@ using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20260210072058_AddUserTraining")]
+    partial class AddUserTraining
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -256,6 +259,9 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<Guid?>("ApplicationUserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -289,6 +295,8 @@ namespace Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("TrainingId");
 
@@ -2976,36 +2984,6 @@ namespace Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Domain.Entities.UserSession", b =>
-                {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("SessionId")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserId", "SessionId");
-
-                    b.HasIndex("SessionId");
-
-                    b.ToTable("UserSessions");
-                });
-
-            modelBuilder.Entity("Domain.Entities.UsersCourse", b =>
-                {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserId", "CourseId");
-
-                    b.HasIndex("CourseId");
-
-                    b.ToTable("UsersCourse", (string)null);
-                });
-
             modelBuilder.Entity("Domain.Entities.UsersTrainings", b =>
                 {
                     b.Property<Guid>("UserId")
@@ -3154,6 +3132,10 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Course", b =>
                 {
+                    b.HasOne("Domain.Entities.ApplicationUser", null)
+                        .WithMany("Courses")
+                        .HasForeignKey("ApplicationUserId");
+
                     b.HasOne("Domain.Entities.Training", "Training")
                         .WithMany("Courses")
                         .HasForeignKey("TrainingId");
@@ -3202,7 +3184,7 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.ApplicationUser", "Lecturer")
-                        .WithMany()
+                        .WithMany("sessions")
                         .HasForeignKey("lecturerId");
 
                     b.Navigation("Course");
@@ -3262,44 +3244,6 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Survey");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Domain.Entities.UserSession", b =>
-                {
-                    b.HasOne("Domain.Entities.Session", "Session")
-                        .WithMany("UserSessions")
-                        .HasForeignKey("SessionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.ApplicationUser", "User")
-                        .WithMany("UserSession")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Session");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Domain.Entities.UsersCourse", b =>
-                {
-                    b.HasOne("Domain.Entities.Course", "Course")
-                        .WithMany("UsersCourse")
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.ApplicationUser", "User")
-                        .WithMany("UsersCourse")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Course");
 
                     b.Navigation("User");
                 });
@@ -3376,15 +3320,15 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.ApplicationUser", b =>
                 {
+                    b.Navigation("Courses");
+
                     b.Navigation("CreatedSurveys");
 
                     b.Navigation("SurveyResponses");
 
-                    b.Navigation("UserSession");
-
-                    b.Navigation("UsersCourse");
-
                     b.Navigation("UsersTrainings");
+
+                    b.Navigation("sessions");
                 });
 
             modelBuilder.Entity("Domain.Entities.Building", b =>
@@ -3395,18 +3339,11 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Course", b =>
                 {
                     b.Navigation("Sessions");
-
-                    b.Navigation("UsersCourse");
                 });
 
             modelBuilder.Entity("Domain.Entities.Room", b =>
                 {
                     b.Navigation("Sessions");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Session", b =>
-                {
-                    b.Navigation("UserSessions");
                 });
 
             modelBuilder.Entity("Domain.Entities.Survey", b =>

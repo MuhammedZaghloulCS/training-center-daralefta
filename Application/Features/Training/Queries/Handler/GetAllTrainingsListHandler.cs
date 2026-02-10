@@ -21,7 +21,7 @@ namespace Application.Features.Training.Queries.Handler
 
         public async Task<BaseResponse<List<TrainingListDTO>>> Handle(GetAllTrainingsListQuery request, CancellationToken cancellationToken)
         {
-            var response = await _unitOfWork.ITraining.GetAllAsync(t => t.Courses, t => t.Users, t => t.Surveys);
+            var response = await _unitOfWork.ITraining.GetAllAsync(t => t.Courses,t => t.UsersTrainings,t=>t.Surveys);
 
             if (response == null || !response.Any())
             {
@@ -40,7 +40,9 @@ namespace Application.Features.Training.Queries.Handler
                 UpdatedAt = t.UpdatedAt,
                 Title = t.Title,
                 StartDate = t.StartDate,
-                EndDate = t.EndDate
+                EndDate = t.EndDate,
+                UsersTrainings = t.UsersTrainings.ToList()
+
             }).ToList();
 
             return BaseResponse<List<TrainingListDTO>>.SuccessResponse(

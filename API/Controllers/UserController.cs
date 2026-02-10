@@ -1,7 +1,10 @@
 ﻿using Application.Common;
 using Application.Features.User.Commands.Create;
+using Application.Features.User.Commands.Create.AssignTrainingToUser;
+using Application.Features.User.Commands.Create.CreateUser;
 using Application.Features.User.Commands.Delete;
 using Application.Features.User.DTOs;
+using Application.Features.User.Queries;
 using Application.Features.User.Queries.Model;
 using Azure;
 using Domain.Entities;
@@ -21,7 +24,7 @@ namespace API.Controllers
         UserManager<ApplicationUser> _userManager;
         MediatR.IMediator _mediator;
 
-        public UserController(UserManager<ApplicationUser> userManager,IMediator mediator)
+        public UserController(UserManager<ApplicationUser> userManager, IMediator mediator)
         {
             _userManager = userManager;
             _mediator = mediator;
@@ -29,7 +32,7 @@ namespace API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
-          var response=  await _mediator.Send(new Application.Features.User.Queries.Model.GetAllUsersQuery());
+            var response = await _mediator.Send(new Application.Features.User.Queries.Model.GetAllUsersQuery());
             if (!response.Success)
             {
                 return BadRequest(response);
@@ -39,8 +42,8 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserDTO user)
         {
-           
-            var response = await _mediator.Send(new CreateUserCommand{ _dto=user});
+
+            var response = await _mediator.Send(new CreateUserCommand { _dto = user });
             if (!response.Success)
             {
                 return BadRequest(response);
@@ -48,9 +51,9 @@ namespace API.Controllers
             return Ok(response);
         }
         [HttpGet("paged")]
-        public async Task<IActionResult> GetUsersPaged(int pageNumber = 1, int pageSize = 10,string search="")
+        public async Task<IActionResult> GetUsersPaged(int pageNumber = 1, int pageSize = 10, string search = "")
         {
-            var response = await _mediator.Send(new GetAllUsersPagedQuery { PageNumber = pageNumber, PageSize = pageSize,Search=search });
+            var response = await _mediator.Send(new GetAllUsersPagedQuery { PageNumber = pageNumber, PageSize = pageSize, Search = search });
             if (!response.Success)
             {
                 return BadRequest(response);
@@ -89,7 +92,7 @@ namespace API.Controllers
         }
 
         [HttpGet("role/{role}")]
-        public async Task<IActionResult> GetUsersByRole(string role) 
+        public async Task<IActionResult> GetUsersByRole(string role)
         {
             var response = await _mediator.Send(new GetUsersByRolesQuery { roleName = role });
             if (!response.Success)
@@ -100,7 +103,7 @@ namespace API.Controllers
         }
 
         [HttpPatch("{userName}")]
-        public async Task<IActionResult> UpdateUser([FromRoute]string userName, [FromBody] UserDTO user)
+        public async Task<IActionResult> UpdateUser([FromRoute] string userName, [FromBody] UserDTO user)
         {
             user.UserName = userName; // Ensure the username in the URL is used
             var response = await _mediator.Send(new Application.Features.User.Commands.Update.UpdateUserCommand { User = user });
@@ -129,5 +132,38 @@ namespace API.Controllers
             return Ok(result);
         }
 
+
+        [HttpGet("training/{trainingId}/users")]
+        public async Task<IActionResult> GetUsersByTrainingId(int trainingId)
+        {
+            var response = await _mediator.Send(new GetUsersTrainingRangePaginatedQuery { TrainingId = trainingId });
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+
+        }
+        [HttpGet("session/{sessionId}/users")]
+        public async Task<IActionResult> GetUsersBySessionId(int sessionId)
+        {
+            var response = await _mediator.Send(new GetUsersSessionRangePaginatedQuery { SessionId = sessionId });
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+
+        }
+        [HttpPost("assigntraining")]
+        public async Task<IActionResult> AssignUserToTraining([FromBody] UserTrainingDTO dto)
+        {
+            var response = await _mediator.Send(new AssignTrainingToUserCommand { _dto=dto });
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
     }
 }

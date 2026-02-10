@@ -57,7 +57,7 @@ namespace Application.Features.Training.Queries.Handler
                 t => t.Id,
                 true,
                 t => t.Courses,
-                t => t.Users,
+                t => t.UsersTrainings,
                 t => t.Surveys);
 
             var items = paged.items;
@@ -82,7 +82,8 @@ namespace Application.Features.Training.Queries.Handler
                 UpdatedAt = t.UpdatedAt,
                 Title = t.Title,
                 StartDate = t.StartDate,
-                EndDate = t.EndDate
+                EndDate = t.EndDate,
+                UsersTrainings = t.UsersTrainings.ToList()
             }).ToList();
 
             return BaseResponse<List<TrainingListDTO>>.SuccessResponse(

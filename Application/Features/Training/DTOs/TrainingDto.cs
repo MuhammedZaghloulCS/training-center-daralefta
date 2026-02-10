@@ -1,3 +1,4 @@
+using Domain.Entities;
 using System;
 
 namespace Application.Features.Training.DTOs
@@ -12,5 +13,6 @@ namespace Application.Features.Training.DTOs
         public string Title { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public List<UsersTrainings> UsersTrainings { get; set; }
     }
 }

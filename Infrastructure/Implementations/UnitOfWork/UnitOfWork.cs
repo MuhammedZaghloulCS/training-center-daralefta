@@ -23,6 +23,9 @@ namespace Infrastructure.Implementations.UnitOfWork
         private SurveyQuestionRepository surveyQuestionRepository;
         private SurveyAnswerRepository surveyAnswerRepository;
         private SurveyResponseRepository surveyResponseRepository;
+        private AssignUserTrainingRepository assignUserTrainingRepository;
+        private AssignUserCourseRepository assignUserCourseRepository;
+        private AssignUserSessionRepository assignUserSessionRepository;
         private readonly ApplicationContext context;
         #endregion
         //CTOR
@@ -163,6 +166,41 @@ namespace Infrastructure.Implementations.UnitOfWork
             }
         }
 
+        public IAssignUserTrainingRepository IAssignUserTraining
+        {
+            get
+            {
+                if (assignUserTrainingRepository == null)
+                {
+                    assignUserTrainingRepository = new AssignUserTrainingRepository(context);
+                }
+                return assignUserTrainingRepository;
+            }
+        }
+        public IAssignUserCourseRepository IAssignUserCourse
+        {
+            get
+            {
+                if (assignUserCourseRepository == null)
+                {
+                    assignUserCourseRepository = new AssignUserCourseRepository(context);
+                }
+                return assignUserCourseRepository;
+
+            }
+        }
+
+        public IAssignUserSessionRepository IAssignUserSession
+        {
+            get
+            {
+                if (assignUserSessionRepository == null)
+                {
+                    assignUserSessionRepository = new AssignUserSessionRepository(context);
+                }
+                return assignUserSessionRepository;
+            }
+        }
         public async Task<int> Complete()
         {
             return await context.SaveChangesAsync();

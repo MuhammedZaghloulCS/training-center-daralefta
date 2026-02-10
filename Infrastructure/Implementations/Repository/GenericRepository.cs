@@ -94,8 +94,12 @@ namespace Infrastructure.Implementations.Repository
             return (items, totalCount);
         }
 
-        public Task<T?> GetByPkAsync(TKey PK)
+        public Task<T?> GetByPkAsync(TKey PK,params Expression<Func<T, object>>[] includeProperties)
         {
+            foreach (var item in includeProperties)
+            {
+                dbSet.Include(item);
+            }
             return dbSet.FindAsync(PK).AsTask();
         }
 

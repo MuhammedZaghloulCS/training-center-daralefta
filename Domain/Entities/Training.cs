@@ -13,7 +13,7 @@ namespace Domain.Entities
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public ICollection<Course> Courses { get; set; }
-        public ICollection<ApplicationUser> Users { get; set; }
+        public ICollection<UsersTrainings> UsersTrainings { get; set; }
         public ICollection<Survey> Surveys { get; set; }
     }
 }
