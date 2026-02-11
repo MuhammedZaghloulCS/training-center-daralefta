@@ -30,15 +30,13 @@ namespace Application.Features.User.Queries.Handler
        CancellationToken cancellationToken)
         {
             var session = await _unitOfWork.ISession
-                .GetByPkAsync(request.SessionId, t => t.UserSessions);
+                .GetByPkAsync(request.SessionId);
 
             if (session is null)
                 return BaseResponse<List<UserDTO>>
                     .NotFoundResponse("Session not found for the provided ID.");
 
-            var userIds = session.UserSessions?
-                .Select(ut => ut.UserId)
-                .ToList();
+            var userIds = await _unitOfWork.IAssignUserSession.GetUsersIdsBySessionId(request.SessionId);
 
             if (userIds == null || !userIds.Any())
                 return BaseResponse<List<UserDTO>>

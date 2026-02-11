@@ -13,6 +13,10 @@ namespace Infrastructure.Abstractions.IRepositories
         public  Task AddIfNotExistsAsync(UsersCourse userCourse);
 
         public void Delete(UsersCourse userCourse);
-        
+
+
+        public Task<List<Guid>> GetUsersIdsByCourseId(int sessionId);
+        public Task<List<int>> GetCourseIdsByUserId(Guid userId);
+
     }
 }

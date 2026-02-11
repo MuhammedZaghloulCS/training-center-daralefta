@@ -7,5 +7,6 @@ namespace Infrastructure.Abstractions.IRepositories
 {
     public interface ITrainingRepository: IGenericRepository<Training, int>
     {
+        
     }
 }

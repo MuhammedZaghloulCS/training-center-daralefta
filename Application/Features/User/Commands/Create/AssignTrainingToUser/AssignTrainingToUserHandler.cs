@@ -29,24 +29,23 @@ namespace Application.Features.User.Commands.Create.AssignTrainingToUser
             if (training == null)
                 return BaseResponse<string>.NotFoundResponse("Training not found");
 
+            var usersTraining2 = request._dto.UserIds.Select(uid => new UsersTrainings { TrainingId = request._dto.TrainingId, UserId = uid }).ToList();
+
             // 1️⃣ Assign Training (Idempotent)
             await _unitOfWork.IAssignUserTraining
-                .AddIfNotExistsAsync(new UsersTrainings
-                {
-                    TrainingId = request._dto.TrainingId,
-                    UserId = request._dto.UserId
-                });
+                .AddRangeIfNotExistsAsync(usersTraining2);
 
             var courses = await _unitOfWork.ICourse.FindRowAsync(c => c.TrainingId == request._dto.TrainingId);
             // 2️⃣ Assign Courses
-            var userCourses = courses.Select(c => new UsersCourse
-            {
-                UserId = request._dto.UserId,
-                CourseId = c.Id
-            }).ToList();
+            var usersCourses = courses
+             .SelectMany(c => request._dto.UserIds.Select(id => new UsersCourse
+             {
+                 UserId = id,
+                 CourseId = c.Id
+             })).ToList();
 
             await _unitOfWork.IAssignUserCourse
-                .AddRangeIfNotExistsAsync(userCourses);
+                .AddRangeIfNotExistsAsync(usersCourses);
 
             // 3️⃣ Get all Sessions in ONE query
             var courseIds = courses.Select(c => c.Id).ToList();
@@ -55,14 +54,14 @@ namespace Application.Features.User.Commands.Create.AssignTrainingToUser
                 .FindRowAsync(s => s.CourseId.HasValue && courseIds.Contains(s.CourseId.Value));
 
             // 4️⃣ Assign Sessions
-            var userSessions = sessions.Select(s => new UserSession
+            var usersSessions = sessions.SelectMany(s => request._dto.UserIds.Select(id => new UserSession
             {
                 SessionId = s.Id,
-                UserId = request._dto.UserId
-            }).ToList();
+                UserId = id
+            })).ToList();
             
                 await _unitOfWork.IAssignUserSession
-                    .AddRangeIfNotExistsAsync(userSessions);
+                    .AddRangeIfNotExistsAsync(usersSessions);
             
 
             await _unitOfWork.Complete();

@@ -9,6 +9,6 @@ namespace Application.Features.User.Commands.Create.AssignTrainingToUser
 {
     public class AssignTrainingToUserCommand :IRequest<BaseResponse<string>>
     {
-       public UserTrainingDTO _dto;
+       public UsersTrainingDTO _dto;
     }
 }

@@ -14,6 +14,5 @@ namespace Application.Features.Training.DTOs
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
 
-        public List<UsersTrainings> UsersTrainings { get; set; }
     }
 }

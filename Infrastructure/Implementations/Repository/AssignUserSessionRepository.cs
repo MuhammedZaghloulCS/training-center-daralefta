@@ -54,6 +54,15 @@ namespace Infrastructure.Implementations.Repository
         {
             _context.UserSessions.Remove(userSession);
         }
+
+        public async Task<List<Guid>> GetUsersIdsBySessionId(int sessionId)=> await _context.UserSessions.Where(ut => ut.SessionId == sessionId)
+               .Select(ut => ut.UserId)
+               .ToListAsync();
+         
+        public async Task<List<int>> GetSessionIdsByUserId(Guid userId)=> await _context.UserSessions.Where(ut => ut.UserId == userId)
+                .Select(ut => ut.SessionId)
+                .ToListAsync();
+        
     }
 
 }

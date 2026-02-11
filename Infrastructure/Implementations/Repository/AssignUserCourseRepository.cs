@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Infrastructure.Implementations.Repository
 {
-    public class AssignUserCourseRepository:IAssignUserCourseRepository
+    public class AssignUserCourseRepository : IAssignUserCourseRepository
     {
         private readonly ApplicationContext _context;
 
@@ -54,6 +54,14 @@ namespace Infrastructure.Implementations.Repository
         {
             _context.UsersCourses.Remove(userCourse);
         }
+
+        public async Task<List<Guid>> GetUsersIdsByCourseId(int sessionId) => await _context.UsersCourses.Where(ut => ut.CourseId == sessionId)
+               .Select(ut => ut.UserId)
+               .ToListAsync();
+
+        public async Task<List<int>> GetCourseIdsByUserId(Guid userId)=>await _context.UsersCourses.Where(ut => ut.UserId == userId)
+                .Select(ut => ut.CourseId)
+                .ToListAsync();
     }
 
 }

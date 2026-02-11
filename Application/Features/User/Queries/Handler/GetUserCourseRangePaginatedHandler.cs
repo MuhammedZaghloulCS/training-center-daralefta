@@ -34,9 +34,7 @@ namespace Application.Features.User.Queries.Handler
                 return BaseResponse<List<UserDTO>>
                     .NotFoundResponse("Course not found for the provided ID.");
 
-            var userIds = course.UsersCourse?
-                .Select(ut => ut.UserId)
-                .ToList();
+            var userIds = await _unitOfWork.IAssignUserCourse.GetUsersIdsByCourseId(request.CourseId);
 
             if (userIds == null || !userIds.Any())
                 return BaseResponse<List<UserDTO>>

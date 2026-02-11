@@ -38,7 +38,6 @@ namespace Application.Features.Training.Queries.Handler
                 Title = training.Title,
                 StartDate = training.StartDate,
                 EndDate = training.EndDate,
-                UsersTrainings = training.UsersTrainings.ToList()
             };
 
             return BaseResponse<TrainingDto>.SuccessResponse(dto, "Training retrieved successfully");

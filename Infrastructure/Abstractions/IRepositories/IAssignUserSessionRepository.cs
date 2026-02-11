@@ -15,6 +15,12 @@ namespace Infrastructure.Abstractions.IRepositories
 
 
         public void Delete(UserSession userSession);
-        
+
+
+
+
+        public Task<List<Guid>> GetUsersIdsBySessionId(int sessionId);
+        public Task<List<int>> GetSessionIdsByUserId(Guid userId);
+
     }
 }

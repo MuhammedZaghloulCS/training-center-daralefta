@@ -7,6 +7,7 @@ using Infrastructure.Abstractions.IUnitOfWork;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using System.Linq.Expressions;
 
 namespace Application.Features.User.Queries.Handler
@@ -24,17 +25,19 @@ namespace Application.Features.User.Queries.Handler
             GetUsersTrainingRangePaginatedQuery request,
             CancellationToken cancellationToken)
         {
-            var training = await _unitOfWork.ITraining
-                .GetByPkAsync(request.TrainingId, t => t.UsersTrainings);
 
-            if (training is null)
+            var trainingExists = await _unitOfWork.ITraining
+                .GetByPkAsync( request.TrainingId);
+            if (trainingExists is null)
                 return BaseResponse<List<UserDTO>>
                     .NotFoundResponse("Training not found for the provided ID.");
 
-            var userIds = training.UsersTrainings?
-                .Select(ut => ut.UserId)
-                .ToList();
+            var userIds = await _unitOfWork.IAssignUserTraining
+                .GetUsersIdsByTrainingId(request.TrainingId);
+        
 
+
+            userIds = userIds.ToList();
             if (userIds == null || !userIds.Any())
                 return BaseResponse<List<UserDTO>>
                     .NotFoundResponse("No users assigned to this training.");
@@ -92,15 +95,13 @@ namespace Application.Features.User.Queries.Handler
             }
 
 
-
-
             var query = _userManager.Users
                 .Where(u => userIds.Contains(u.Id));
 
-            var totalCount = await query.CountAsync(cancellationToken);
+
 
             var users = await query.Where(search)
-                .OrderBy(u => u.UserName) // مهم جدًا
+                .OrderBy(u => u.UserName) 
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)
                 .Select(user => new UserDTO
@@ -133,10 +134,10 @@ namespace Application.Features.User.Queries.Handler
                     Appreciation = user.Appreciation,
                     ImagePath = user.ImagePath
                 })
-                .ToListAsync(cancellationToken);
+                .ToListAsync();
 
             return BaseResponse<List<UserDTO>>
-                .SuccessResponse(users);
+                .SuccessResponse(data:users);
         }
     }
 }
