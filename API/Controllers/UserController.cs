@@ -133,7 +133,7 @@ namespace API.Controllers
         }
 
 
-        [HttpGet("training/{trainingId}/users")]
+        [HttpGet("training/{trainingId}")]
         public async Task<IActionResult> GetUsersByTrainingId(int trainingId,int pageNumber = 1, int pageSize = 10)
         {
             var response = await _mediator.Send(new GetUsersTrainingRangePaginatedQuery { PageNumber = pageNumber, PageSize = pageSize, TrainingId = trainingId });
@@ -159,7 +159,7 @@ namespace API.Controllers
 
         //todo
 
-        [HttpGet("course/{courseId}/users")]
+        [HttpGet("course/{courseId}")]
         public async Task<IActionResult> GetUsersByCourseId(int courseId, int pageNumber = 1, int pageSize = 10)
         {
             var response = await _mediator.Send(new GetUsersCourseRangePaginatedQuery { PageNumber = pageNumber, PageSize = pageSize, CourseId = courseId });
@@ -183,7 +183,7 @@ namespace API.Controllers
         }
         //todo
 
-        [HttpGet("session/{sessionId}/users")]
+        [HttpGet("session/{sessionId}")]
         public async Task<IActionResult> GetUsersBySessionId(int sessionId, int pageNumber = 1, int pageSize = 10)
         {
             var response = await _mediator.Send(new GetUsersSessionRangePaginatedQuery { PageNumber = pageNumber, PageSize = pageSize, SessionId = sessionId });
