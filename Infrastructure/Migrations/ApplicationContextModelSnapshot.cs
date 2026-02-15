@@ -159,6 +159,10 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("pin")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -546,6 +550,10 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AttRoomId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("BuildId")
                         .HasColumnType("int");
 
@@ -588,6 +596,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 1,
+                            AttRoomId = "",
                             BuildId = 2,
                             Capacity = 11,
                             CreatedBy = "system",
@@ -599,6 +608,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 2,
+                            AttRoomId = "",
                             BuildId = 3,
                             Capacity = 12,
                             CreatedBy = "system",
@@ -610,6 +620,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 3,
+                            AttRoomId = "",
                             BuildId = 4,
                             Capacity = 13,
                             CreatedBy = "system",
@@ -621,6 +632,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 4,
+                            AttRoomId = "",
                             BuildId = 5,
                             Capacity = 14,
                             CreatedBy = "system",
@@ -632,6 +644,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 5,
+                            AttRoomId = "",
                             BuildId = 1,
                             Capacity = 15,
                             CreatedBy = "system",
@@ -643,6 +656,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 6,
+                            AttRoomId = "",
                             BuildId = 2,
                             Capacity = 16,
                             CreatedBy = "system",
@@ -654,6 +668,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 7,
+                            AttRoomId = "",
                             BuildId = 3,
                             Capacity = 17,
                             CreatedBy = "system",
@@ -665,6 +680,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 8,
+                            AttRoomId = "",
                             BuildId = 4,
                             Capacity = 18,
                             CreatedBy = "system",
@@ -676,6 +692,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 9,
+                            AttRoomId = "",
                             BuildId = 5,
                             Capacity = 19,
                             CreatedBy = "system",
@@ -687,6 +704,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 10,
+                            AttRoomId = "",
                             BuildId = 1,
                             Capacity = 20,
                             CreatedBy = "system",
@@ -698,6 +716,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 11,
+                            AttRoomId = "",
                             BuildId = 2,
                             Capacity = 21,
                             CreatedBy = "system",
@@ -709,6 +728,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 12,
+                            AttRoomId = "",
                             BuildId = 3,
                             Capacity = 22,
                             CreatedBy = "system",
@@ -720,6 +740,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 13,
+                            AttRoomId = "",
                             BuildId = 4,
                             Capacity = 23,
                             CreatedBy = "system",
@@ -731,6 +752,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 14,
+                            AttRoomId = "",
                             BuildId = 5,
                             Capacity = 24,
                             CreatedBy = "system",
@@ -742,6 +764,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 15,
+                            AttRoomId = "",
                             BuildId = 1,
                             Capacity = 25,
                             CreatedBy = "system",
@@ -753,6 +776,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 16,
+                            AttRoomId = "",
                             BuildId = 2,
                             Capacity = 26,
                             CreatedBy = "system",
@@ -764,6 +788,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 17,
+                            AttRoomId = "",
                             BuildId = 3,
                             Capacity = 27,
                             CreatedBy = "system",
@@ -775,6 +800,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 18,
+                            AttRoomId = "",
                             BuildId = 4,
                             Capacity = 28,
                             CreatedBy = "system",
@@ -786,6 +812,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 19,
+                            AttRoomId = "",
                             BuildId = 5,
                             Capacity = 29,
                             CreatedBy = "system",
@@ -797,6 +824,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 20,
+                            AttRoomId = "",
                             BuildId = 1,
                             Capacity = 30,
                             CreatedBy = "system",
@@ -808,6 +836,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 21,
+                            AttRoomId = "",
                             BuildId = 2,
                             Capacity = 31,
                             CreatedBy = "system",
@@ -819,6 +848,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 22,
+                            AttRoomId = "",
                             BuildId = 3,
                             Capacity = 32,
                             CreatedBy = "system",
@@ -830,6 +860,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 23,
+                            AttRoomId = "",
                             BuildId = 4,
                             Capacity = 33,
                             CreatedBy = "system",
@@ -841,6 +872,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 24,
+                            AttRoomId = "",
                             BuildId = 5,
                             Capacity = 34,
                             CreatedBy = "system",
@@ -852,6 +884,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 25,
+                            AttRoomId = "",
                             BuildId = 1,
                             Capacity = 35,
                             CreatedBy = "system",
@@ -863,6 +896,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 26,
+                            AttRoomId = "",
                             BuildId = 2,
                             Capacity = 36,
                             CreatedBy = "system",
@@ -874,6 +908,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 27,
+                            AttRoomId = "",
                             BuildId = 3,
                             Capacity = 37,
                             CreatedBy = "system",
@@ -885,6 +920,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 28,
+                            AttRoomId = "",
                             BuildId = 4,
                             Capacity = 38,
                             CreatedBy = "system",
@@ -896,6 +932,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 29,
+                            AttRoomId = "",
                             BuildId = 5,
                             Capacity = 39,
                             CreatedBy = "system",
@@ -907,6 +944,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 30,
+                            AttRoomId = "",
                             BuildId = 1,
                             Capacity = 40,
                             CreatedBy = "system",
@@ -918,6 +956,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 31,
+                            AttRoomId = "",
                             BuildId = 2,
                             Capacity = 41,
                             CreatedBy = "system",
@@ -929,6 +968,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 32,
+                            AttRoomId = "",
                             BuildId = 3,
                             Capacity = 42,
                             CreatedBy = "system",
@@ -940,6 +980,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 33,
+                            AttRoomId = "",
                             BuildId = 4,
                             Capacity = 43,
                             CreatedBy = "system",
@@ -951,6 +992,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 34,
+                            AttRoomId = "",
                             BuildId = 5,
                             Capacity = 44,
                             CreatedBy = "system",
@@ -962,6 +1004,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 35,
+                            AttRoomId = "",
                             BuildId = 1,
                             Capacity = 45,
                             CreatedBy = "system",
@@ -973,6 +1016,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 36,
+                            AttRoomId = "",
                             BuildId = 2,
                             Capacity = 46,
                             CreatedBy = "system",
@@ -984,6 +1028,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 37,
+                            AttRoomId = "",
                             BuildId = 3,
                             Capacity = 47,
                             CreatedBy = "system",
@@ -995,6 +1040,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 38,
+                            AttRoomId = "",
                             BuildId = 4,
                             Capacity = 48,
                             CreatedBy = "system",
@@ -1006,6 +1052,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 39,
+                            AttRoomId = "",
                             BuildId = 5,
                             Capacity = 49,
                             CreatedBy = "system",
@@ -1017,6 +1064,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 40,
+                            AttRoomId = "",
                             BuildId = 1,
                             Capacity = 50,
                             CreatedBy = "system",
@@ -1028,6 +1076,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 41,
+                            AttRoomId = "",
                             BuildId = 2,
                             Capacity = 51,
                             CreatedBy = "system",
@@ -1039,6 +1088,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 42,
+                            AttRoomId = "",
                             BuildId = 3,
                             Capacity = 52,
                             CreatedBy = "system",
@@ -1050,6 +1100,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 43,
+                            AttRoomId = "",
                             BuildId = 4,
                             Capacity = 53,
                             CreatedBy = "system",
@@ -1061,6 +1112,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 44,
+                            AttRoomId = "",
                             BuildId = 5,
                             Capacity = 54,
                             CreatedBy = "system",
@@ -1072,6 +1124,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 45,
+                            AttRoomId = "",
                             BuildId = 1,
                             Capacity = 55,
                             CreatedBy = "system",
@@ -1083,6 +1136,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 46,
+                            AttRoomId = "",
                             BuildId = 2,
                             Capacity = 56,
                             CreatedBy = "system",
@@ -1094,6 +1148,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 47,
+                            AttRoomId = "",
                             BuildId = 3,
                             Capacity = 57,
                             CreatedBy = "system",
@@ -1105,6 +1160,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 48,
+                            AttRoomId = "",
                             BuildId = 4,
                             Capacity = 58,
                             CreatedBy = "system",
@@ -1116,6 +1172,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 49,
+                            AttRoomId = "",
                             BuildId = 5,
                             Capacity = 59,
                             CreatedBy = "system",
@@ -1127,6 +1184,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 50,
+                            AttRoomId = "",
                             BuildId = 1,
                             Capacity = 10,
                             CreatedBy = "system",
@@ -1138,6 +1196,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 51,
+                            AttRoomId = "",
                             BuildId = 2,
                             Capacity = 11,
                             CreatedBy = "system",
@@ -1149,6 +1208,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 52,
+                            AttRoomId = "",
                             BuildId = 3,
                             Capacity = 12,
                             CreatedBy = "system",
@@ -1160,6 +1220,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 53,
+                            AttRoomId = "",
                             BuildId = 4,
                             Capacity = 13,
                             CreatedBy = "system",
@@ -1171,6 +1232,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 54,
+                            AttRoomId = "",
                             BuildId = 5,
                             Capacity = 14,
                             CreatedBy = "system",
@@ -1182,6 +1244,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 55,
+                            AttRoomId = "",
                             BuildId = 1,
                             Capacity = 15,
                             CreatedBy = "system",
@@ -1193,6 +1256,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 56,
+                            AttRoomId = "",
                             BuildId = 2,
                             Capacity = 16,
                             CreatedBy = "system",
@@ -1204,6 +1268,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 57,
+                            AttRoomId = "",
                             BuildId = 3,
                             Capacity = 17,
                             CreatedBy = "system",
@@ -1215,6 +1280,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 58,
+                            AttRoomId = "",
                             BuildId = 4,
                             Capacity = 18,
                             CreatedBy = "system",
@@ -1226,6 +1292,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 59,
+                            AttRoomId = "",
                             BuildId = 5,
                             Capacity = 19,
                             CreatedBy = "system",
@@ -1237,6 +1304,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 60,
+                            AttRoomId = "",
                             BuildId = 1,
                             Capacity = 20,
                             CreatedBy = "system",
@@ -1248,6 +1316,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 61,
+                            AttRoomId = "",
                             BuildId = 2,
                             Capacity = 21,
                             CreatedBy = "system",
@@ -1259,6 +1328,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 62,
+                            AttRoomId = "",
                             BuildId = 3,
                             Capacity = 22,
                             CreatedBy = "system",
@@ -1270,6 +1340,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 63,
+                            AttRoomId = "",
                             BuildId = 4,
                             Capacity = 23,
                             CreatedBy = "system",
@@ -1281,6 +1352,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 64,
+                            AttRoomId = "",
                             BuildId = 5,
                             Capacity = 24,
                             CreatedBy = "system",
@@ -1292,6 +1364,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 65,
+                            AttRoomId = "",
                             BuildId = 1,
                             Capacity = 25,
                             CreatedBy = "system",
@@ -1303,6 +1376,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 66,
+                            AttRoomId = "",
                             BuildId = 2,
                             Capacity = 26,
                             CreatedBy = "system",
@@ -1314,6 +1388,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 67,
+                            AttRoomId = "",
                             BuildId = 3,
                             Capacity = 27,
                             CreatedBy = "system",
@@ -1325,6 +1400,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 68,
+                            AttRoomId = "",
                             BuildId = 4,
                             Capacity = 28,
                             CreatedBy = "system",
@@ -1336,6 +1412,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 69,
+                            AttRoomId = "",
                             BuildId = 5,
                             Capacity = 29,
                             CreatedBy = "system",
@@ -1347,6 +1424,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 70,
+                            AttRoomId = "",
                             BuildId = 1,
                             Capacity = 30,
                             CreatedBy = "system",
@@ -1358,6 +1436,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 71,
+                            AttRoomId = "",
                             BuildId = 2,
                             Capacity = 31,
                             CreatedBy = "system",
@@ -1369,6 +1448,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 72,
+                            AttRoomId = "",
                             BuildId = 3,
                             Capacity = 32,
                             CreatedBy = "system",
@@ -1380,6 +1460,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 73,
+                            AttRoomId = "",
                             BuildId = 4,
                             Capacity = 33,
                             CreatedBy = "system",
@@ -1391,6 +1472,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 74,
+                            AttRoomId = "",
                             BuildId = 5,
                             Capacity = 34,
                             CreatedBy = "system",
@@ -1402,6 +1484,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 75,
+                            AttRoomId = "",
                             BuildId = 1,
                             Capacity = 35,
                             CreatedBy = "system",
@@ -1413,6 +1496,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 76,
+                            AttRoomId = "",
                             BuildId = 2,
                             Capacity = 36,
                             CreatedBy = "system",
@@ -1424,6 +1508,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 77,
+                            AttRoomId = "",
                             BuildId = 3,
                             Capacity = 37,
                             CreatedBy = "system",
@@ -1435,6 +1520,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 78,
+                            AttRoomId = "",
                             BuildId = 4,
                             Capacity = 38,
                             CreatedBy = "system",
@@ -1446,6 +1532,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 79,
+                            AttRoomId = "",
                             BuildId = 5,
                             Capacity = 39,
                             CreatedBy = "system",
@@ -1457,6 +1544,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 80,
+                            AttRoomId = "",
                             BuildId = 1,
                             Capacity = 40,
                             CreatedBy = "system",
@@ -1468,6 +1556,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 81,
+                            AttRoomId = "",
                             BuildId = 2,
                             Capacity = 41,
                             CreatedBy = "system",
@@ -1479,6 +1568,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 82,
+                            AttRoomId = "",
                             BuildId = 3,
                             Capacity = 42,
                             CreatedBy = "system",
@@ -1490,6 +1580,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 83,
+                            AttRoomId = "",
                             BuildId = 4,
                             Capacity = 43,
                             CreatedBy = "system",
@@ -1501,6 +1592,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 84,
+                            AttRoomId = "",
                             BuildId = 5,
                             Capacity = 44,
                             CreatedBy = "system",
@@ -1512,6 +1604,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 85,
+                            AttRoomId = "",
                             BuildId = 1,
                             Capacity = 45,
                             CreatedBy = "system",
@@ -1523,6 +1616,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 86,
+                            AttRoomId = "",
                             BuildId = 2,
                             Capacity = 46,
                             CreatedBy = "system",
@@ -1534,6 +1628,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 87,
+                            AttRoomId = "",
                             BuildId = 3,
                             Capacity = 47,
                             CreatedBy = "system",
@@ -1545,6 +1640,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 88,
+                            AttRoomId = "",
                             BuildId = 4,
                             Capacity = 48,
                             CreatedBy = "system",
@@ -1556,6 +1652,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 89,
+                            AttRoomId = "",
                             BuildId = 5,
                             Capacity = 49,
                             CreatedBy = "system",
@@ -1567,6 +1664,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 90,
+                            AttRoomId = "",
                             BuildId = 1,
                             Capacity = 50,
                             CreatedBy = "system",
@@ -1578,6 +1676,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 91,
+                            AttRoomId = "",
                             BuildId = 2,
                             Capacity = 51,
                             CreatedBy = "system",
@@ -1589,6 +1688,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 92,
+                            AttRoomId = "",
                             BuildId = 3,
                             Capacity = 52,
                             CreatedBy = "system",
@@ -1600,6 +1700,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 93,
+                            AttRoomId = "",
                             BuildId = 4,
                             Capacity = 53,
                             CreatedBy = "system",
@@ -1611,6 +1712,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 94,
+                            AttRoomId = "",
                             BuildId = 5,
                             Capacity = 54,
                             CreatedBy = "system",
@@ -1622,6 +1724,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 95,
+                            AttRoomId = "",
                             BuildId = 1,
                             Capacity = 55,
                             CreatedBy = "system",
@@ -1633,6 +1736,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 96,
+                            AttRoomId = "",
                             BuildId = 2,
                             Capacity = 56,
                             CreatedBy = "system",
@@ -1644,6 +1748,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 97,
+                            AttRoomId = "",
                             BuildId = 3,
                             Capacity = 57,
                             CreatedBy = "system",
@@ -1655,6 +1760,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 98,
+                            AttRoomId = "",
                             BuildId = 4,
                             Capacity = 58,
                             CreatedBy = "system",
@@ -1666,6 +1772,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 99,
+                            AttRoomId = "",
                             BuildId = 5,
                             Capacity = 59,
                             CreatedBy = "system",
@@ -1677,6 +1784,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 100,
+                            AttRoomId = "",
                             BuildId = 1,
                             Capacity = 10,
                             CreatedBy = "system",
@@ -1688,6 +1796,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 101,
+                            AttRoomId = "",
                             BuildId = 2,
                             Capacity = 11,
                             CreatedBy = "system",
@@ -1699,6 +1808,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 102,
+                            AttRoomId = "",
                             BuildId = 3,
                             Capacity = 12,
                             CreatedBy = "system",
@@ -1710,6 +1820,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 103,
+                            AttRoomId = "",
                             BuildId = 4,
                             Capacity = 13,
                             CreatedBy = "system",
@@ -1721,6 +1832,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 104,
+                            AttRoomId = "",
                             BuildId = 5,
                             Capacity = 14,
                             CreatedBy = "system",
@@ -1732,6 +1844,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 105,
+                            AttRoomId = "",
                             BuildId = 1,
                             Capacity = 15,
                             CreatedBy = "system",
@@ -1743,6 +1856,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 106,
+                            AttRoomId = "",
                             BuildId = 2,
                             Capacity = 16,
                             CreatedBy = "system",
@@ -1754,6 +1868,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 107,
+                            AttRoomId = "",
                             BuildId = 3,
                             Capacity = 17,
                             CreatedBy = "system",
@@ -1765,6 +1880,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 108,
+                            AttRoomId = "",
                             BuildId = 4,
                             Capacity = 18,
                             CreatedBy = "system",
@@ -1776,6 +1892,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 109,
+                            AttRoomId = "",
                             BuildId = 5,
                             Capacity = 19,
                             CreatedBy = "system",
@@ -1787,6 +1904,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 110,
+                            AttRoomId = "",
                             BuildId = 1,
                             Capacity = 20,
                             CreatedBy = "system",
@@ -1798,6 +1916,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 111,
+                            AttRoomId = "",
                             BuildId = 2,
                             Capacity = 21,
                             CreatedBy = "system",
@@ -1809,6 +1928,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 112,
+                            AttRoomId = "",
                             BuildId = 3,
                             Capacity = 22,
                             CreatedBy = "system",
@@ -1820,6 +1940,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 113,
+                            AttRoomId = "",
                             BuildId = 4,
                             Capacity = 23,
                             CreatedBy = "system",
@@ -1831,6 +1952,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 114,
+                            AttRoomId = "",
                             BuildId = 5,
                             Capacity = 24,
                             CreatedBy = "system",
@@ -1842,6 +1964,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 115,
+                            AttRoomId = "",
                             BuildId = 1,
                             Capacity = 25,
                             CreatedBy = "system",
@@ -1853,6 +1976,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 116,
+                            AttRoomId = "",
                             BuildId = 2,
                             Capacity = 26,
                             CreatedBy = "system",
@@ -1864,6 +1988,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 117,
+                            AttRoomId = "",
                             BuildId = 3,
                             Capacity = 27,
                             CreatedBy = "system",
@@ -1875,6 +2000,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 118,
+                            AttRoomId = "",
                             BuildId = 4,
                             Capacity = 28,
                             CreatedBy = "system",
@@ -1886,6 +2012,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 119,
+                            AttRoomId = "",
                             BuildId = 5,
                             Capacity = 29,
                             CreatedBy = "system",
@@ -1897,6 +2024,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 120,
+                            AttRoomId = "",
                             BuildId = 1,
                             Capacity = 30,
                             CreatedBy = "system",

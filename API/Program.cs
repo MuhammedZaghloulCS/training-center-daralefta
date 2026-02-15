@@ -22,6 +22,8 @@ builder.Services.AddDbContext<ApplicationContext>(option =>
 {
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+
 //JWT
 // إعداد JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -56,8 +58,14 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
 .AddEntityFrameworkStores<ApplicationContext>()
 .AddDefaultTokenProviders();
 
-
-
+//HTTP Client
+builder.Services.AddHttpClient("ExternalApi")
+    .ConfigurePrimaryHttpMessageHandler(() =>
+        new HttpClientHandler
+        {
+            ServerCertificateCustomValidationCallback =
+                HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+        });
 // Adding Infrastructure Dependencies
 builder.Services.AddedModuleInfraStructureDependencies();
 

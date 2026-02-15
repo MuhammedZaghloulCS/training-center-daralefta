@@ -1,11 +1,16 @@
 ﻿using Application.Common;
 using Application.Features.User.DTOs;
 using Domain.Entities;
+using Domain.Enums;
+using Domain.Helper;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Data;
+using System.Net.Http.Json;
 using System.Text;
 
 namespace Application.Features.User.Commands.Create.CreateUser
@@ -13,9 +18,11 @@ namespace Application.Features.User.Commands.Create.CreateUser
     public class CreateUserHandler : IRequestHandler<CreateUserCommand,BaseResponse<UserDTO>>
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        public CreateUserHandler(UserManager<ApplicationUser> userManager)
+        private readonly HttpClient _httpClient;
+        public CreateUserHandler(UserManager<ApplicationUser> userManager,IHttpClientFactory httpClientFactory)
         {
             _userManager = userManager;
+            _httpClient = httpClientFactory.CreateClient("ExternalApi");
         }
         public async Task<BaseResponse<UserDTO>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
@@ -60,8 +67,28 @@ namespace Application.Features.User.Commands.Create.CreateUser
                 return BaseResponse<UserDTO>.FailureResponse("User creation failed", errors.ToList());
             }
 
-            await _userManager.AddToRolesAsync(newUser, request.Roles);
+            await _userManager.AddToRolesAsync(newUser, request._dto.roles);
 
+           var lastUser = await _userManager.Users
+    .Where(u => u.pin != null)
+    .OrderByDescending(u => Convert.ToInt64(u.pin))
+    .FirstOrDefaultAsync();
+
+            var lastId = Convert.ToInt64(lastUser?.pin) + 1;
+            var newSysUser = new ZkPersonCreateDto
+            {
+                Pin = lastId.ToString()??"0",
+                Name = newUser.FirstName,
+                LastName = newUser.LastName,
+                Email = newUser.Email,
+                Gender = newUser.Gender.GetDescription()[0],
+                MobilePhone=newUser.PhoneNumber
+
+            };
+            var res=await _httpClient.PostAsJsonAsync(MainConstants.Use("person/add"), newSysUser);
+            res.EnsureSuccessStatusCode();
+
+            var res2 = await res.Content.ReadFromJsonAsync<ZkPersonCreateDto>();
             return BaseResponse<UserDTO>.SuccessResponse(data:new UserDTO
             {
                 Id = newUser.Id,

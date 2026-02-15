@@ -8,7 +8,6 @@ namespace Application.Features.User.DTOs
 {
     public class CreateUserDTO
     {
-     
 
 
 
@@ -61,7 +60,7 @@ namespace Application.Features.User.DTOs
         public string Appreciation { get; set; }
         public string ImagePath { get; set; }
 
-        
 
+        public List<string> roles {get;set;}
     }
 }

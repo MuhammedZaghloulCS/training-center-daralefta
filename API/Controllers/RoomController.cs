@@ -2,11 +2,14 @@ using Application.Features.Room.Commands.Create;
 using Application.Features.Room.Commands.Delete;
 using Application.Features.Room.Commands.Update;
 using Application.Features.Room.Queries.Model;
+using Azure;
 using Domain.Entities;
+using Domain.Helper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
 
 namespace API.Controllers
 {
@@ -18,10 +21,12 @@ namespace API.Controllers
     {
         IMediator _mediator;
         UserManager<ApplicationUser> _userManager;
+        HttpClient HttpClient;
 
-        public RoomController(IMediator mediator)
+        public RoomController(IMediator mediator, IHttpClientFactory httpClientFactory)
         {
             _mediator = mediator;
+            HttpClient = httpClientFactory.CreateClient("ExternalApi");
         }
 
         [HttpGet]
@@ -70,5 +75,16 @@ namespace API.Controllers
             var response = await _mediator.Send(new DeleteRoomCommand { Id = id });
             return response.Success ? Ok(response) : BadRequest(response);
         }
+
+        [HttpGet("attrooms")]
+        public async Task<IActionResult> GetPagedSystemizedRooms()
+        {
+            var door =await HttpClient.GetAsync(MainConstants.Use("door/list","pageNo=1&pageSize=1000"));
+            door.EnsureSuccessStatusCode();
+            var result=await door.Content.ReadAsStringAsync();
+            return Ok(result );
+
+        }
+
     }
 }

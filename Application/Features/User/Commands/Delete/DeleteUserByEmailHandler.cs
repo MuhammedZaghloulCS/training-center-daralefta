@@ -1,5 +1,6 @@
 ﻿using Application.Common;
 using Domain.Entities;
+using Domain.Helper;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -12,10 +13,11 @@ namespace Application.Features.User.Commands.Delete
     public class DeleteUserHandler : IRequestHandler<DeleteUserCommand, BaseResponse<string>>
     {
         private readonly UserManager<ApplicationUser> _userManager;
-
-        public DeleteUserHandler(UserManager<ApplicationUser> userManager)
+        private readonly HttpClient httpClient;
+        public DeleteUserHandler(UserManager<ApplicationUser> userManager, IHttpClientFactory httpClient)
         {
             _userManager = userManager;
+            this.httpClient = httpClient.CreateClient("ExternalApi");
         }
 
         public async Task<BaseResponse<string>> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
@@ -39,7 +41,7 @@ namespace Application.Features.User.Commands.Delete
                     new List<string> { $"لا يوجد مستخدم بالمعرف: {request.Email}" }
                 );
             }
-
+            var pin = existingUser.pin;
             // حذف المستخدم
             var result = await _userManager.DeleteAsync(existingUser);
 
@@ -52,6 +54,7 @@ namespace Application.Features.User.Commands.Delete
                 }
                 return BaseResponse<string>.FailureResponse("فشل حذف المستخدم", errors);
             }
+            await httpClient.DeleteAsync(MainConstants.Use("person/delete/" + pin));
 
             return BaseResponse<string>.SuccessResponse(
                 data: $"تم حذف المستخدم {existingUser.UserName} بنجاح",

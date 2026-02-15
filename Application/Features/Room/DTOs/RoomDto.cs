@@ -12,6 +12,8 @@ namespace Application.Features.Room.DTOs
         public string Name { get; set; }
         public int Capacity { get; set; }
         public string Location { get; set; }
+        public string AttRoomId { get; set; }
+
         public int? BuildId { get; set; }
         public bool? HaveProjector { get; set; }
     }

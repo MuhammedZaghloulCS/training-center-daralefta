@@ -49,6 +49,7 @@ namespace Application.Features.Room.Commands.Create
                 Capacity = request.Capacity,
                 Location = request.Location,
                 BuildId = request.BuildId,
+                AttRoomId = request.AttRoomId,
                 HaveProjector = request.HaveProjector
             };
 
@@ -65,6 +66,7 @@ namespace Application.Features.Room.Commands.Create
                 Name = room.Name,
                 Capacity = room.Capacity,
                 Location = room.Location,
+                AttRoomId = room.AttRoomId,
                 BuildId = room.BuildId,
                 HaveProjector = room.HaveProjector
             };

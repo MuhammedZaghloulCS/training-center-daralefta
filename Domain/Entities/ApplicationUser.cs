@@ -10,8 +10,8 @@ namespace Domain.Entities
 {
     public class ApplicationUser : IdentityUser<Guid>
     {
-        
-        
+
+        public string pin { get; set; } = "";
         public String FirstName { get; set; }
         public String LastName { get; set; }
         public string FullName => $"{FirstName} {LastName}";

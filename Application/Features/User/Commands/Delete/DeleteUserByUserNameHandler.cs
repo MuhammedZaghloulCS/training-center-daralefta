@@ -1,9 +1,11 @@
 ﻿using Application.Common;
 using Domain.Entities;
+using Domain.Helper;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,10 +14,12 @@ namespace Application.Features.User.Commands.Delete
     public class DeleteUserByUserNameHandler : IRequestHandler<DeleteUserByUserNameCommand, BaseResponse<string>>
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly HttpClient httpClient;
 
-        public DeleteUserByUserNameHandler(UserManager<ApplicationUser> userManager)
+        public DeleteUserByUserNameHandler(UserManager<ApplicationUser> userManager, IHttpClientFactory httpClient)
         {
             _userManager = userManager;
+            this.httpClient = httpClient.CreateClient("ExternalApi");
         }
 
         public async Task<BaseResponse<string>> Handle(DeleteUserByUserNameCommand request, CancellationToken cancellationToken)
@@ -44,7 +48,7 @@ namespace Application.Features.User.Commands.Delete
                     new List<string> { $"لا يوجد مستخدم بالمعرف: {request.UserId}" }
                 );
             }
-
+            var pin = existingUser.pin;
             // حذف المستخدم
             var result = await _userManager.DeleteAsync(existingUser);
 
@@ -57,7 +61,10 @@ namespace Application.Features.User.Commands.Delete
                 }
                 return BaseResponse<string>.FailureResponse("فشل حذف المستخدم", errors);
             }
-
+            var res=await httpClient.DeleteAsync(MainConstants.Use($"person/delete/{pin}"));
+            res.EnsureSuccessStatusCode();
+            var x=res.Content.ReadAsStringAsync();
+           
             return BaseResponse<string>.SuccessResponse(
                 data: $"تم حذف المستخدم {existingUser.UserName} بنجاح",
                 message: "تم حذف المستخدم بنجاح"

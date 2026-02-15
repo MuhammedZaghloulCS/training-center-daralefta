@@ -76,6 +76,7 @@ namespace Application.Features.User.Commands.Update
                 }
             }
 
+
             return BaseResponse<UserDTO>.SuccessResponse(data: new UserDTO
             {
                 Id = existingUser.Id,

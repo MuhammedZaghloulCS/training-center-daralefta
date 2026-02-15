@@ -10,6 +10,6 @@ namespace Application.Features.User.Commands.Create.CreateUser
     public class CreateUserCommand :IRequest<BaseResponse<UserDTO>>
     {
         public CreateUserDTO _dto;
-        public List<string> Roles;
+     
     }
 }
