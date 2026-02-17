@@ -16,7 +16,7 @@ namespace Domain.Entities
         [ForeignKey(nameof(RoomId))]
         public Room Room { get; set; }
 
-
+        public string AccessLevelId {  get; set; }
         public int? CourseId { get; set; }
         [ForeignKey(nameof(CourseId))]
         public Course Course { get; set; }

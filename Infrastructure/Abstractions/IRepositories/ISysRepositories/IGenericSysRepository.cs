@@ -13,6 +13,7 @@ namespace Infrastructure.Abstractions.IRepositories.ISysRepositories
         public Task<IEnumerable<T>> GetAllAsync();
         public Task<T> GetFirstOrderedByAsync<TKey>(Expression<Func<T, TKey>> order = null,bool descending=true);
         public Task<List<T>> GetPaginatedAsync<TKey>(int pageNumber, int pageSize, Expression<Func<T, TKey>> order, bool descending = true);
+        public Task<T> GetByIdAsync(string id);
 
     }
 }

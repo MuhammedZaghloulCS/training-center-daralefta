@@ -32,6 +32,11 @@ namespace Infrastructure.Implementations.Repository.SysRepository
           return await _dbSet.AsNoTracking().ToListAsync();
         }
 
+        public async Task<T> GetByIdAsync(string id)
+        {
+            return await _dbSet.FindAsync(id);
+        }
+
         public async Task<T> GetFirstOrderedByAsync<TKey>(Expression<Func<T, TKey>> order = null, bool descending = true)
         {
             var query = _dbSet.AsQueryable();

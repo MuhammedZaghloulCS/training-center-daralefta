@@ -12,6 +12,9 @@ namespace Infrastructure.Implementations.UnitOfWork.SysUnitOfWork
     {
         #region Fields
         private  ISysPersonRepository _sysPersonRepository;
+        private ISysTimeSessionRepository _sysTimeSessionRepository;
+        private ISysAccessLevelRepository _sysAccessLevelRepository;
+
         private readonly security_dbContext _context;
         #endregion
 
@@ -30,6 +33,22 @@ namespace Infrastructure.Implementations.UnitOfWork.SysUnitOfWork
                     _sysPersonRepository = new SysPersonRepository(_context);
                 }
                 return _sysPersonRepository;
+            }
+        }
+        public ISysTimeSessionRepository ISysTimeSessionRepository { get
+            {
+                if ( _sysTimeSessionRepository == null)
+                    _sysTimeSessionRepository = new SysTimeSessionRepository(_context);
+                return _sysTimeSessionRepository;
+
+            }
+        }
+        public ISysAccessLevelRepository ISysAccessLevelRepository{ get
+            {
+                if ( _sysAccessLevelRepository == null)
+                    _sysAccessLevelRepository = new SysAccessLevelRepository(_context);
+                return _sysAccessLevelRepository;
+
             }
         }
 

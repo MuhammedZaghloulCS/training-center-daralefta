@@ -4,6 +4,7 @@ using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20260217122655_addAccessLevelIDInSession")]
+    partial class addAccessLevelIDInSession
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2043,9 +2046,8 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("AccessLevelId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("AccessLevelId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int?>("CourseId")
                         .HasColumnType("int");
@@ -2096,7 +2098,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            AccessLevelId = "DEFAULT_ACCESS",
+                            AccessLevelId = new Guid("00000000-0000-0000-0000-000000000000"),
                             CourseId = 1,
                             CreatedBy = "system",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -2110,7 +2112,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 2,
-                            AccessLevelId = "DEFAULT_ACCESS",
+                            AccessLevelId = new Guid("00000000-0000-0000-0000-000000000000"),
                             CourseId = 2,
                             CreatedBy = "system",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -2124,7 +2126,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 3,
-                            AccessLevelId = "DEFAULT_ACCESS",
+                            AccessLevelId = new Guid("00000000-0000-0000-0000-000000000000"),
                             CourseId = 3,
                             CreatedBy = "system",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -2138,7 +2140,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 4,
-                            AccessLevelId = "DEFAULT_ACCESS",
+                            AccessLevelId = new Guid("00000000-0000-0000-0000-000000000000"),
                             CourseId = 4,
                             CreatedBy = "system",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -2152,7 +2154,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 5,
-                            AccessLevelId = "DEFAULT_ACCESS",
+                            AccessLevelId = new Guid("00000000-0000-0000-0000-000000000000"),
                             CourseId = 5,
                             CreatedBy = "system",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -2166,7 +2168,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 6,
-                            AccessLevelId = "DEFAULT_ACCESS",
+                            AccessLevelId = new Guid("00000000-0000-0000-0000-000000000000"),
                             CourseId = 6,
                             CreatedBy = "system",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -2180,7 +2182,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 7,
-                            AccessLevelId = "DEFAULT_ACCESS",
+                            AccessLevelId = new Guid("00000000-0000-0000-0000-000000000000"),
                             CourseId = 7,
                             CreatedBy = "system",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -2194,7 +2196,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 8,
-                            AccessLevelId = "DEFAULT_ACCESS",
+                            AccessLevelId = new Guid("00000000-0000-0000-0000-000000000000"),
                             CourseId = 8,
                             CreatedBy = "system",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -2208,7 +2210,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 9,
-                            AccessLevelId = "DEFAULT_ACCESS",
+                            AccessLevelId = new Guid("00000000-0000-0000-0000-000000000000"),
                             CourseId = 9,
                             CreatedBy = "system",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -2222,7 +2224,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 10,
-                            AccessLevelId = "DEFAULT_ACCESS",
+                            AccessLevelId = new Guid("00000000-0000-0000-0000-000000000000"),
                             CourseId = 10,
                             CreatedBy = "system",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -2231,6 +2233,146 @@ namespace Infrastructure.Migrations
                             SessionDate = new DateTime(2024, 1, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             StartTime = new TimeSpan(0, 10, 0, 0, 0),
                             Topic = "Session 10",
+                            lecturerId = new Guid("df8a0113-3d20-4aed-b33d-2f5bef703863")
+                        },
+                        new
+                        {
+                            Id = 11,
+                            AccessLevelId = new Guid("00000000-0000-0000-0000-000000000000"),
+                            CourseId = 11,
+                            CreatedBy = "system",
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
+                            RoomId = 30,
+                            SessionDate = new DateTime(2024, 1, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            StartTime = new TimeSpan(0, 11, 0, 0, 0),
+                            Topic = "Session 11",
+                            lecturerId = new Guid("df8a0113-3d20-4aed-b33d-2f5bef703863")
+                        },
+                        new
+                        {
+                            Id = 12,
+                            AccessLevelId = new Guid("00000000-0000-0000-0000-000000000000"),
+                            CourseId = 12,
+                            CreatedBy = "system",
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
+                            RoomId = 31,
+                            SessionDate = new DateTime(2024, 1, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            StartTime = new TimeSpan(0, 11, 0, 0, 0),
+                            Topic = "Session 12",
+                            lecturerId = new Guid("df8a0113-3d20-4aed-b33d-2f5bef703863")
+                        },
+                        new
+                        {
+                            Id = 13,
+                            AccessLevelId = new Guid("00000000-0000-0000-0000-000000000000"),
+                            CourseId = 13,
+                            CreatedBy = "system",
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
+                            RoomId = 32,
+                            SessionDate = new DateTime(2024, 1, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            StartTime = new TimeSpan(0, 11, 0, 0, 0),
+                            Topic = "Session 13",
+                            lecturerId = new Guid("df8a0113-3d20-4aed-b33d-2f5bef703863")
+                        },
+                        new
+                        {
+                            Id = 14,
+                            AccessLevelId = new Guid("00000000-0000-0000-0000-000000000000"),
+                            CourseId = 14,
+                            CreatedBy = "system",
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
+                            RoomId = 33,
+                            SessionDate = new DateTime(2024, 1, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            StartTime = new TimeSpan(0, 11, 0, 0, 0),
+                            Topic = "Session 14",
+                            lecturerId = new Guid("df8a0113-3d20-4aed-b33d-2f5bef703863")
+                        },
+                        new
+                        {
+                            Id = 15,
+                            AccessLevelId = new Guid("00000000-0000-0000-0000-000000000000"),
+                            CourseId = 15,
+                            CreatedBy = "system",
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
+                            RoomId = 34,
+                            SessionDate = new DateTime(2024, 1, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            StartTime = new TimeSpan(0, 11, 0, 0, 0),
+                            Topic = "Session 15",
+                            lecturerId = new Guid("df8a0113-3d20-4aed-b33d-2f5bef703863")
+                        },
+                        new
+                        {
+                            Id = 16,
+                            AccessLevelId = new Guid("00000000-0000-0000-0000-000000000000"),
+                            CourseId = 16,
+                            CreatedBy = "system",
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new TimeSpan(0, 14, 0, 0, 0),
+                            RoomId = 35,
+                            SessionDate = new DateTime(2024, 1, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            StartTime = new TimeSpan(0, 12, 0, 0, 0),
+                            Topic = "Session 16",
+                            lecturerId = new Guid("df8a0113-3d20-4aed-b33d-2f5bef703863")
+                        },
+                        new
+                        {
+                            Id = 17,
+                            AccessLevelId = new Guid("00000000-0000-0000-0000-000000000000"),
+                            CourseId = 17,
+                            CreatedBy = "system",
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new TimeSpan(0, 14, 0, 0, 0),
+                            RoomId = 36,
+                            SessionDate = new DateTime(2024, 1, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            StartTime = new TimeSpan(0, 12, 0, 0, 0),
+                            Topic = "Session 17",
+                            lecturerId = new Guid("df8a0113-3d20-4aed-b33d-2f5bef703863")
+                        },
+                        new
+                        {
+                            Id = 18,
+                            AccessLevelId = new Guid("00000000-0000-0000-0000-000000000000"),
+                            CourseId = 18,
+                            CreatedBy = "system",
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new TimeSpan(0, 14, 0, 0, 0),
+                            RoomId = 37,
+                            SessionDate = new DateTime(2024, 1, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            StartTime = new TimeSpan(0, 12, 0, 0, 0),
+                            Topic = "Session 18",
+                            lecturerId = new Guid("df8a0113-3d20-4aed-b33d-2f5bef703863")
+                        },
+                        new
+                        {
+                            Id = 19,
+                            AccessLevelId = new Guid("00000000-0000-0000-0000-000000000000"),
+                            CourseId = 19,
+                            CreatedBy = "system",
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new TimeSpan(0, 14, 0, 0, 0),
+                            RoomId = 38,
+                            SessionDate = new DateTime(2024, 1, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            StartTime = new TimeSpan(0, 12, 0, 0, 0),
+                            Topic = "Session 19",
+                            lecturerId = new Guid("df8a0113-3d20-4aed-b33d-2f5bef703863")
+                        },
+                        new
+                        {
+                            Id = 20,
+                            AccessLevelId = new Guid("00000000-0000-0000-0000-000000000000"),
+                            CourseId = 20,
+                            CreatedBy = "system",
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new TimeSpan(0, 14, 0, 0, 0),
+                            RoomId = 39,
+                            SessionDate = new DateTime(2024, 1, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            StartTime = new TimeSpan(0, 12, 0, 0, 0),
+                            Topic = "Session 20",
                             lecturerId = new Guid("df8a0113-3d20-4aed-b33d-2f5bef703863")
                         });
                 });

@@ -9,6 +9,8 @@ namespace Infrastructure.Abstractions.IUnitOfWork.ISysUnitOfWork
     {
         #region Properties
         ISysPersonRepository ISysPersonRepository { get; }
+        ISysTimeSessionRepository ISysTimeSessionRepository { get; }
+        ISysAccessLevelRepository ISysAccessLevelRepository { get; }
         #endregion
         Task<int> Complete();
         void Dispose();
