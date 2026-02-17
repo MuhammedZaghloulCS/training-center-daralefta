@@ -821,10 +821,7 @@ namespace Infrastructure.Context
 
         public virtual DbSet<wf_flow_node> wf_flow_nodes { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-            => optionsBuilder.UseSqlServer("Data Source=10.0.11.112;Initial Catalog=security_db;Persist Security Info=True;User ID=sa;Password=@tt3nDAce951753");
-
+      
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ACT_EVT_LOG>(entity =>

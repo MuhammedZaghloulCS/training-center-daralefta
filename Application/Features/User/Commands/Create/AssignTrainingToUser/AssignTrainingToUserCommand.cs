@@ -7,8 +7,8 @@ using System.Text;
 
 namespace Application.Features.User.Commands.Create.AssignTrainingToUser
 {
-    public class AssignTrainingToUserCommand :IRequest<BaseResponse<string>>
+    public class AssignTrainingToUserCommand : IRequest<BaseResponse<string>>
     {
-       public UsersTrainingDTO _dto;
+        public UsersTrainingDTO _dto { get; set; }
     }
 }

@@ -22,6 +22,10 @@ builder.Services.AddDbContext<ApplicationContext>(option =>
 {
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+builder.Services.AddDbContext<security_dbContext>(option =>
+{
+    option.UseSqlServer(builder.Configuration.GetConnectionString("SecondConnection"));
+});
 
 
 //JWT

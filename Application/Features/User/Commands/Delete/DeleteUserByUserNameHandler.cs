@@ -1,6 +1,7 @@
 ﻿using Application.Common;
 using Domain.Entities;
 using Domain.Helper;
+using Infrastructure.Abstractions.IUnitOfWork.ISysUnitOfWork;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -15,11 +16,12 @@ namespace Application.Features.User.Commands.Delete
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly HttpClient httpClient;
-
-        public DeleteUserByUserNameHandler(UserManager<ApplicationUser> userManager, IHttpClientFactory httpClient)
+        private readonly ISysUnitOfWork sysUnitOfWork;
+        public DeleteUserByUserNameHandler(UserManager<ApplicationUser> userManager, IHttpClientFactory httpClient,ISysUnitOfWork sysUnitOfWork)
         {
             _userManager = userManager;
             this.httpClient = httpClient.CreateClient("ExternalApi");
+            this.sysUnitOfWork = sysUnitOfWork;
         }
 
         public async Task<BaseResponse<string>> Handle(DeleteUserByUserNameCommand request, CancellationToken cancellationToken)
@@ -61,9 +63,9 @@ namespace Application.Features.User.Commands.Delete
                 }
                 return BaseResponse<string>.FailureResponse("فشل حذف المستخدم", errors);
             }
-            var res=await httpClient.DeleteAsync(MainConstants.Use($"person/delete/{pin}"));
-            res.EnsureSuccessStatusCode();
-            var x=res.Content.ReadAsStringAsync();
+            var personOnSys = await sysUnitOfWork.ISysPersonRepository.GetPersonByPinAsync(pin);
+            sysUnitOfWork.ISysPersonRepository.Delete(personOnSys);
+            await sysUnitOfWork.Complete();
            
             return BaseResponse<string>.SuccessResponse(
                 data: $"تم حذف المستخدم {existingUser.UserName} بنجاح",

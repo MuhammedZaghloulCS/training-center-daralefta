@@ -1,6 +1,8 @@
 ﻿using Application.Common;
 using Domain.Entities;
 using Domain.Helper;
+using Infrastructure.Abstractions.IUnitOfWork.ISysUnitOfWork;
+using Infrastructure.Implementations.UnitOfWork.SysUnitOfWork;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -10,17 +12,19 @@ using System.Threading.Tasks;
 
 namespace Application.Features.User.Commands.Delete
 {
-    public class DeleteUserHandler : IRequestHandler<DeleteUserCommand, BaseResponse<string>>
+    public class DeleteUserHandler : IRequestHandler<DeleteUserByEmailCommand, BaseResponse<string>>
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly HttpClient httpClient;
-        public DeleteUserHandler(UserManager<ApplicationUser> userManager, IHttpClientFactory httpClient)
+        private readonly ISysUnitOfWork sysUnitOfWork;
+        public DeleteUserHandler(UserManager<ApplicationUser> userManager, IHttpClientFactory httpClient,ISysUnitOfWork sysUnitOfWork)
         {
             _userManager = userManager;
             this.httpClient = httpClient.CreateClient("ExternalApi");
+            this.sysUnitOfWork = sysUnitOfWork;
         }
 
-        public async Task<BaseResponse<string>> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<string>> Handle(DeleteUserByEmailCommand request, CancellationToken cancellationToken)
         {
             if ((String.IsNullOrEmpty(request.Email)))
             {
@@ -54,7 +58,9 @@ namespace Application.Features.User.Commands.Delete
                 }
                 return BaseResponse<string>.FailureResponse("فشل حذف المستخدم", errors);
             }
-            await httpClient.DeleteAsync(MainConstants.Use("person/delete/" + pin));
+            var personOnSys = await sysUnitOfWork.ISysPersonRepository.GetPersonByPinAsync(pin);
+            sysUnitOfWork.ISysPersonRepository.Delete(personOnSys);
+            await sysUnitOfWork.Complete();
 
             return BaseResponse<string>.SuccessResponse(
                 data: $"تم حذف المستخدم {existingUser.UserName} بنجاح",

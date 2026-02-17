@@ -1,5 +1,7 @@
 ﻿using Infrastructure.Abstractions.IUnitOfWork;
+using Infrastructure.Abstractions.IUnitOfWork.ISysUnitOfWork;
 using Infrastructure.Implementations.UnitOfWork;
+using Infrastructure.Implementations.UnitOfWork.SysUnitOfWork;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -14,6 +16,7 @@ namespace Infrastructure.Dependencies
             // Here you can add your infrastructure dependencies
             // e.g., services.AddScoped<IYourRepository, YourRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<ISysUnitOfWork, SysUnitOfWork>();
             return services;
         }
     }

@@ -29,7 +29,7 @@ namespace Infrastructure.Implementations.Repository
                 .Where(x => x.UserId == userId &&
                             courseIds.Contains(x.CourseId))
                 .ToListAsync();
-
+             
             var toAdd = userCourses
                 .Where(x => !existing.Any(e =>
                     e.UserId == x.UserId &&

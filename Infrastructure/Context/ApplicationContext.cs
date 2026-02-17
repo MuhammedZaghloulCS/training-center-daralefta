@@ -14,7 +14,7 @@ namespace Infrastructure.Context
     public class ApplicationContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
     {
         //CTOR
-        public ApplicationContext(DbContextOptions options) : base(options) { }
+        public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) { }
 
         #region Fields
         public DbSet<Building> Building { get; set; }

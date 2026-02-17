@@ -1,5 +1,7 @@
 ﻿using Application.Common;
 using Application.Features.User.Commands.Create;
+using Application.Features.User.Commands.Create.AssignCourseToUser;
+using Application.Features.User.Commands.Create.AssignSessionToUser;
 using Application.Features.User.Commands.Create.AssignTrainingToUser;
 using Application.Features.User.Commands.Create.CreateUser;
 using Application.Features.User.Commands.Delete;
@@ -114,12 +116,29 @@ namespace API.Controllers
             return Ok(response);
         }
 
-        [HttpDelete("{userName}")]
+        [HttpDelete("DeleteByName/{userName}")]
         public async Task<IActionResult> DeleteUser(string userName)
         {
             var command = new DeleteUserByUserNameCommand
             {
                 UserName = userName
+            };
+
+            var result = await _mediator.Send(command);
+
+            if (!result.Success)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+        [HttpDelete("DeleteByEmail/{email}")]
+        public async Task<IActionResult> DeleteUserbyEmail(string email)
+        {
+            var command = new DeleteUserByEmailCommand
+            {
+                Email = email
             };
 
             var result = await _mediator.Send(command);
@@ -206,10 +225,30 @@ namespace API.Controllers
             return Ok(response);
         }
 
-        [HttpPost("assigntraining")]
+        [HttpPost("assignTraining")]
         public async Task<IActionResult> AssignUserToTraining([FromBody] UsersTrainingDTO dto)
         {
             var response = await _mediator.Send(new AssignTrainingToUserCommand { _dto=dto });
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+        [HttpPost("assignCourse")]
+        public async Task<IActionResult> AssignUserToCourse([FromBody] UsersCourseDTO dto)
+        {
+            var response = await _mediator.Send(new AssignCourseToUserCommand { _dto=dto });
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+        [HttpPost("assignSession")]
+        public async Task<IActionResult> AssignUserToSession([FromBody] UsersSessionDTO dto)
+        {
+            var response = await _mediator.Send(new AssignSessionToUsersCommand { _dto=dto });
             if (!response.Success)
             {
                 return BadRequest(response);

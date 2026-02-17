@@ -4,7 +4,7 @@ using System;
 
 namespace Application.Features.User.Commands.Delete
 {
-    public class DeleteUserCommand : IRequest<BaseResponse<string>>
+    public class DeleteUserByEmailCommand : IRequest<BaseResponse<string>>
     {
  
         public string Email { get; set; }
