@@ -1,12 +1,19 @@
 using Application.Common;
 using Application.Features.Session.DTOs;
+using Azure;
 using del.Models;
+using Domain.Entities;
+using Domain.Entities.Models;
+using Domain.Helper;
 using Infrastructure.Abstractions.IUnitOfWork;
 using Infrastructure.Abstractions.IUnitOfWork.ISysUnitOfWork;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,11 +23,14 @@ namespace Application.Features.Session.Commands.Create
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ISysUnitOfWork _SysunitOfWork;
-
-        public CreateSessionHandler(IUnitOfWork unitOfWork, ISysUnitOfWork sysUnitOfWork)
+        private readonly HttpClient _httpClientFactory;
+        private readonly UserManager<ApplicationUser> userManager;
+        public CreateSessionHandler(IUnitOfWork unitOfWork, ISysUnitOfWork sysUnitOfWork, IHttpClientFactory httpClientFactory, UserManager<ApplicationUser> userManager)
         {
             _unitOfWork = unitOfWork;
             _SysunitOfWork = sysUnitOfWork;
+            _httpClientFactory = httpClientFactory.CreateClient("ExternalApi");
+            this.userManager = userManager;
         }
 
         public async Task<BaseResponse<SessionDto>> Handle(CreateSessionCommand request, CancellationToken cancellationToken)
@@ -44,13 +54,14 @@ namespace Application.Features.Session.Commands.Create
 
             if (errors.Any())
                 return BaseResponse<SessionDto>.FailureResponse("Validation failed", errors);
-
-
+            //set time period
+            var lastTime=await _SysunitOfWork.ISysTimeSessionRepository.GetFirstOrderedByAsync(p => p.business_id,descending:true);
             var time = new acc_timeseg { 
-                id= Guid.NewGuid().ToString()
-
+                id= Guid.NewGuid().ToString(),
+                business_id = lastTime.business_id + 1,
+                name= request.StartTime.ToString(@"hh\:mm")+'-'+ request.EndTime.ToString(@"hh\:mm")
             };
-
+           
             string dayName = request.SessionDate.DayOfWeek.ToString();
             var propertyNames = time.GetType()
                        .GetProperties()
@@ -59,20 +70,36 @@ namespace Application.Features.Session.Commands.Create
             var startTimeDate = propertyNames.FirstOrDefault(p => p.Name.Contains(dayName.ToLower()+"_start", StringComparison.OrdinalIgnoreCase));
             var endtimeDate = propertyNames.FirstOrDefault(p => p.Name.Contains(dayName.ToLower()+"_end", StringComparison.OrdinalIgnoreCase));
 
-            startTimeDate.SetValue(time, request.StartTime.ToString());
-            endtimeDate.SetValue(time, request.EndTime.ToString());
+            startTimeDate.SetValue(time, request.StartTime.Add(TimeSpan.FromMinutes(30)).ToString(@"hh\:mm"));
+            endtimeDate.SetValue(time, request.EndTime.Add(TimeSpan.FromMinutes(30)).ToString(@"hh\:mm"));
             
             await _SysunitOfWork.ISysTimeSessionRepository.AddAsync(time);
-            var accessLevel = new acc_level
+            //set access level
+            // List<AddAccessLevelRequest> requests = new List<AddAccessLevelRequest>();
+            // requests.Add(new AddAccessLevelRequest
+            //  { AreaName= "مركز تدريب دار الافتاء المصرية", Name= request.Topic, TimeSegName= time.name
+
+            // });
+            //var addAccLevel=await _httpClientFactory.PostAsJsonAsync(MainConstants.Use("accLevel/addLevel"), requests);
+            // var success = await addAccLevel.Content.ReadFromJsonAsync<ExternalApiResponse<List<string>>>();
+            // if (success.Message.Contains("Succeed: 0"))
+            //     BaseResponse<SessionDto>.FailureResponse("Failed to create access level");
+            var accLevel = new acc_level
             {
                 id = Guid.NewGuid().ToString(),
-                start_date= request.SessionDate,
+                creater_code = "admin",
+                creater_id = "8a807a299b0d347b019b0d355f320002",
+                creater_name = "admin",
+                updater_code = "admin",
+                updater_id = "8a807a299b0d347b019b0d355f320002",
+                updater_name = "admin",
+                auth_area_id = "8a807a299b0d347b019b0d355f9a0003",
                 name = request.Topic,
-                end_date=request.SessionDate.AddDays(1),
-                timeseg_id=time.id
+                timeseg_id = time.id
             };
-           
-            await _SysunitOfWork.ISysAccessLevelRepository.AddAsync(accessLevel);
+            await _SysunitOfWork.ISysAccessLevelRepository.AddAsync(accLevel);
+            await _SysunitOfWork.Complete();
+
             var session = new Domain.Entities.Session
             {
                 CreatedBy = "System",
@@ -84,10 +111,51 @@ namespace Application.Features.Session.Commands.Create
                 RoomId = request.RoomId,
                 CourseId = request.CourseId,
                 lecturerId = request.LecturerId,
-                AccessLevelId = accessLevel.id
+                AccessLevelId= accLevel.id
 
             };
+            //set access level with doors
+                //get all doors names
+                //get room first
+                var room=await _unitOfWork.IRooms.GetByPkAsync(request.RoomId);
+                var outsideId = room.AttRoomIdOutSide;
+                var insideId=room.AttRoomIdinside;
+                var doors =new List<DoorDto>();
+            var doorOutside = await _SysunitOfWork.ISysDoorRepository.GetByPropAsync(d=>d.id.Contains(outsideId));
+            var doorInside = await _SysunitOfWork.ISysDoorRepository.GetByPropAsync(d=>d.id.Contains(insideId));
+                
+            List<AccessLevelDoorDto> request2 = new List<AccessLevelDoorDto>
+            {
+                new AccessLevelDoorDto
+                {
+                    DoorName = doorOutside.name,
+                    LevelName = accLevel.name
+                },
+                new AccessLevelDoorDto
+                {
+                    DoorName = doorInside.name,
+                    LevelName = accLevel.name
+                }
+            };
+            
+            var addDoorsToAccLevel=await _httpClientFactory.PostAsJsonAsync(MainConstants.Use("accLevel/addLevelDoor"), request2);
 
+            var success2 = await addDoorsToAccLevel.Content.ReadFromJsonAsync<ExternalApiResponse<List<string>>>();
+            if (success2.Message.Contains("Succeed: 0"))
+                BaseResponse<SessionDto>.FailureResponse("Failed to assign doors to access level");
+
+            var users =await userManager.Users.Where(u => request.usersIds.Contains(u.Id)).ToListAsync();
+            var userForSys = new List<ZkPersonCreateDto>();
+            foreach(var user in users)
+            {
+                userForSys.Add(new ZkPersonCreateDto
+                {
+                    Pin=user.pin,
+                    AccLevelIds=accLevel.id
+                });
+
+            }
+            await _httpClientFactory.PostAsJsonAsync(MainConstants.Use("person/add"), userForSys);
             await _unitOfWork.ISession.AddAsync(session);
             await _unitOfWork.Complete();
             await _SysunitOfWork.Complete();

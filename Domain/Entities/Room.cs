@@ -14,7 +14,8 @@ namespace Domain.Entities
         public string Location { get; set; }
         public int? BuildId { get; set; }
         public bool? HaveProjector { get; set; } = false;
-        public string AttRoomId { get; set; } = string.Empty;
+        public string AttRoomIdOutSide { get; set; } = string.Empty;
+        public string AttRoomIdinside { get; set; } = string.Empty;
         
         [ForeignKey(nameof(BuildId))]
         public Building Building { get; set; }

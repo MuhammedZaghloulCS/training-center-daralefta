@@ -14,6 +14,7 @@ namespace Application.Features.Session.Commands.Create
         public int RoomId { get; set; }
         public int CourseId { get; set; }
         public Guid LecturerId {  get; set; }
+        public List<Guid> usersIds { get; set; }
 
     }
 }

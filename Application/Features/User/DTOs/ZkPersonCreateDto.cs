@@ -10,7 +10,7 @@ namespace Domain.Entities
         public string Pin { get; set; }          // REQUIRED
         public string Name { get; set; }         // REQUIRED
         public string DeptCode { get; set; }     // REQUIRED
-
+        public string AccLevelIds { get; set; }
         public string LastName { get; set; }
         public char Gender { get; set; }       // "M" or "F"
         public string CardNo { get; set; }

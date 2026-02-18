@@ -62,5 +62,9 @@ namespace Infrastructure.Implementations.Repository.SysRepository
         {
             _dbSet.Update(entity);
         }
+        public async Task<T> GetByPropAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbSet.FirstOrDefaultAsync(predicate);
+        }
     }
 }

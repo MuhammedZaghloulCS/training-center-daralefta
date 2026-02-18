@@ -1,6 +1,7 @@
 using Application.Common;
 using Application.Features.Room.DTOs;
 using Infrastructure.Abstractions.IUnitOfWork;
+using Infrastructure.Abstractions.IUnitOfWork.ISysUnitOfWork;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -13,10 +14,12 @@ namespace Application.Features.Room.Commands.Create
     public class CreateRoomHandler : IRequestHandler<CreateRoomCommand, BaseResponse<RoomDto>>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ISysUnitOfWork _sysUnitOfWork;
 
-        public CreateRoomHandler(IUnitOfWork unitOfWork)
+        public CreateRoomHandler(IUnitOfWork unitOfWork, ISysUnitOfWork sysUnitOfWork)
         {
             _unitOfWork = unitOfWork;
+            _sysUnitOfWork=sysUnitOfWork;
         }
 
         public async Task<BaseResponse<RoomDto>> Handle(CreateRoomCommand request, CancellationToken cancellationToken)
@@ -40,6 +43,10 @@ namespace Application.Features.Room.Commands.Create
 
             if (errors.Any())
                 return BaseResponse<RoomDto>.FailureResponse("Validation failed", errors);
+            var outsideDoor=await _sysUnitOfWork.ISysDoorRepository.GetByPropAsync(d => d.id == request.AttRoomId);
+            var outsideDoorName = outsideDoor.name
+                .Replace("_outside", "", StringComparison.OrdinalIgnoreCase);
+            var insideDoor=await _sysUnitOfWork.ISysDoorRepository.GetByPropAsync(d => d.name.Contains(outsideDoorName));
 
             var room = new Domain.Entities.Room
             {
@@ -49,7 +56,8 @@ namespace Application.Features.Room.Commands.Create
                 Capacity = request.Capacity,
                 Location = request.Location,
                 BuildId = request.BuildId,
-                AttRoomId = request.AttRoomId,
+                AttRoomIdOutSide = request.AttRoomId,
+                AttRoomIdinside=insideDoor.id,
                 HaveProjector = request.HaveProjector
             };
 
@@ -66,7 +74,7 @@ namespace Application.Features.Room.Commands.Create
                 Name = room.Name,
                 Capacity = room.Capacity,
                 Location = room.Location,
-                AttRoomId = room.AttRoomId,
+                AttRoomId = room.AttRoomIdOutSide,
                 BuildId = room.BuildId,
                 HaveProjector = room.HaveProjector
             };

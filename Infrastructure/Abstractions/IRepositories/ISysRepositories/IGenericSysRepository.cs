@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
@@ -15,5 +16,6 @@ namespace Infrastructure.Abstractions.IRepositories.ISysRepositories
         public Task<List<T>> GetPaginatedAsync<TKey>(int pageNumber, int pageSize, Expression<Func<T, TKey>> order, bool descending = true);
         public Task<T> GetByIdAsync(string id);
 
+        public Task<T?> GetByPropAsync(Expression<Func<T, bool>> predicate);
     }
 }

@@ -224,7 +224,7 @@ namespace API.Controllers
             }
             return Ok(response);
         }
-
+        //to dooooooooooooo asign users in sys DON'T IGNORE
         [HttpPost("assignTraining")]
         public async Task<IActionResult> AssignUserToTraining([FromBody] UsersTrainingDTO dto)
         {
