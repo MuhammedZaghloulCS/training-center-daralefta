@@ -7,6 +7,7 @@ using Domain.Entities.Models;
 using Domain.Helper;
 using Infrastructure.Abstractions.IUnitOfWork;
 using Infrastructure.Abstractions.IUnitOfWork.ISysUnitOfWork;
+using Infrastructure.Implementations.UnitOfWork.SysUnitOfWork;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -144,10 +145,28 @@ namespace Application.Features.Session.Commands.Create
             if (success2.Message.Contains("Succeed: 0"))
                 BaseResponse<SessionDto>.FailureResponse("Failed to assign doors to access level");
 
-            var users =await userManager.Users.Where(u => request.usersIds.Contains(u.Id)).ToListAsync();
+            var users =await userManager.Users.Where(u => request.usersIds.Contains(u.Id)&&!u.IsDeleted).ToListAsync();
+
+            var lastSysPerson = await _SysunitOfWork.ISysPersonRepository.GetFirstOrderedByAsync<int>(p => Convert.ToInt32(p.pin), descending: true);
+
+            var lastUser = await userManager.Users
+            .Where(u => u.pin != null)
+            .OrderByDescending(u => Convert.ToInt64(u.pin))
+            .FirstOrDefaultAsync();
+
+            int sysPin = int.TryParse(lastSysPerson?.pin, out var s) ? s : 0;
+            int userPin = int.TryParse(lastUser?.pin, out var u) ? u : 0;
+
+            var lastId = Math.Max(sysPin, userPin) + 1;
+
             var userForSys = new List<ZkPersonCreateDto>();
             foreach(var user in users)
             {
+                if(string.IsNullOrEmpty(user.pin))
+                {
+                    user.pin = lastId.ToString();
+                    await userManager.UpdateAsync(user);
+                }
                 userForSys.Add(new ZkPersonCreateDto
                 {
                     Pin=user.pin,
@@ -155,7 +174,9 @@ namespace Application.Features.Session.Commands.Create
                 });
 
             }
-            await _httpClientFactory.PostAsJsonAsync(MainConstants.Use("person/add"), userForSys);
+            var resultOfAddedUsersOnSys=await _httpClientFactory.PostAsJsonAsync(MainConstants.Use("person/add"), userForSys);
+            if(!resultOfAddedUsersOnSys.IsSuccessStatusCode)
+                BaseResponse<SessionDto>.FailureResponse("Failed to add users to the system");
             await _unitOfWork.ISession.AddAsync(session);
             await _unitOfWork.Complete();
             await _SysunitOfWork.Complete();

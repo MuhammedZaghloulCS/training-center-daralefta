@@ -22,6 +22,7 @@ namespace Application.Features.User.Queries.Handler
         public async Task<BaseResponse<List<UserDTO>>> Handle(GetUsersByRolesQuery request, CancellationToken cancellationToken)
         {
             var usersInRole = await _userManager.GetUsersInRoleAsync(request.roleName);
+           usersInRole = usersInRole.Where(user => !user.IsDeleted).ToList(); // تأكد من استبعاد المستخدمين المحذوفين
             if (usersInRole == null)
             {
                 return BaseResponse<List<UserDTO>>.NotFoundResponse($"No users found in role '{request.roleName}'.");

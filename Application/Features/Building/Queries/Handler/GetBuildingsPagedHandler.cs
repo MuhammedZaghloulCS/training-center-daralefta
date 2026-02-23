@@ -34,7 +34,7 @@ namespace Application.Features.Building.Queries.Handler
                 true,
                 b => b.Rooms);
 
-            if (items == null || !items.Any())
+            if (items == null || !items.Any()||items.All(r=>r.IsDeleted))
             {
                 return BaseResponse<List<BuildingListDTO>>.SuccessResponse(
                     new List<BuildingListDTO>(),
@@ -44,7 +44,7 @@ namespace Application.Features.Building.Queries.Handler
                     "No building found");
             }
 
-            var data = items.Select(b => new BuildingListDTO
+            var data = items.Where(b=>!b.IsDeleted).Select(b => new BuildingListDTO
             {
                 Id = b.Id,
                 CreatedBy = b.CreatedBy,

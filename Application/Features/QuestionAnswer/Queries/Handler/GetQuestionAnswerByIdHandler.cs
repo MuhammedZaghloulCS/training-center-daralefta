@@ -23,7 +23,7 @@ namespace Application.Features.QuestionAnswer.Queries.Handler
             var answers = await _unitOfWork.ISurveyAnswer.FindRowAsync(a => a.Id == request.Id, a => a.SurveyQuestion, a => a.SurveyResponse);
             var answer = answers.FirstOrDefault();
 
-            if (answer == null)
+            if (answer == null || answer.IsDeleted)
             {
                 return BaseResponse<QuestionAnswerDto>.NotFoundResponse("QuestionAnswer not found");
             }

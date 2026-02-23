@@ -20,7 +20,7 @@ namespace Application.Features.User.Queries.Handler
         public async Task<BaseResponse<UserDTO>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
         {
            var user= await _userManager.FindByIdAsync(request.Id.ToString());
-            if (user == null)
+            if (user == null||user.IsDeleted)
             {
                 return BaseResponse<UserDTO>.NotFoundResponse("User not found");
             }

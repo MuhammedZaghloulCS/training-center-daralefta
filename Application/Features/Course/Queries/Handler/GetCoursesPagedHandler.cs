@@ -35,7 +35,7 @@ namespace Application.Features.Course.Queries.Handler
                 c => c.Sessions,
                 c => c.Training);
 
-            if (items == null || !items.Any())
+            if (items == null || !items.Any()||items.All(r=>r.IsDeleted))
             {
                 return BaseResponse<List<CourseListDTO>>.SuccessResponse(
                     new List<CourseListDTO>(),
@@ -45,7 +45,7 @@ namespace Application.Features.Course.Queries.Handler
                     "No course found");
             }
 
-            var data = items.Select(c => new CourseListDTO
+            var data = items.Where(r=>!r.IsDeleted).Select(c => new CourseListDTO
             {
                 Id = c.Id,
                 CreatedBy = c.CreatedBy,

@@ -22,7 +22,7 @@ namespace Application.Features.Course.Commands.Update
         public async Task<BaseResponse<CourseDto>> Handle(UpdateCourseCommand request, CancellationToken cancellationToken)
         {
             var course = await _unitOfWork.ICourse.GetByPkAsync(request.Id);
-            if (course == null)
+            if (course == null||course.IsDeleted)
             {
                 return BaseResponse<CourseDto>.NotFoundResponse("Course not found");
             }

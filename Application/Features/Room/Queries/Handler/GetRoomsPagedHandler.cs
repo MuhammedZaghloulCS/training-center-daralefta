@@ -35,7 +35,7 @@ namespace Application.Features.Room.Queries.Handler
                 r => r.Building,
                 r => r.Sessions);
 
-            if (items == null || !items.Any())
+            if (items == null || !items.Any() || items.All(r => r.IsDeleted))
             {
                 return BaseResponse<List<RoomListDTO>>.SuccessResponse(
                     new List<RoomListDTO>(),
@@ -45,7 +45,7 @@ namespace Application.Features.Room.Queries.Handler
                     "No room found");
             }
 
-            var data = items.Select(r => new RoomListDTO
+            var data = items.Where(r=>!r.IsDeleted).Select(r => new RoomListDTO
             {
                 Id = r.Id,
                 CreatedBy = r.CreatedBy,

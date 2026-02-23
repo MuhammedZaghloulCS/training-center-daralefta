@@ -32,7 +32,7 @@ namespace API.Controllers
             if (request == null)
                 throw new Exception("Request is null");
             var user = await _userManager.FindByEmailAsync(request.Email);
-            if (user == null)
+            if (user == null||user.IsDeleted)
                 return Unauthorized(new { message = "Invalid email or password" });
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, lockoutOnFailure: true);
@@ -72,7 +72,7 @@ namespace API.Controllers
             var user = await _userManager.FindByIdAsync(userId);
 
             // التحقق من الـ Refresh Token
-            if (user == null ||
+            if (user == null ||user.IsDeleted||
                 user.RefreshToken != request.RefreshToken ||
                 user.RefreshTokenExpiryTime <= DateTime.UtcNow)
             {
@@ -106,7 +106,7 @@ namespace API.Controllers
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var user = await _userManager.FindByIdAsync(userId);
 
-            if (user == null)
+            if (user == null || user.IsDeleted)
                 return NotFound();
 
             // إلغاء الـ Refresh Token (Logout)

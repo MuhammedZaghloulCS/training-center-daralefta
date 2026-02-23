@@ -20,9 +20,9 @@ namespace Application.Features.Building.Queries.Handler
 
         public async Task<BaseResponse<BuildingDto>> Handle(GetBuildingByIdQuery request, CancellationToken cancellationToken)
         {
-            var buildings = await _unitOfWork.IBuildings.FindRowAsync(b => b.Id == request.Id, b => b.Rooms);
+            var buildings = await _unitOfWork.IBuildings.FindRowAsync(b => b.Id == request.Id&&!b.IsDeleted, b => b.Rooms);
             var building = buildings.FirstOrDefault();
-            if (building == null)
+            if (building == null||building.IsDeleted)
             {
                 return BaseResponse<BuildingDto>.NotFoundResponse("Building not found");
             }

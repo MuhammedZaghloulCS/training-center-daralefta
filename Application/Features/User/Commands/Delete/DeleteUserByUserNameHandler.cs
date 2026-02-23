@@ -43,7 +43,7 @@ namespace Application.Features.User.Commands.Delete
                 existingUser = await _userManager.FindByIdAsync(request.UserId.ToString()); 
             }
 
-            if (existingUser == null)
+            if (existingUser == null||existingUser.IsDeleted)
             {
                 return BaseResponse<string>.FailureResponse(
                     "المستخدم غير موجود",
@@ -51,8 +51,10 @@ namespace Application.Features.User.Commands.Delete
                 );
             }
             var pin = existingUser.pin;
+            existingUser.IsDeleted = true;
+
             // حذف المستخدم
-            var result = await _userManager.DeleteAsync(existingUser);
+            var result = await _userManager.UpdateAsync(existingUser);
 
             if (!result.Succeeded)
             {
@@ -63,9 +65,7 @@ namespace Application.Features.User.Commands.Delete
                 }
                 return BaseResponse<string>.FailureResponse("فشل حذف المستخدم", errors);
             }
-            var personOnSys = await sysUnitOfWork.ISysPersonRepository.GetPersonByPinAsync(pin);
-            sysUnitOfWork.ISysPersonRepository.Delete(personOnSys);
-            await sysUnitOfWork.Complete();
+
            
             return BaseResponse<string>.SuccessResponse(
                 data: $"تم حذف المستخدم {existingUser.UserName} بنجاح",

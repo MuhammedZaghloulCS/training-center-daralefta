@@ -24,7 +24,7 @@ namespace Application.Features.User.Queries.Handler
         public async Task<BaseResponse<List<TrainingDto>>> Handle(GetTrainingUsersRangePaginatedQuery request, CancellationToken cancellationToken)
         {
 
-            var userExist= _userManager.Users.FirstOrDefault(u => u.Id == request.UserId);
+            var userExist= _userManager.Users.FirstOrDefault(u => u.Id == request.UserId&& !u.IsDeleted);
 
             if (userExist is null)
                 return BaseResponse<List<TrainingDto>>.NotFoundResponse("User not found for the provided ID.");

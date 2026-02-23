@@ -79,7 +79,7 @@ namespace Application.Features.User.Queries.Handler
                     
             }
 
-            var usersQuery = _userManager.Users.AsNoTracking();
+            var usersQuery = _userManager.Users.Where(u=>!u.IsDeleted).AsNoTracking();
             IEnumerable<ApplicationUser> users;
 
             if (!string.IsNullOrWhiteSpace(request.Search))

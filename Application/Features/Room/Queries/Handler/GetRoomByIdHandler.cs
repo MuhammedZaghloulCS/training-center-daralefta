@@ -23,7 +23,7 @@ namespace Application.Features.Room.Queries.Handler
             var rooms = await _unitOfWork.IRooms.FindRowAsync(r => r.Id == request.Id, r => r.Building, r => r.Sessions);
             var room = rooms.FirstOrDefault();
 
-            if (room == null)
+            if (room == null || room.IsDeleted)
             {
                 return BaseResponse<RoomDto>.NotFoundResponse("Room not found");
             }

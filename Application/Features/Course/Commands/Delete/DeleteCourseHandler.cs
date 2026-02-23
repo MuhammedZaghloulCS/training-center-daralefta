@@ -18,12 +18,12 @@ namespace Application.Features.Course.Commands.Delete
         public async Task<BaseResponse<bool>> Handle(DeleteCourseCommand request, CancellationToken cancellationToken)
         {
             var course = await _unitOfWork.ICourse.GetByPkAsync(request.Id);
-            if (course == null)
+            if (course == null||course.IsDeleted)
             {
                 return BaseResponse<bool>.NotFoundResponse("Course not found");
             }
-
-            _unitOfWork.ICourse.Delete(course);
+            course.IsDeleted=true;
+            _unitOfWork.ICourse.Update(course);
             await _unitOfWork.Complete();
 
             return BaseResponse<bool>.SuccessResponse(true, "Deleted successfully");

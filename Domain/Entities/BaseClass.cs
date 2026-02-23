@@ -13,5 +13,6 @@ namespace Domain.Entities
         public DateTime CreatedDate { get; set; }
         public string? UpdatedBy { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public bool IsDeleted { get; set; }=false;
     }
 }

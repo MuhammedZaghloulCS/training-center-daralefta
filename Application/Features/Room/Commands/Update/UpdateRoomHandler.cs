@@ -22,7 +22,7 @@ namespace Application.Features.Room.Commands.Update
         public async Task<BaseResponse<RoomDto>> Handle(UpdateRoomCommand request, CancellationToken cancellationToken)
         {
             var room = await _unitOfWork.IRooms.GetByPkAsync(request.Id);
-            if (room == null)
+            if (room == null || room.IsDeleted)
             {
                 return BaseResponse<RoomDto>.NotFoundResponse("Room not found");
             }

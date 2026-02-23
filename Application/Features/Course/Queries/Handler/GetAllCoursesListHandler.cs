@@ -23,7 +23,7 @@ namespace Application.Features.Course.Queries.Handler
         {
             var response = await _unitOfWork.ICourse.GetAllAsync(c => c.Sessions, c => c.Training);
 
-            if (response == null || !response.Any())
+            if (response == null || !response.Any()||response.All(r=>r.IsDeleted))
             {
                 return BaseResponse<List<CourseListDTO>>.SuccessResponse(
                     new List<CourseListDTO>(),
@@ -31,7 +31,7 @@ namespace Application.Features.Course.Queries.Handler
                 );
             }
 
-            var data = response.Select(c => new CourseListDTO
+            var data = response.Where(r=>!r.IsDeleted).Select(c => new CourseListDTO
             {
                 Id = c.Id,
                 CreatedBy = c.CreatedBy,

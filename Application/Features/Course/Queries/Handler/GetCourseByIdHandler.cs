@@ -23,7 +23,7 @@ namespace Application.Features.Course.Queries.Handler
             var courses = await _unitOfWork.ICourse.FindRowAsync(c => c.Id == request.Id, c => c.Sessions, c => c.Training);
             var course = courses.FirstOrDefault();
 
-            if (course == null)
+            if (course == null||course.IsDeleted)
             {
                 return BaseResponse<CourseDto>.NotFoundResponse("Course not found");
             }

@@ -23,7 +23,7 @@ namespace Application.Features.Room.Queries.Handler
         {
             var response = await _unitOfWork.IRooms.GetAllAsync(r => r.Building, r => r.Sessions);
 
-            if (response == null || !response.Any())
+            if (response == null || !response.Any() || response.All(r => r.IsDeleted))
             {
                 return BaseResponse<List<RoomListDTO>>.SuccessResponse(
                     new List<RoomListDTO>(),
@@ -31,7 +31,7 @@ namespace Application.Features.Room.Queries.Handler
                 );
             }
 
-            var data = response.Select(r => new RoomListDTO
+            var data = response.Where(r=>r.!IsDeleted).Select(r => new RoomListDTO
             {
                 Id = r.Id,
                 CreatedBy = r.CreatedBy,

@@ -18,12 +18,12 @@ namespace Application.Features.Room.Commands.Delete
         public async Task<BaseResponse<bool>> Handle(DeleteRoomCommand request, CancellationToken cancellationToken)
         {
             var room = await _unitOfWork.IRooms.GetByPkAsync(request.Id);
-            if (room == null)
+            if (room == null||room.IsDeleted)
             {
                 return BaseResponse<bool>.NotFoundResponse("Room not found");
             }
-
-            _unitOfWork.IRooms.Delete(room);
+            room.IsDeleted = true;
+            _unitOfWork.IRooms.Update(room);
             await _unitOfWork.Complete();
 
             return BaseResponse<bool>.SuccessResponse(true, "Deleted successfully");

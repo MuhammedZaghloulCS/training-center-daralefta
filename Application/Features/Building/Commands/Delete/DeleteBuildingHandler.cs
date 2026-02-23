@@ -18,12 +18,12 @@ namespace Application.Features.Building.Commands.Delete
         public async Task<BaseResponse<bool>> Handle(DeleteBuildingCommand request, CancellationToken cancellationToken)
         {
             var building = await _unitOfWork.IBuildings.GetByPkAsync(request.Id);
-            if (building == null)
+            if (building == null||building.IsDeleted)
             {
                 return BaseResponse<bool>.NotFoundResponse("Building not found");
             }
-
-            _unitOfWork.IBuildings.Delete(building);
+            building.IsDeleted = true;
+            _unitOfWork.IBuildings.Update(building);
             await _unitOfWork.Complete();
 
             return BaseResponse<bool>.SuccessResponse(true, "Deleted successfully");

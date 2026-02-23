@@ -35,7 +35,7 @@ namespace Application.Features.QuestionAnswer.Queries.Handler
                 a => a.SurveyQuestion,
                 a => a.SurveyResponse);
 
-            if (items == null || !items.Any())
+            if (items == null || !items.Any()||items.All(r=>r.IsDeleted))
             {
                 return BaseResponse<List<QuestionAnswerListDTO>>.SuccessResponse(
                     new List<QuestionAnswerListDTO>(),
@@ -45,7 +45,7 @@ namespace Application.Features.QuestionAnswer.Queries.Handler
                     "No question answer found");
             }
 
-            var data = items.Select(a => new QuestionAnswerListDTO
+            var data = items.Where(r=>!r.IsDeleted).Select(a => new QuestionAnswerListDTO
             {
                 Id = a.Id,
                 CreatedBy = a.CreatedBy,

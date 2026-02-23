@@ -18,12 +18,12 @@ namespace Application.Features.QuestionAnswer.Commands.Delete
         public async Task<BaseResponse<bool>> Handle(DeleteQuestionAnswerCommand request, CancellationToken cancellationToken)
         {
             var answer = await _unitOfWork.ISurveyAnswer.GetByPkAsync(request.Id);
-            if (answer == null)
+            if (answer == null||answer.IsDeleted)
             {
                 return BaseResponse<bool>.NotFoundResponse("QuestionAnswer not found");
             }
-
-            _unitOfWork.ISurveyAnswer.Delete(answer);
+            answer.IsDeleted = true;
+            _unitOfWork.ISurveyAnswer.Update(answer);
             await _unitOfWork.Complete();
 
             return BaseResponse<bool>.SuccessResponse(true, "Deleted successfully");

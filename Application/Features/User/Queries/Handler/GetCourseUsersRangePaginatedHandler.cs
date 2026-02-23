@@ -25,7 +25,7 @@ namespace Application.Features.User.Queries.Handler
         public async Task<BaseResponse<List<CourseDto>>> Handle(GetCourseUsersRangePaginatedQuery request, CancellationToken cancellationToken)
         {
 
-            var userExist= _userManager.Users.FirstOrDefault(u => u.Id == request.UserId);
+            var userExist= _userManager.Users.FirstOrDefault(u => u.Id == request.UserId&&!u.IsDeleted);
 
             if (userExist is null)
                 return BaseResponse<List<CourseDto>>.NotFoundResponse("User not found for the provided ID.");

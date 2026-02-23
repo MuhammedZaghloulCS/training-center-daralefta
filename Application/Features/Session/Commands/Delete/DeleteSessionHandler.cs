@@ -18,12 +18,12 @@ namespace Application.Features.Session.Commands.Delete
         public async Task<BaseResponse<bool>> Handle(DeleteSessionCommand request, CancellationToken cancellationToken)
         {
             var session = await _unitOfWork.ISession.GetByPkAsync(request.Id);
-            if (session == null)
+            if (session == null||session.IsDeleted)
             {
                 return BaseResponse<bool>.NotFoundResponse("Session not found");
             }
-
-            _unitOfWork.ISession.Delete(session);
+            session.IsDeleted = true;
+            _unitOfWork.ISession.Update(session);
             await _unitOfWork.Complete();
 
             return BaseResponse<bool>.SuccessResponse(true, "Deleted successfully");

@@ -10,7 +10,7 @@ namespace Domain.Entities
 {
     public class ApplicationUser : IdentityUser<Guid>
     {
-
+        public bool IsDeleted { get; set; } = false;
         public string pin { get; set; } = "";
         public String FirstName { get; set; }
         public String LastName { get; set; }

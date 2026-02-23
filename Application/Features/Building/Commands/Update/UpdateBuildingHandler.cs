@@ -22,7 +22,7 @@ namespace Application.Features.Building.Commands.Update
         public async Task<BaseResponse<BuildingDto>> Handle(UpdateBuildingCommand request, CancellationToken cancellationToken)
         {
             var building = await _unitOfWork.IBuildings.GetByPkAsync(request.Id);
-            if (building == null)
+            if (building == null||building.IsDeleted)
             {
                 return BaseResponse<BuildingDto>.NotFoundResponse("Building not found");
             }

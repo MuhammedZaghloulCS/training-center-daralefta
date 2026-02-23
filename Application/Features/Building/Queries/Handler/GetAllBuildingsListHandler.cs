@@ -30,7 +30,7 @@ namespace Application.Features.Building.Queries.Handler
                 );
             }
 
-            var data = response.Select(b => new BuildingListDTO
+            var data = response.Where(r=>!r.IsDeleted).Select(b => new BuildingListDTO
             {
                 Id = b.Id,
                 CreatedBy = b.CreatedBy,

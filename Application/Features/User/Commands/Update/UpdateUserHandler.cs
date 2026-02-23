@@ -26,7 +26,7 @@ namespace Application.Features.User.Commands.Update
             // Find the existing user
             var existingUser = await _userManager.FindByNameAsync(request.User.UserName);
             
-            if (existingUser == null)
+            if (existingUser == null || existingUser.IsDeleted)
             {
                 return BaseResponse<UserDTO>.FailureResponse("User not found", new List<string> { $"No user found with ID: {request.User.Id}" });
             }
