@@ -30,7 +30,7 @@ namespace Application.Features.Survey.Queries.Handler
 
             var survey = surveys.FirstOrDefault();
 
-            if (survey == null)
+            if (survey == null|| survey.IsDeleted)
             {
                 return BaseResponse<SurveyDto>.NotFoundResponse("Survey not found");
             }

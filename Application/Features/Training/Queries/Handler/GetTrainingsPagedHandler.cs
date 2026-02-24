@@ -63,7 +63,7 @@ namespace Application.Features.Training.Queries.Handler
             var items = paged.items;
             var totalCount = paged.totalCount;
 
-            if (items == null || !items.Any())
+            if (items == null || !items.Any()||items.All(r=>r.IsDeleted))
             {
                 return BaseResponse<List<TrainingListDTO>>.SuccessResponse(
                     new List<TrainingListDTO>(),
@@ -73,7 +73,7 @@ namespace Application.Features.Training.Queries.Handler
                     "No training found");
             }
 
-            var data = items.Select(t => new TrainingListDTO
+            var data = items.Where(r => !r.IsDeleted).Select(t => new TrainingListDTO
             {
                 Id = t.Id,
                 CreatedBy = t.CreatedBy,

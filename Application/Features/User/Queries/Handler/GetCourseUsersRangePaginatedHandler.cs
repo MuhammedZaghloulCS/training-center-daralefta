@@ -27,7 +27,7 @@ namespace Application.Features.User.Queries.Handler
 
             var userExist= _userManager.Users.FirstOrDefault(u => u.Id == request.UserId&&!u.IsDeleted);
 
-            if (userExist is null)
+            if (userExist is null||userExist.IsDeleted)
                 return BaseResponse<List<CourseDto>>.NotFoundResponse("User not found for the provided ID.");
 
 
@@ -44,7 +44,7 @@ namespace Application.Features.User.Queries.Handler
             var query=await _unitOfWork.ICourse
                 .FindRowAsync(s=>CourseIds.Contains(s.Id));
 
-           var CourseDtos = query
+           var CourseDtos = query.Where(r => !r.IsDeleted)
                 .OrderBy(u => u.Name)
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)

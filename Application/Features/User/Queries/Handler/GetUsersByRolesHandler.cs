@@ -23,12 +23,12 @@ namespace Application.Features.User.Queries.Handler
         {
             var usersInRole = await _userManager.GetUsersInRoleAsync(request.roleName);
            usersInRole = usersInRole.Where(user => !user.IsDeleted).ToList(); // تأكد من استبعاد المستخدمين المحذوفين
-            if (usersInRole == null)
+            if (usersInRole == null||usersInRole.All(r=>r.IsDeleted))
             {
                 return BaseResponse<List<UserDTO>>.NotFoundResponse($"No users found in role '{request.roleName}'.");
             }
         
-            var userDTOs = usersInRole.Select(user => new UserDTO
+            var userDTOs = usersInRole.Where(r => !r.IsDeleted).Select(user => new UserDTO
             {
                 Id = user.Id,
                 UserName = user.UserName,

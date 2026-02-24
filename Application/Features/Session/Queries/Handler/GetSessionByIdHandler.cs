@@ -23,7 +23,7 @@ namespace Application.Features.Session.Queries.Handler
             var sessions = await _unitOfWork.ISession.FindRowAsync(s => s.Id == request.Id, s => s.Room, s => s.Course);
             var session = sessions.FirstOrDefault();
 
-            if (session == null)
+            if (session == null||session.IsDeleted)
             {
                 return BaseResponse<SessionDto>.NotFoundResponse("Session not found");
             }

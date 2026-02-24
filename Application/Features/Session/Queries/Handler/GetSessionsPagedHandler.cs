@@ -64,7 +64,7 @@ namespace Application.Features.Session.Queries.Handler
                 s => s.Room,
                 s => s.Course);
 
-            if (items == null || !items.Any())
+            if (items == null || !items.Any()||items.All(i=>i.IsDeleted))
             {
                 return BaseResponse<List<SessionListDTO>>.SuccessResponse(
                     new List<SessionListDTO>(),
@@ -74,7 +74,7 @@ namespace Application.Features.Session.Queries.Handler
                     "No session found");
             }
 
-            var data = items.Select(s => new SessionListDTO
+            var data = items.Where(r => !r.IsDeleted).Select(s => new SessionListDTO
             {
                 Id = s.Id,
                 CreatedBy = s.CreatedBy,

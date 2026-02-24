@@ -23,7 +23,7 @@ namespace Application.Features.SurveyCategory.Queries.Handler
             var categories = await _unitOfWork.ISurveyCategory.FindRowAsync(c => c.Id == request.Id, c => c.Surveys);
             var surveyCategory = categories.FirstOrDefault();
 
-            if (surveyCategory == null)
+            if (surveyCategory == null || surveyCategory.IsDeleted)
             {
                 return BaseResponse<SurveyCategoryDto>.NotFoundResponse("SurveyCategory not found");
             }

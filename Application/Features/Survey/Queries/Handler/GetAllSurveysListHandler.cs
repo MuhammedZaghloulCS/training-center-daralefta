@@ -28,7 +28,7 @@ namespace Application.Features.Survey.Queries.Handler
                 s => s.SurveyQuestions,
                 s => s.SurveyResponses);
 
-            if (response == null || !response.Any())
+            if (response == null || !response.Any()||response.All(r=>r.IsDeleted))
             {
                 return BaseResponse<List<SurveyListDTO>>.SuccessResponse(
                     new List<SurveyListDTO>(),
@@ -36,7 +36,7 @@ namespace Application.Features.Survey.Queries.Handler
                 );
             }
 
-            var data = response.Select(s => new SurveyListDTO
+            var data = response.Where(r => !r.IsDeleted).Select(s => new SurveyListDTO
             {
                 Id = s.Id,
                 CreatedBy = s.CreatedBy,

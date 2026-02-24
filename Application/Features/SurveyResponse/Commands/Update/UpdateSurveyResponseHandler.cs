@@ -22,7 +22,7 @@ namespace Application.Features.SurveyResponse.Commands.Update
         public async Task<BaseResponse<SurveyResponseDto>> Handle(UpdateSurveyResponseCommand request, CancellationToken cancellationToken)
         {
             var surveyResponse = await _unitOfWork.ISurveyResponse.GetByPkAsync(request.Id);
-            if (surveyResponse == null)
+            if (surveyResponse == null|| surveyResponse.IsDeleted)
             {
                 return BaseResponse<SurveyResponseDto>.NotFoundResponse("SurveyResponse not found");
             }

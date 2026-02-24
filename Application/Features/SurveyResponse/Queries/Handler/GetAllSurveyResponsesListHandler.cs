@@ -23,7 +23,7 @@ namespace Application.Features.SurveyResponse.Queries.Handler
         {
             var response = await _unitOfWork.ISurveyResponse.GetAllAsync(r => r.User, r => r.Survey, r => r.Answers);
 
-            if (response == null || !response.Any())
+            if (response == null || !response.Any()||response.All(r=>r.IsDeleted))
             {
                 return BaseResponse<List<SurveyResponseListDTO>>.SuccessResponse(
                     new List<SurveyResponseListDTO>(),
@@ -31,7 +31,7 @@ namespace Application.Features.SurveyResponse.Queries.Handler
                 );
             }
 
-            var data = response.Select(r => new SurveyResponseListDTO
+            var data = response.Where(r => !r.IsDeleted).Select(r => new SurveyResponseListDTO
             {
                 Id = r.Id,
                 CreatedBy = r.CreatedBy,

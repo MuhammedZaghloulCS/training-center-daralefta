@@ -18,12 +18,12 @@ namespace Application.Features.SurveyResponse.Commands.Delete
         public async Task<BaseResponse<bool>> Handle(DeleteSurveyResponseCommand request, CancellationToken cancellationToken)
         {
             var surveyResponse = await _unitOfWork.ISurveyResponse.GetByPkAsync(request.Id);
-            if (surveyResponse == null)
+            if (surveyResponse == null|| surveyResponse.IsDeleted)
             {
                 return BaseResponse<bool>.NotFoundResponse("SurveyResponse not found");
             }
-
-            _unitOfWork.ISurveyResponse.Delete(surveyResponse);
+            surveyResponse.IsDeleted = true;
+            _unitOfWork.ISurveyResponse.Update(surveyResponse);
             await _unitOfWork.Complete();
 
             return BaseResponse<bool>.SuccessResponse(true, "Deleted successfully");

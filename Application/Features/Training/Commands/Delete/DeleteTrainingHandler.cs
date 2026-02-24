@@ -18,12 +18,12 @@ namespace Application.Features.Training.Commands.Delete
         public async Task<BaseResponse<bool>> Handle(DeleteTrainingCommand request, CancellationToken cancellationToken)
         {
             var training = await _unitOfWork.ITraining.GetByPkAsync(request.Id);
-            if (training == null)
+            if (training == null|training.IsDeleted)
             {
                 return BaseResponse<bool>.NotFoundResponse("Training not found");
             }
-
-            _unitOfWork.ITraining.Delete(training);
+            training.IsDeleted = true;
+            _unitOfWork.ITraining.Update(training);
             await _unitOfWork.Complete();
 
             return BaseResponse<bool>.SuccessResponse(true, "Deleted successfully");

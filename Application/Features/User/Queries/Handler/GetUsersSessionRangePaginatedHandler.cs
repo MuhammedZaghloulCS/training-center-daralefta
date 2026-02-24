@@ -98,7 +98,7 @@ namespace Application.Features.User.Queries.Handler
 
             }
 
-            var users = await query.Where(search)
+            var users = await query.Where(r => !r.IsDeleted).Where(search)
                 .OrderBy(u => u.UserName) // مهم جدًا
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)

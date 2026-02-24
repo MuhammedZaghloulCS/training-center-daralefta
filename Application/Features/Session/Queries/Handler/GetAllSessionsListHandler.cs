@@ -25,7 +25,7 @@ namespace Application.Features.Session.Queries.Handler
         
             var response = await _unitOfWork.ISession.GetAllAsync(s => s.Room, s => s.Course,s=>s.Lecturer);
 
-            if (response == null || !response.Any())
+            if (response == null || !response.Any()||response.All(r=>r.IsDeleted))
             {
                 return BaseResponse<List<SessionListDTO>>.SuccessResponse(
                     new List<SessionListDTO>(),
@@ -33,7 +33,7 @@ namespace Application.Features.Session.Queries.Handler
                 );
             }
 
-            var data = response.Select(s => new SessionListDTO
+            var data = response.Where(r=>!r.IsDeleted).Select(s => new SessionListDTO
             {
                 Id = s.Id,
                 CreatedBy = s.CreatedBy,

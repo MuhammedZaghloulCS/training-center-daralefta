@@ -30,7 +30,7 @@ namespace Application.Features.User.Queries.Handler
             var course = await _unitOfWork.ICourse
                 .GetByPkAsync(request.CourseId, t => t.UsersCourse);
 
-            if (course is null)
+            if (course is null||course.IsDeleted)
                 return BaseResponse<List<UserDTO>>
                     .NotFoundResponse("Course not found for the provided ID.");
 
@@ -94,7 +94,7 @@ namespace Application.Features.User.Queries.Handler
 
             }
 
-            var users = await query.Where(search)
+            var users = await query.Where(r => !r.IsDeleted).Where(search)
                 .OrderBy(u => u.UserName) // مهم جدًا
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)

@@ -22,7 +22,7 @@ namespace Application.Features.Session.Commands.Update
         public async Task<BaseResponse<SessionDto>> Handle(UpdateSessionCommand request, CancellationToken cancellationToken)
         {
             var session = await _unitOfWork.ISession.GetByPkAsync(request.Id);
-            if (session == null)
+            if (session == null||session.IsDeleted)
             {
                 return BaseResponse<SessionDto>.NotFoundResponse("Session not found");
             }

@@ -53,7 +53,7 @@ namespace Application.Features.Survey.Queries.Handler
                 s => s.SurveyQuestions,
                 s => s.SurveyResponses);
 
-            if (items == null || !items.Any())
+            if (items == null || !items.Any()||items.All(i=>i.IsDeleted))
             {
                 return BaseResponse<List<SurveyListDTO>>.SuccessResponse(
                     new List<SurveyListDTO>(),
@@ -63,7 +63,7 @@ namespace Application.Features.Survey.Queries.Handler
                     "No survey found");
             }
 
-            var data = items.Select(s => new SurveyListDTO
+            var data = items.Where(r => !r.IsDeleted).Select(s => new SurveyListDTO
             {
                 Id = s.Id,
                 CreatedBy = s.CreatedBy,

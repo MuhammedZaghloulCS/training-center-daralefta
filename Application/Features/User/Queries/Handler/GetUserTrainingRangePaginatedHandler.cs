@@ -28,7 +28,7 @@ namespace Application.Features.User.Queries.Handler
 
             var trainingExists = await _unitOfWork.ITraining
                 .GetByPkAsync( request.TrainingId);
-            if (trainingExists is null)
+            if (trainingExists is null||trainingExists.IsDeleted)
                 return BaseResponse<List<UserDTO>>
                     .NotFoundResponse("Training not found for the provided ID.");
 
@@ -100,7 +100,7 @@ namespace Application.Features.User.Queries.Handler
 
 
 
-            var users = await query.Where(search)
+            var users = await query.Where(r => !r.IsDeleted).Where(search)
                 .OrderBy(u => u.UserName) 
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)

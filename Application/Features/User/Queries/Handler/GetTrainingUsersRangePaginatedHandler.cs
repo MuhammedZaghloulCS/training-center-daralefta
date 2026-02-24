@@ -26,7 +26,7 @@ namespace Application.Features.User.Queries.Handler
 
             var userExist= _userManager.Users.FirstOrDefault(u => u.Id == request.UserId&& !u.IsDeleted);
 
-            if (userExist is null)
+            if (userExist is null || userExist.IsDeleted)
                 return BaseResponse<List<TrainingDto>>.NotFoundResponse("User not found for the provided ID.");
 
 
@@ -43,7 +43,7 @@ namespace Application.Features.User.Queries.Handler
             var query=await _unitOfWork.ITraining
                 .FindRowAsync(s=>trainingIds.Contains(s.Id));
 
-           var trainingDtos = query
+           var trainingDtos = query.Where(r => !r.IsDeleted)
                 .OrderBy(u => u.StartDate)
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)

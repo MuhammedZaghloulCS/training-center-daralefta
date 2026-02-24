@@ -90,7 +90,7 @@ namespace Application.Features.User.Queries.Handler
                  users = await usersQuery.Skip((request.PageNumber - 1) * request.PageSize).Take(request.PageSize).AsNoTracking().ToListAsync();
             
 
-            if (users == null)
+            if (users == null||users.All(r=>r.IsDeleted))
             {
                 return BaseResponse<List<UserDTO>>.FailureResponse("No users found");
             }
@@ -98,7 +98,7 @@ namespace Application.Features.User.Queries.Handler
             {
                 return BaseResponse<List<UserDTO>>.SuccessResponse(data: default, message: "No users found");
             }
-            var userDTOs = users.Select(u => new UserDTO
+            var userDTOs = users.Where(r => !r.IsDeleted).Select(u => new UserDTO
             {
                 Id = u.Id,
                 UserName = u.UserName,

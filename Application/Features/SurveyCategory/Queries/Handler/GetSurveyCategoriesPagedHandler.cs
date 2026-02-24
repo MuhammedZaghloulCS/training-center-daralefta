@@ -34,7 +34,7 @@ namespace Application.Features.SurveyCategory.Queries.Handler
                 true,
                 c => c.Surveys);
 
-            if (items == null || !items.Any())
+            if (items == null || !items.Any()||items.All(i=>i.IsDeleted))
             {
                 return BaseResponse<List<SurveyCategoryListDTO>>.SuccessResponse(
                     new List<SurveyCategoryListDTO>(),
@@ -44,7 +44,7 @@ namespace Application.Features.SurveyCategory.Queries.Handler
                     "No survey category found");
             }
 
-            var data = items.Select(c => new SurveyCategoryListDTO
+            var data = items.Where(r => !r.IsDeleted).Select(c => new SurveyCategoryListDTO
             {
                 Id = c.Id,
                 CreatedBy = c.CreatedBy,

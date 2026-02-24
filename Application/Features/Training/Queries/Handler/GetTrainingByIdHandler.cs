@@ -23,7 +23,7 @@ namespace Application.Features.Training.Queries.Handler
             var trainings = await _unitOfWork.ITraining.FindRowAsync(t => t.Id == request.Id, t => t.Courses, t => t.UsersTrainings, t => t.Surveys);
             var training = trainings.FirstOrDefault();
 
-            if (training == null)
+            if (training == null||training.IsDeleted)
             {
                 return BaseResponse<TrainingDto>.NotFoundResponse("Training not found");
             }

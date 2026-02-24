@@ -23,7 +23,7 @@ namespace Application.Features.Training.Queries.Handler
         {
             var response = await _unitOfWork.ITraining.GetAllAsync(t => t.Courses,t => t.UsersTrainings,t=>t.Surveys);
 
-            if (response == null || !response.Any())
+            if (response == null || !response.Any()||response.All(r=>r.IsDeleted))
             {
                 return BaseResponse<List<TrainingListDTO>>.SuccessResponse(
                     new List<TrainingListDTO>(),
@@ -31,7 +31,7 @@ namespace Application.Features.Training.Queries.Handler
                 );
             }
 
-            var data = response.Select(t => new TrainingListDTO
+            var data = response.Where(r => !r.IsDeleted).Select(t => new TrainingListDTO
             {
                 Id = t.Id,
                 CreatedBy = t.CreatedBy,

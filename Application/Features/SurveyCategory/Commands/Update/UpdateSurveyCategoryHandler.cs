@@ -22,7 +22,7 @@ namespace Application.Features.SurveyCategory.Commands.Update
         public async Task<BaseResponse<SurveyCategoryDto>> Handle(UpdateSurveyCategoryCommand request, CancellationToken cancellationToken)
         {
             var surveyCategory = await _unitOfWork.ISurveyCategory.GetByPkAsync(request.Id);
-            if (surveyCategory == null)
+            if (surveyCategory == null || surveyCategory.IsDeleted)
             {
                 return BaseResponse<SurveyCategoryDto>.NotFoundResponse("SurveyCategory not found");
             }

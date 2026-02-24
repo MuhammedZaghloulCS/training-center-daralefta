@@ -18,12 +18,12 @@ namespace Application.Features.SurveyCategory.Commands.Delete
         public async Task<BaseResponse<bool>> Handle(DeleteSurveyCategoryCommand request, CancellationToken cancellationToken)
         {
             var surveyCategory = await _unitOfWork.ISurveyCategory.GetByPkAsync(request.Id);
-            if (surveyCategory == null)
+            if (surveyCategory == null|| surveyCategory.IsDeleted)
             {
                 return BaseResponse<bool>.NotFoundResponse("SurveyCategory not found");
             }
-
-            _unitOfWork.ISurveyCategory.Delete(surveyCategory);
+            surveyCategory.IsDeleted = true;
+            _unitOfWork.ISurveyCategory.Update(surveyCategory);
             await _unitOfWork.Complete();
 
             return BaseResponse<bool>.SuccessResponse(true, "Deleted successfully");
