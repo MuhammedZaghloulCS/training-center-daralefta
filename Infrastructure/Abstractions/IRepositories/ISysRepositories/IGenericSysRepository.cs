@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using del.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -15,7 +16,9 @@ namespace Infrastructure.Abstractions.IRepositories.ISysRepositories
         public Task<T> GetFirstOrderedByAsync<TKey>(Expression<Func<T, TKey>> order = null,bool descending=true);
         public Task<List<T>> GetPaginatedAsync<TKey>(int pageNumber, int pageSize, Expression<Func<T, TKey>> order, bool descending = true);
         public Task<T> GetByIdAsync(string id);
-
+        public Task<List<T>> GetAllByPropAsync(Expression<Func<T, bool>> predicate);
         public Task<T?> GetByPropAsync(Expression<Func<T, bool>> predicate);
+        public Task AddRangeAsync(List<T> users);
+
     }
 }

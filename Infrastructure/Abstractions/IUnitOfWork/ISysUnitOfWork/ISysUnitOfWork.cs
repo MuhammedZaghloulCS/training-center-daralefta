@@ -14,6 +14,8 @@ namespace Infrastructure.Abstractions.IUnitOfWork.ISysUnitOfWork
         ISysAccessLevelRepository ISysAccessLevelRepository { get; }
         ISysDoorsRepository ISysDoorRepository { get; }
         ISysAccessLevelDoorRepository ISysAccessLevelDoorRepository { get; }
+        ISysAccessLevelPersonRepository ISysAccessLevelPersonRepository { get; }
+
         #endregion
         Task<int> Complete();
         void Dispose();

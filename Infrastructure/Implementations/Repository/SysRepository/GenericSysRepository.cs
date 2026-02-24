@@ -1,4 +1,5 @@
-﻿using Infrastructure.Abstractions.IRepositories.ISysRepositories;
+﻿using del.Models;
+using Infrastructure.Abstractions.IRepositories.ISysRepositories;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -66,5 +67,14 @@ namespace Infrastructure.Implementations.Repository.SysRepository
         {
             return await _dbSet.FirstOrDefaultAsync(predicate);
         }
+        public async Task<List<T>> GetAllByPropAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbSet.Where(predicate).ToListAsync();
+        }
+        public async Task AddRangeAsync(List<T> users)
+        {
+            await _dbSet.AddRangeAsync(users);
+        }
+
     }
 }

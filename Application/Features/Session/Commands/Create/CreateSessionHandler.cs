@@ -4,6 +4,7 @@ using Azure;
 using del.Models;
 using Domain.Entities;
 using Domain.Entities.Models;
+using Domain.Enums;
 using Domain.Helper;
 using Infrastructure.Abstractions.IUnitOfWork;
 using Infrastructure.Abstractions.IUnitOfWork.ISysUnitOfWork;
@@ -15,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Json;
+using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -58,7 +60,17 @@ namespace Application.Features.Session.Commands.Create
             //set time period
             var lastTime=await _SysunitOfWork.ISysTimeSessionRepository.GetFirstOrderedByAsync(p => p.business_id,descending:true);
             var time = new acc_timeseg { 
-                id= Guid.NewGuid().ToString(),
+                id= Guid.NewGuid().ToString("N"),
+                create_time= DateTime.Now,
+                creater_code= "admin",
+                creater_id= "8a807a299b0d347b019b0d355f320002", 
+                creater_name="admin",
+                op_version=0,
+                update_time= DateTime.Now,
+                updater_code= "admin",
+                updater_id= "8a807a299b0d347b019b0d355f320002",
+                updater_name="admin",
+                remark= request.Topic,
                 business_id = lastTime.business_id + 1,
                 name= request.StartTime.ToString(@"hh\:mm")+'-'+ request.EndTime.ToString(@"hh\:mm")
             };
@@ -67,35 +79,44 @@ namespace Application.Features.Session.Commands.Create
             var propertyNames = time.GetType()
                        .GetProperties()
                        .ToList();
+            foreach (var property in propertyNames)
+            {
+                if (property.Name.Contains("_start", StringComparison.OrdinalIgnoreCase) ||
+                    property.Name.Contains("_end", StringComparison.OrdinalIgnoreCase) &&! property.Name.Contains("end_date", StringComparison.OrdinalIgnoreCase)&&! property.Name.Contains("start_date", StringComparison.OrdinalIgnoreCase))
+                {
+                    property.SetValue(time, "00:00");
+
+                }
+            }
 
             var startTimeDate = propertyNames.FirstOrDefault(p => p.Name.Contains(dayName.ToLower()+"_start", StringComparison.OrdinalIgnoreCase));
             var endtimeDate = propertyNames.FirstOrDefault(p => p.Name.Contains(dayName.ToLower()+"_end", StringComparison.OrdinalIgnoreCase));
 
             startTimeDate.SetValue(time, request.StartTime.Add(TimeSpan.FromMinutes(30)).ToString(@"hh\:mm"));
             endtimeDate.SetValue(time, request.EndTime.Add(TimeSpan.FromMinutes(30)).ToString(@"hh\:mm"));
+
+            
             
             await _SysunitOfWork.ISysTimeSessionRepository.AddAsync(time);
-            //set access level
-            // List<AddAccessLevelRequest> requests = new List<AddAccessLevelRequest>();
-            // requests.Add(new AddAccessLevelRequest
-            //  { AreaName= "مركز تدريب دار الافتاء المصرية", Name= request.Topic, TimeSegName= time.name
-
-            // });
-            //var addAccLevel=await _httpClientFactory.PostAsJsonAsync(MainConstants.Use("accLevel/addLevel"), requests);
-            // var success = await addAccLevel.Content.ReadFromJsonAsync<ExternalApiResponse<List<string>>>();
-            // if (success.Message.Contains("Succeed: 0"))
-            //     BaseResponse<SessionDto>.FailureResponse("Failed to create access level");
+           
+            string newName= request.Topic;
+            var oldAccLevel = await _SysunitOfWork.ISysAccessLevelRepository.GetByPropAsync(acc => acc.name.Equals(request.Topic));
+            if (oldAccLevel?.name is not null)
+                newName = newName + Guid.NewGuid().ToString("N")[..5];
             var accLevel = new acc_level
             {
-                id = Guid.NewGuid().ToString(),
+                id = Guid.NewGuid().ToString("N"),
                 creater_code = "admin",
                 creater_id = "8a807a299b0d347b019b0d355f320002",
+                create_time =DateTime.Now,
+                op_version=0,
+                update_time =DateTime.Now,
                 creater_name = "admin",
                 updater_code = "admin",
                 updater_id = "8a807a299b0d347b019b0d355f320002",
                 updater_name = "admin",
                 auth_area_id = "8a807a299b0d347b019b0d355f9a0003",
-                name = request.Topic,
+                name = newName,
                 timeseg_id = time.id
             };
             await _SysunitOfWork.ISysAccessLevelRepository.AddAsync(accLevel);
@@ -143,10 +164,13 @@ namespace Application.Features.Session.Commands.Create
 
             var success2 = await addDoorsToAccLevel.Content.ReadFromJsonAsync<ExternalApiResponse<List<string>>>();
             if (success2.Message.Contains("Succeed: 0"))
-                BaseResponse<SessionDto>.FailureResponse("Failed to assign doors to access level");
+                return BaseResponse<SessionDto>.FailureResponse("Failed to assign doors to access level");
 
             var users =await userManager.Users.Where(u => request.usersIds.Contains(u.Id)&&!u.IsDeleted).ToListAsync();
 
+            //check if the users on the sys
+
+            var usersSysPins =( await _SysunitOfWork.ISysPersonRepository.GetAllAsync()).Select(u=>u.pin).ToList();
             var lastSysPerson = await _SysunitOfWork.ISysPersonRepository.GetFirstOrderedByAsync<int>(p => Convert.ToInt32(p.pin), descending: true);
 
             var lastUser = await userManager.Users
@@ -158,25 +182,65 @@ namespace Application.Features.Session.Commands.Create
             int userPin = int.TryParse(lastUser?.pin, out var u) ? u : 0;
 
             var lastId = Math.Max(sysPin, userPin) + 1;
-
-            var userForSys = new List<ZkPersonCreateDto>();
-            foreach(var user in users)
+            var diffUsers=users.Where(u => !usersSysPins.Contains(u.pin)).ToList();
+            var diffUsersOnSys = diffUsers.Select(old => new pers_person
             {
-                if(string.IsNullOrEmpty(user.pin))
-                {
-                    user.pin = lastId.ToString();
-                    await userManager.UpdateAsync(user);
-                }
-                userForSys.Add(new ZkPersonCreateDto
-                {
-                    Pin=user.pin,
-                    AccLevelIds=accLevel.id
-                });
+                id=old.Id.ToString("N"),
+                create_time=DateTime.Now,
+                creater_code="admin",
+                creater_id= "8a807a299b0d347b019b0d355f320002",
+                creater_name="admin",
+                op_version=0,
+                update_time= DateTime.Now,
+                updater_code="admin",
+                updater_id= "8a807a299b0d347b019b0d355f320002",
+                updater_name="admin",
+                auth_dept_id= "8a807a299b0d347b019b0d355fb10004",
+                enabled_credential=true,
+                exception_flag=0,
+                gender=old.Gender.GetDescription(),
+                id_card="",
+                id_card_physical_no="",
+                is_from= "PERS_USER_MANUALLY_ADDED",
+                is_sendmail=false,
+                last_name=old.LastName,
+                mobile_phone=old.PhoneNumber,
+                name=old.FirstName,
+                name_spell=old.FullName,
+                number_pin=lastId,
+                person_pwd=old.UserName,
+                person_type=0,
+                pin=lastId.ToString(),
+                pin_letter=false,
+                self_pwd=old.UserName,
+                send_app=true,
+                send_sms=false,
+                status=0
+                
+            }).ToList();
 
-            }
-            var resultOfAddedUsersOnSys=await _httpClientFactory.PostAsJsonAsync(MainConstants.Use("person/add"), userForSys);
-            if(!resultOfAddedUsersOnSys.IsSuccessStatusCode)
-                BaseResponse<SessionDto>.FailureResponse("Failed to add users to the system");
+
+            await _SysunitOfWork.ISysPersonRepository.AddRangeAsync(diffUsersOnSys);
+            await _SysunitOfWork.Complete();
+            var usersPins = users.Select(u => u.pin).ToList();
+            var usersOnSysWithPin = await _SysunitOfWork.ISysPersonRepository.GetAllByPropAsync(u => usersPins.Contains(u.pin));
+            var accPersons = usersOnSysWithPin.Select(u=>new acc_level_person
+            {
+                id = Guid.NewGuid().ToString("N"),
+                create_time = DateTime.Now,
+                creater_code = "admin",
+                creater_id = "8a807a299b0d347b019b0d355f320002",
+                creater_name = "admin",
+                op_version = 0,
+                update_time = DateTime.Now,
+                updater_code = "admin",
+                updater_id = "8a807a299b0d347b019b0d355f320002",
+                updater_name = "admin",
+                pers_person_id=u.id,
+                level_id= accLevel.id
+            }).ToList();
+            await _SysunitOfWork.ISysAccessLevelPersonRepository.AddRangeAsync(accPersons);
+
             await _unitOfWork.ISession.AddAsync(session);
             await _unitOfWork.Complete();
             await _SysunitOfWork.Complete();

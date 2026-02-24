@@ -31,7 +31,7 @@ namespace Application.Features.Room.Queries.Handler
                 );
             }
 
-            var data = response.Where(r=>r.!IsDeleted).Select(r => new RoomListDTO
+            var data = response.Where(r=>!r.IsDeleted).Select(r => new RoomListDTO
             {
                 Id = r.Id,
                 CreatedBy = r.CreatedBy,

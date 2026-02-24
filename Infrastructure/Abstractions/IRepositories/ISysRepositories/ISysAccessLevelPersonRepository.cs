@@ -5,9 +5,7 @@ using System.Text;
 
 namespace Infrastructure.Abstractions.IRepositories.ISysRepositories
 {
-    public interface ISysPersonRepository : IGenericSysRepository<pers_person>
+    public interface ISysAccessLevelPersonRepository : IGenericSysRepository<acc_level_person>
     {
-        public Task<pers_person> GetPersonByPinAsync(string pin);
-
     }
 }

@@ -16,6 +16,7 @@ namespace Infrastructure.Implementations.Repository.SysRepository
             this._context = context;
         }
 
+
         public async Task<pers_person> GetPersonByPinAsync(string pin)
         {
             return await _context.pers_people.FirstOrDefaultAsync(p => p.pin == pin);

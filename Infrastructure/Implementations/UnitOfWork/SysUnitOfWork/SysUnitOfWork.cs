@@ -16,6 +16,7 @@ namespace Infrastructure.Implementations.UnitOfWork.SysUnitOfWork
         private ISysAccessLevelRepository _sysAccessLevelRepository;
         private ISysDoorsRepository _sysDoorRepository;
         private ISysAccessLevelDoorRepository _sysAccessLevelDoorRepository;
+        private ISysAccessLevelPersonRepository _sysAccessLevelPersonRepository;
         private readonly security_dbContext _context;
         #endregion
 
@@ -67,6 +68,15 @@ namespace Infrastructure.Implementations.UnitOfWork.SysUnitOfWork
                 if(_sysAccessLevelDoorRepository == null)
                     _sysAccessLevelDoorRepository=new SysAccessLevelDoorRepository(_context);
                 return _sysAccessLevelDoorRepository;
+            }
+        }
+        public ISysAccessLevelPersonRepository ISysAccessLevelPersonRepository
+        {
+            get
+            {
+                if(_sysAccessLevelPersonRepository == null)
+                    _sysAccessLevelPersonRepository = new SysAccessLevelPersonRepository(_context);
+                return _sysAccessLevelPersonRepository;
             }
         }
 
