@@ -5,6 +5,7 @@ using Infrastructure.Abstractions.IUnitOfWork;
 using MediatR;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,11 +26,36 @@ namespace Application.Features.Room.Queries.Handler
             {
                 return BaseResponse<List<RoomListDTO>>.BadRequestResponse("Invalid pagination parameters");
             }
+            Expression<Func<Domain.Entities.Room, bool>> filter = null;
+            // 1️⃣ Guard
+            if (!string.IsNullOrWhiteSpace(request.SearchTerm))
+            { 
+
+            // 2️⃣ Base filter (string)
+            filter =
+                r => r.Name.Contains(request.SearchTerm)
+                  || r.Location.Contains(request.SearchTerm);
+
+            // 3️⃣ int search (Capacity)
+            if (int.TryParse(request.SearchTerm, out int capacity))
+            {
+                filter = filter.Or(r => r.Capacity == capacity);
+            }
+
+            // 4️⃣ bool? search (HaveProjector)
+            if (bool.TryParse(request.SearchTerm, out bool haveProjector))
+            {
+                filter = filter.Or(r =>
+                    r.HaveProjector.HasValue &&
+                    r.HaveProjector == haveProjector
+                );
+            }
+            }
 
             var (items, totalCount) = await _unitOfWork.IRooms.GetPaginatedAsync(
                 request.PageNumber,
                 request.PageSize,
-                null,
+                filter,
                 r => r.Id,
                 true,
                 r => r.Building,
@@ -55,7 +81,8 @@ namespace Application.Features.Room.Queries.Handler
                 Name = r.Name,
                 Capacity = r.Capacity,
                 Location = r.Location,
-                AttRoomId = r.AttRoomIdOutSide,
+                AttRoomIdOutSide = r.AttRoomIdOutSide,
+                AttRoomIdinside = r.AttRoomIdinside,
                 BuildId = r.BuildId,
                 HaveProjector = r.HaveProjector,
                 Building= new Building.DTOs.BuildingDto
@@ -74,4 +101,22 @@ namespace Application.Features.Room.Queries.Handler
                 "Rooms retrieved successfully");
         }
     }
+
+public static class ExpressionExtensions
+{
+    public static Expression<Func<T, bool>> Or<T>(
+        this Expression<Func<T, bool>> first,
+        Expression<Func<T, bool>> second)
+    {
+        var parameter = Expression.Parameter(typeof(T));
+
+        var left = Expression.Invoke(first, parameter);
+        var right = Expression.Invoke(second, parameter);
+
+        return Expression.Lambda<Func<T, bool>>(
+            Expression.OrElse(left, right),
+            parameter
+        );
+    }
+}
 }

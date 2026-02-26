@@ -19,14 +19,12 @@ namespace Domain.Enums
     }
      public enum UsersRolesEnum
     {
-        [Description("طالب")]
+        [Description("Student")]
         Student = 1,
-        [Description("محاضر")]
+        [Description("Instructor")]
         Lecturer = 2,
-        [Description("الكل")]
-        Both = 3,
-        [Description("الكل")]
-        Admin = 4
+        [Description("Admin")]
+        Admin = 3
 
 
     }

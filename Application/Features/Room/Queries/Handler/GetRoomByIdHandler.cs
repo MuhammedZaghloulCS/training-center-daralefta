@@ -38,7 +38,8 @@ namespace Application.Features.Room.Queries.Handler
                 Name = room.Name,
                 Capacity = room.Capacity,
                 Location = room.Location,
-                AttRoomId = room.AttRoomIdOutSide,
+                AttRoomIdOutSide = room.AttRoomIdOutSide,
+                AttRoomIdinside = room.AttRoomIdinside,
                 BuildId = room.BuildId,
                 HaveProjector = room.HaveProjector
             };

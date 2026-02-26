@@ -10,6 +10,7 @@ using Application.Features.User.Queries;
 using Application.Features.User.Queries.Model;
 using Azure;
 using Domain.Entities;
+using Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -249,6 +250,16 @@ namespace API.Controllers
         public async Task<IActionResult> AssignUserToSession([FromBody] UsersSessionDTO dto)
         {
             var response = await _mediator.Send(new AssignSessionToUsersCommand { _dto=dto });
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+        [HttpGet("userinrole")]
+        public async Task<IActionResult> GetUsersInRole ( UsersRolesEnum role)
+        {
+            var response = await _mediator.Send(new GetUsersInRoleQuery { Role=role });
             if (!response.Success)
             {
                 return BadRequest(response);

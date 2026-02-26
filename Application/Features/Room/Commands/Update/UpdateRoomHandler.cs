@@ -65,8 +65,8 @@ namespace Application.Features.Room.Commands.Update
                 Name = room.Name,
                 Capacity = room.Capacity,
                 Location = room.Location,
-                AttRoomId = room.AttRoomIdOutSide,
-
+                AttRoomIdOutSide = room.AttRoomIdOutSide,
+                AttRoomIdinside = room.AttRoomIdinside,
                 BuildId = room.BuildId,
                 HaveProjector = room.HaveProjector
             };

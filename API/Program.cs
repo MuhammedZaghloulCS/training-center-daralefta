@@ -1,6 +1,7 @@
 using Domain.Entities;
 using Infrastructure.Context;
 using Infrastructure.Dependencies;
+using Mapster;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -86,6 +87,8 @@ builder.Services.AddCors(options =>
                .AllowAnyHeader();
     });
 });
+
+builder.Services.AddMapster();
 
 var app = builder.Build();
 

@@ -43,10 +43,10 @@ namespace Application.Features.Room.Commands.Create
 
             if (errors.Any())
                 return BaseResponse<RoomDto>.FailureResponse("Validation failed", errors);
-            var outsideDoor=await _sysUnitOfWork.ISysDoorRepository.GetByPropAsync(d => d.id == request.AttRoomId);
+            var outsideDoor=await _sysUnitOfWork.ISysDoorRepository.GetByPropAsync(d => d.id == request.AttRoomIdOutSide);
             var outsideDoorName = outsideDoor.name
-                .Replace("_outside", "", StringComparison.OrdinalIgnoreCase);
-            var insideDoor=await _sysUnitOfWork.ISysDoorRepository.GetByPropAsync(d => d.name.Contains(outsideDoorName));
+                .Replace("-outside", "", StringComparison.OrdinalIgnoreCase);
+            var insideDoor=await _sysUnitOfWork.ISysDoorRepository.GetByPropAsync(d => d.name.Contains(outsideDoorName)&&d.id!=outsideDoor.id);
 
             var room = new Domain.Entities.Room
             {
@@ -56,7 +56,7 @@ namespace Application.Features.Room.Commands.Create
                 Capacity = request.Capacity,
                 Location = request.Location,
                 BuildId = request.BuildId,
-                AttRoomIdOutSide = request.AttRoomId,
+                AttRoomIdOutSide = request.AttRoomIdOutSide,
                 AttRoomIdinside=insideDoor.id,
                 HaveProjector = request.HaveProjector
             };
@@ -74,7 +74,7 @@ namespace Application.Features.Room.Commands.Create
                 Name = room.Name,
                 Capacity = room.Capacity,
                 Location = room.Location,
-                AttRoomId = room.AttRoomIdOutSide,
+                AttRoomIdOutSide = room.AttRoomIdOutSide,
                 BuildId = room.BuildId,
                 HaveProjector = room.HaveProjector
             };

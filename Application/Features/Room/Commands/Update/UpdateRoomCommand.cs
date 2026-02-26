@@ -11,7 +11,8 @@ namespace Application.Features.Room.Commands.Update
         public string Name { get; set; }
         public int Capacity { get; set; }
         public string Location { get; set; }
-        public string AttRoomId { get; set; }
+        public string AttRoomIdOutSide { get; set; } = string.Empty;
+        public string AttRoomIdinside { get; set; } = string.Empty;
         public int? BuildId { get; set; }
         public bool? HaveProjector { get; set; }
     }

@@ -41,7 +41,8 @@ namespace Application.Features.Room.Queries.Handler
                 Name = r.Name,
                 Capacity = r.Capacity,
                 Location = r.Location,
-                AttRoomId = r.AttRoomIdOutSide,
+                AttRoomIdOutSide = r.AttRoomIdOutSide,
+                AttRoomIdinside = r.AttRoomIdinside,
                 BuildId = r.BuildId,
                 HaveProjector = r.HaveProjector
             }).ToList();
