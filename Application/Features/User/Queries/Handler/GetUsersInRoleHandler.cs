@@ -25,8 +25,9 @@ namespace Application.Features.User.Queries.Handler
             {
                 BaseResponse<List<UserDTO>>.FailureResponse("Invalid request: Role is required and must be a valid UsersRolesEnum value.");
             }
-
-            var usersInRole = await _userManager.GetUsersInRoleAsync(request.Role.GetDescription());
+            
+            var roleName = request.Role.GetDescription();
+            var usersInRole = await _userManager.GetUsersInRoleAsync(roleName);
 
              var result=usersInRole.Where(u=>!u.IsDeleted).Adapt<List<UserDTO>>();
 

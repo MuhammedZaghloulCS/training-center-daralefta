@@ -136,10 +136,12 @@ namespace Application.Features.Session.Commands.Create
                 AccessLevelId= accLevel.id
 
             };
+
+
             //set access level with doors
-                //get all doors names
-                //get room first
-                var room=await _unitOfWork.IRooms.GetByPkAsync(request.RoomId);
+            //get all doors names
+            //get room first
+            var room=await _unitOfWork.IRooms.GetByPkAsync(request.RoomId);
                 var outsideId = room.AttRoomIdOutSide;
                 var insideId=room.AttRoomIdinside;
                 var doors =new List<DoorDto>();
@@ -182,7 +184,7 @@ namespace Application.Features.Session.Commands.Create
             int userPin = int.TryParse(lastUser?.pin, out var u) ? u : 0;
 
             var lastId = Math.Max(sysPin, userPin) + 1;
-            var diffUsers=users.Where(u => !usersSysPins.Contains(u.pin)).ToList();
+            var diffUsers=users.Where(u => !usersSysPins.Contains(u.pin)&&!u.IsDeleted).ToList();
             var diffUsersOnSys = diffUsers.Select(old => new pers_person
             {
                 id=old.Id.ToString("N"),
@@ -210,7 +212,7 @@ namespace Application.Features.Session.Commands.Create
                 number_pin=lastId,
                 person_pwd=old.UserName,
                 person_type=0,
-                pin=lastId.ToString(),
+                pin=(++lastId).ToString(),
                 pin_letter=false,
                 self_pwd=old.UserName,
                 send_app=true,
@@ -243,7 +245,10 @@ namespace Application.Features.Session.Commands.Create
 
             await _unitOfWork.ISession.AddAsync(session);
             await _unitOfWork.Complete();
+            var usersSession = request.usersIds.Select(s => new UserSession { SessionId = session.Id, UserId = s });
+            await _unitOfWork.IAssignUserSession.AddRangeIfNotExistsAsync(usersSession.ToList());
             await _SysunitOfWork.Complete();
+            await _unitOfWork.Complete();
 
 
             var dto = new SessionDto
