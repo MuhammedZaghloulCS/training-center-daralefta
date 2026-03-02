@@ -2,6 +2,7 @@ using Application.Common;
 using Application.Features.Session.DTOs;
 using MediatR;
 using System;
+using System.Collections.Generic;
 
 namespace Application.Features.Session.Commands.Update
 {
@@ -16,5 +17,6 @@ namespace Application.Features.Session.Commands.Update
         public int RoomId { get; set; }
         public int CourseId { get; set; }
         public Guid LecturerId { get; set; }
+        public List<Guid> usersIds { get; set; }
     }
 }

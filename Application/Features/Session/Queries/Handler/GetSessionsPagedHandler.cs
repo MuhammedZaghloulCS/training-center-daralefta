@@ -62,7 +62,8 @@ namespace Application.Features.Session.Queries.Handler
                 s => s.Id,
                 true,
                 s => s.Room,
-                s => s.Course);
+                s => s.Course,
+                s=>s.UserSessions);
 
             if (items == null || !items.Any()||items.All(i=>i.IsDeleted))
             {
@@ -87,8 +88,8 @@ namespace Application.Features.Session.Queries.Handler
                 Topic = s.Topic,
                 RoomId = s.RoomId,
                 CourseId = s.CourseId,
-                LecturerId = s.lecturerId
-
+                LecturerId = s.lecturerId,
+                UsersIds = s.UserSessions.Select(us => us.UserId).ToList()
             }).ToList();
 
             return BaseResponse<List<SessionListDTO>>.SuccessResponse(

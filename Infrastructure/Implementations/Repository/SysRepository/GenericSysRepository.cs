@@ -76,5 +76,9 @@ namespace Infrastructure.Implementations.Repository.SysRepository
             await _dbSet.AddRangeAsync(users);
         }
 
+        public  void RemoveRange(List<T> entities)
+        {
+             _dbSet.RemoveRange(entities);
+        }
     }
 }

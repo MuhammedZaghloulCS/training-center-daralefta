@@ -62,7 +62,12 @@ namespace Infrastructure.Implementations.Repository
         public async Task<List<int>> GetSessionIdsByUserId(Guid userId)=> await _context.UserSessions.Where(ut => ut.UserId == userId)
                 .Select(ut => ut.SessionId)
                 .ToListAsync();
-        
+
+        public void RemoveRange(List<UserSession> userSessions)
+        {
+            _context.UserSessions.RemoveRange(userSessions);
+        }
+
     }
 
 }

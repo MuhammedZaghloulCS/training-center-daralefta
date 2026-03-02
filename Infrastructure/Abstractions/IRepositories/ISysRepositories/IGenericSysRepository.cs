@@ -20,5 +20,8 @@ namespace Infrastructure.Abstractions.IRepositories.ISysRepositories
         public Task<T?> GetByPropAsync(Expression<Func<T, bool>> predicate);
         public Task AddRangeAsync(List<T> users);
 
+        public void RemoveRange(List<T> entities);
+
+
     }
 }

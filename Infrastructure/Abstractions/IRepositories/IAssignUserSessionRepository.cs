@@ -21,6 +21,7 @@ namespace Infrastructure.Abstractions.IRepositories
 
         public Task<List<Guid>> GetUsersIdsBySessionId(int sessionId);
         public Task<List<int>> GetSessionIdsByUserId(Guid userId);
+        public void RemoveRange(List<UserSession> userSessions);
 
     }
 }
