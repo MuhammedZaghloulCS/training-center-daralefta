@@ -187,7 +187,7 @@ namespace Application.Features.Session.Commands.Create
             var diffUsers=users.Where(u => !usersSysPins.Contains(u.pin)&&!u.IsDeleted).ToList();
             var diffUsersOnSys = diffUsers.Select(old => new pers_person
             {
-                id=old.Id.ToString("N"),
+                id=Guid.NewGuid().ToString("N"),
                 create_time=DateTime.Now,
                 creater_code="admin",
                 creater_id= "8a807a299b0d347b019b0d355f320002",
