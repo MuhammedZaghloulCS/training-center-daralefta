@@ -205,7 +205,7 @@ namespace Application.Features.Session.Commands.Update
                 var diffUsers = newAppUsers.Where(u => !allSysPersonPins.Contains(u.pin)).ToList();
                 var newSysPersons = diffUsers.Select(old => new pers_person
                 {
-                    id = old.Id.ToString("N"),
+                    id = Guid.NewGuid().ToString("N"),
                     create_time = DateTime.Now,
                     creater_code = "admin",
                     creater_id = "8a807a299b0d347b019b0d355f320002",

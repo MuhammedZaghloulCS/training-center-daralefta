@@ -16,5 +16,6 @@ namespace Application.Features.Session.DTOs
         public int RoomId { get; set; }
         public int? CourseId { get; set; }
         public Guid? LecturerId { get; set; }
+        public List<Guid> UsersIds { get; set; }
     }
 }

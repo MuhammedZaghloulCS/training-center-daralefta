@@ -24,7 +24,7 @@ namespace Application.Features.User.Commands.Update
         public async Task<BaseResponse<UserDTO>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
             // Find the existing user
-            var existingUser = await _userManager.FindByNameAsync(request.User.UserName);
+            var existingUser = await _userManager.FindByNameAsync(request.UserName);
             
             if (existingUser == null || existingUser.IsDeleted)
             {
@@ -32,27 +32,27 @@ namespace Application.Features.User.Commands.Update
             }
 
             // Update user properties
-            existingUser.Email = request.User.Email;
-            existingUser.PhoneNumber = request.User.PhoneNumber;
-            existingUser.FirstName = request.User.FirstName;
-            existingUser.LastName = request.User.LastName;
-            existingUser.Gender = request.User.Gender;
+            existingUser.Email = request.Email??existingUser.Email;
+            existingUser.PhoneNumber = request.PhoneNumber??existingUser.PhoneNumber;
+            existingUser.FirstName = request.FirstName ?? existingUser.FirstName;
+            existingUser.LastName = request.LastName ?? existingUser.LastName;
+            existingUser.Gender = request.Gender ;
             
-            existingUser.JobTitle = request.User.JobTitle;
-            existingUser.AcademicTitle = request.User.AcademicTitle;
-            existingUser.Organization = request.User.Organization;
-            existingUser.Specialization = request.User.Specialization;
-            existingUser.Skills = request.User.Skills;
-            existingUser.WhatsappNumber = request.User.WhatsappNumber;
-            existingUser.BirthDate = request.User.BirthDate;
-            existingUser.NationalIdImage = request.User.NationalIdImage;
-            existingUser.AddressInsideCairo = request.User.AddressInsideCairo;
-            existingUser.AddressOutsideCairo = request.User.AddressOutsideCairo;
-            existingUser.Doctrine = request.User.Doctrine;
-            existingUser.MaritalState = request.User.MaritalState;
-            existingUser.AcademicQualification = request.User.AcademicQualification;
-            existingUser.Appreciation = request.User.Appreciation;
-            existingUser.ImagePath = request.User.ImagePath;
+            existingUser.JobTitle = request.JobTitle ?? existingUser.JobTitle;
+            existingUser.AcademicTitle = request.AcademicTitle ?? existingUser.AcademicTitle;
+            existingUser.Organization = request.Organization ?? existingUser.Organization;
+            existingUser.Specialization = request.Specialization ?? existingUser.Specialization;
+            existingUser.Skills = request.Skills ?? existingUser.Skills;
+            existingUser.WhatsappNumber = request.WhatsappNumber ?? existingUser.WhatsappNumber;
+            existingUser.BirthDate = request.BirthDate;
+            existingUser.NationalIdImage = request.NationalIdImage ?? existingUser.NationalIdImage;
+            existingUser.AddressInsideCairo = request.AddressInsideCairo ?? existingUser.AddressInsideCairo;
+            existingUser.AddressOutsideCairo = request.AddressOutsideCairo ?? existingUser.AddressOutsideCairo;
+            existingUser.Doctrine = request.Doctrine ?? existingUser.Doctrine;
+            existingUser.MaritalState = request.MaritalState ?? existingUser.MaritalState;
+            existingUser.AcademicQualification = request.AcademicQualification ?? existingUser.AcademicQualification;
+            existingUser.Appreciation = request.Appreciation ?? existingUser.Appreciation;
+            existingUser.ImagePath = request.ImagePath ?? existingUser.ImagePath;
 
             // Update the user
             var result = await _userManager.UpdateAsync(existingUser);
@@ -63,18 +63,18 @@ namespace Application.Features.User.Commands.Update
                 return BaseResponse<UserDTO>.FailureResponse("User update failed", errors.ToList());
             }
 
-            // If password is provided, update it
-            if (!string.IsNullOrEmpty(request.User.Password))
+            /*// If password is provided, update it
+            if (!string.IsNullOrEmpty(request.Password))
             {
                 var token = await _userManager.GeneratePasswordResetTokenAsync(existingUser);
-                var passwordResult = await _userManager.ResetPasswordAsync(existingUser, token, request.User.Password);
+                var passwordResult = await _userManager.ResetPasswordAsync(existingUser, token, request.Password);
 
                 if (!passwordResult.Succeeded)
                 {
                     var errors = passwordResult.Errors.Select(e => e.Description);
                     return BaseResponse<UserDTO>.FailureResponse("Password update failed", errors.ToList());
                 }
-            }
+            }*/
 
 
             return BaseResponse<UserDTO>.SuccessResponse(data: new UserDTO
