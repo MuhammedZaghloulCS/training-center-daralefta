@@ -1,6 +1,7 @@
 ﻿using Application.Common;
 using Application.Features.User.DTOs;
 using Domain.Entities;
+using Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -24,35 +25,35 @@ namespace Application.Features.User.Commands.Update
         public async Task<BaseResponse<UserDTO>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
             // Find the existing user
-            var existingUser = await _userManager.FindByNameAsync(request.UserName);
+            var existingUser = await _userManager.FindByNameAsync(request.UpdateUser.UserName);
             
             if (existingUser == null || existingUser.IsDeleted)
             {
-                return BaseResponse<UserDTO>.FailureResponse("User not found", new List<string> { $"No user found with ID: {request.User.Id}" });
+                return BaseResponse<UserDTO>.FailureResponse("User not found", new List<string> { $"No user found with Username: {request.UpdateUser.UserName}" });
             }
 
             // Update user properties
-            existingUser.Email = request.Email??existingUser.Email;
-            existingUser.PhoneNumber = request.PhoneNumber??existingUser.PhoneNumber;
-            existingUser.FirstName = request.FirstName ?? existingUser.FirstName;
-            existingUser.LastName = request.LastName ?? existingUser.LastName;
-            existingUser.Gender = request.Gender ;
+            existingUser.Email = request.UpdateUser.Email??existingUser.Email;
+            existingUser.PhoneNumber = request.UpdateUser.PhoneNumber??existingUser.PhoneNumber;
+            existingUser.FirstName = request.UpdateUser.FirstName ?? existingUser.FirstName;
+            existingUser.LastName = request.UpdateUser.LastName ?? existingUser.LastName;
+            existingUser.Gender =(Gender) request.UpdateUser.Gender ;
             
-            existingUser.JobTitle = request.JobTitle ?? existingUser.JobTitle;
-            existingUser.AcademicTitle = request.AcademicTitle ?? existingUser.AcademicTitle;
-            existingUser.Organization = request.Organization ?? existingUser.Organization;
-            existingUser.Specialization = request.Specialization ?? existingUser.Specialization;
-            existingUser.Skills = request.Skills ?? existingUser.Skills;
-            existingUser.WhatsappNumber = request.WhatsappNumber ?? existingUser.WhatsappNumber;
-            existingUser.BirthDate = request.BirthDate;
-            existingUser.NationalIdImage = request.NationalIdImage ?? existingUser.NationalIdImage;
-            existingUser.AddressInsideCairo = request.AddressInsideCairo ?? existingUser.AddressInsideCairo;
-            existingUser.AddressOutsideCairo = request.AddressOutsideCairo ?? existingUser.AddressOutsideCairo;
-            existingUser.Doctrine = request.Doctrine ?? existingUser.Doctrine;
-            existingUser.MaritalState = request.MaritalState ?? existingUser.MaritalState;
-            existingUser.AcademicQualification = request.AcademicQualification ?? existingUser.AcademicQualification;
-            existingUser.Appreciation = request.Appreciation ?? existingUser.Appreciation;
-            existingUser.ImagePath = request.ImagePath ?? existingUser.ImagePath;
+            existingUser.JobTitle = request.UpdateUser.JobTitle ?? existingUser.JobTitle;
+            existingUser.AcademicTitle = request.UpdateUser.AcademicTitle ?? existingUser.AcademicTitle;
+            existingUser.Organization = request.UpdateUser.Organization ?? existingUser.Organization;
+            existingUser.Specialization = request.UpdateUser.Specialization ?? existingUser.Specialization;
+            existingUser.Skills = request.UpdateUser.Skills ?? existingUser.Skills;
+            existingUser.WhatsappNumber = request.UpdateUser.WhatsappNumber ?? existingUser.WhatsappNumber;
+            existingUser.BirthDate = request.UpdateUser.BirthDate;
+            existingUser.NationalIdImage = request.UpdateUser.NationalIdImage ?? existingUser.NationalIdImage;
+            existingUser.AddressInsideCairo = request.UpdateUser.AddressInsideCairo ?? existingUser.AddressInsideCairo;
+            existingUser.AddressOutsideCairo = request.UpdateUser.AddressOutsideCairo ?? existingUser.AddressOutsideCairo;
+            existingUser.Doctrine = request.UpdateUser.Doctrine ?? existingUser.Doctrine;
+            existingUser.MaritalState = request.UpdateUser.MaritalState ?? existingUser.MaritalState;
+            existingUser.AcademicQualification = request.UpdateUser.AcademicQualification ?? existingUser.AcademicQualification;
+            existingUser.Appreciation = request.UpdateUser.Appreciation ?? existingUser.Appreciation;
+            existingUser.ImagePath = request.UpdateUser.ImagePath ?? existingUser.ImagePath;
 
             // Update the user
             var result = await _userManager.UpdateAsync(existingUser);

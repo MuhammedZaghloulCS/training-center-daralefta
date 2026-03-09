@@ -11,6 +11,7 @@ using Application.Features.User.Queries.Model;
 using Azure;
 using Domain.Entities;
 using Domain.Enums;
+using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -106,10 +107,11 @@ namespace API.Controllers
         }
 
         [HttpPatch("{userName}")]
-        public async Task<IActionResult> UpdateUser([FromRoute] string userName, [FromBody] UserDTO user)
+        public async Task<IActionResult> UpdateUser([FromRoute] string userName, [FromBody] UpdateUserDTO user)
         {
             user.UserName = userName; // Ensure the username in the URL is used
-            var response = await _mediator.Send(new Application.Features.User.Commands.Update.UpdateUserCommand { User = user });
+            
+            var response = await _mediator.Send(new Application.Features.User.Commands.Update.UpdateUserCommand { UpdateUser = user });
             if (!response.Success)
             {
                 return BadRequest(response);

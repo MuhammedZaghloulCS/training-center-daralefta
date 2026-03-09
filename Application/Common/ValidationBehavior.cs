@@ -2,7 +2,9 @@
 using FluentValidation;
 using MediatR;
 
-public class ValidationBehavior<TRequest, TResponse>: IPipelineBehavior<TRequest, TResponse>
+public class ValidationBehavior<TRequest, TResponse>
+    : IPipelineBehavior<TRequest, TResponse>
+    where TResponse : class
 {
     private readonly IEnumerable<IValidator<TRequest>> _validators;
 
@@ -19,6 +21,7 @@ public class ValidationBehavior<TRequest, TResponse>: IPipelineBehavior<TRequest
         if (_validators.Any())
         {
             var context = new ValidationContext<TRequest>(request);
+
             var failures = _validators
                 .Select(v => v.Validate(context))
                 .SelectMany(r => r.Errors)
@@ -29,8 +32,19 @@ public class ValidationBehavior<TRequest, TResponse>: IPipelineBehavior<TRequest
             {
                 var errors = failures.Select(e => e.ErrorMessage).ToList();
 
-                return (TResponse)(object)BaseResponse<object>
-                    .FailureResponse("Validation failed", errors);
+                var responseType = typeof(TResponse);
+
+                var response = Activator.CreateInstance(responseType);
+
+                var successProp = responseType.GetProperty("Success");
+                var messageProp = responseType.GetProperty("Message");
+                var errorsProp = responseType.GetProperty("Errors");
+
+                successProp?.SetValue(response, false);
+                messageProp?.SetValue(response, "Validation failed");
+                errorsProp?.SetValue(response, errors);
+
+                return (TResponse)response!;
             }
         }
 
