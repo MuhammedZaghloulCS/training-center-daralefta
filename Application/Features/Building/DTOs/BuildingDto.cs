@@ -11,5 +11,7 @@ namespace Application.Features.Building.DTOs
         public DateTime? UpdatedAt { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public string SysBuildingId{  get; set; }
+
     }
 }

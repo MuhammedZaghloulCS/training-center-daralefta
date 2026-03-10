@@ -41,7 +41,8 @@ namespace Application.Features.Building.Commands.Create
                 CreatedBy = request.CreatedBy,
                 CreatedDate = DateTime.UtcNow,
                 Name = request.Name,
-                Description = request.Description
+                Description = request.Description,
+                SysBuildingId=request.SysBuildingId,
             };
 
             await _unitOfWork.IBuildings.AddAsync(building);
@@ -55,7 +56,9 @@ namespace Application.Features.Building.Commands.Create
                 UpdatedBy = building.UpdatedBy,
                 UpdatedAt = building.UpdatedAt,
                 Name = building.Name,
-                Description = building.Description
+                Description = building.Description,
+                SysBuildingId = request.SysBuildingId,
+
             };
 
             return BaseResponse<BuildingDto>.SuccessResponse(dto, "Building created successfully");

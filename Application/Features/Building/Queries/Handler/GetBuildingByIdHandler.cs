@@ -35,7 +35,8 @@ namespace Application.Features.Building.Queries.Handler
                 UpdatedBy = building.UpdatedBy,
                 UpdatedAt = building.UpdatedAt,
                 Name = building.Name,
-                Description = building.Description
+                Description = building.Description,
+                SysBuildingId = building.SysBuildingId
             };
 
             return BaseResponse<BuildingDto>.SuccessResponse(dto, "Building retrieved successfully");

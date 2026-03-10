@@ -38,7 +38,8 @@ namespace Application.Features.Building.Queries.Handler
                 UpdatedBy = b.UpdatedBy,
                 UpdatedAt = b.UpdatedAt,
                 Name = b.Name,
-                Description = b.Description
+                Description = b.Description,
+                SysBuildingId = b.SysBuildingId,
             }).ToList();
             return BaseResponse<List<BuildingListDTO>>.SuccessResponse(
                 data,

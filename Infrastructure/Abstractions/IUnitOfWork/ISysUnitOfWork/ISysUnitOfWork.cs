@@ -15,6 +15,8 @@ namespace Infrastructure.Abstractions.IUnitOfWork.ISysUnitOfWork
         ISysDoorsRepository ISysDoorRepository { get; }
         ISysAccessLevelDoorRepository ISysAccessLevelDoorRepository { get; }
         ISysAccessLevelPersonRepository ISysAccessLevelPersonRepository { get; }
+        ISysAuthAreaRepository ISysAuthAreaRepository { get; }
+
 
         #endregion
         Task<int> Complete();
