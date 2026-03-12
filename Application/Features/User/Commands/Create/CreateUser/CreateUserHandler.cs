@@ -35,19 +35,25 @@ namespace Application.Features.User.Commands.Create.CreateUser
             {
                 return BaseResponse<UserDTO>.FailureResponse("الايميل مستخدم بالفعل");
             }
+
+            pers_person userInSys = await _sysUnitOfWork.ISysPersonRepository.GetFirstOrderedByAsync(p => p.pin == request._dto.pin.ToString());
+
+            if (userInSys is null)
+                return BaseResponse<UserDTO>.BadRequestResponse("المستخدم لم يسجل علي جهاز البصمة");
+
                 var id = Guid.NewGuid();
             string userName = request._dto.FirstName + id.ToString("N")[..6];
-            var lastSysPerson = await _sysUnitOfWork.ISysPersonRepository.GetFirstOrderedByAsync<int>(p => Convert.ToInt32(p.pin), descending: true);
+            //var lastSysPerson = await _sysUnitOfWork.ISysPersonRepository.GetFirstOrderedByAsync<int>(p => Convert.ToInt32(p.pin), descending: true);
 
-            var lastUser = await _userManager.Users
-            .Where(u => u.pin != null)
-            .OrderByDescending(u => Convert.ToInt64(u.pin))
-            .FirstOrDefaultAsync();
+            //var lastUser = await _userManager.Users
+            //.Where(u => u.pin != null)
+            //.OrderByDescending(u => Convert.ToInt64(u.pin))
+            //.FirstOrDefaultAsync();
 
-            int sysPin = int.TryParse(lastSysPerson?.pin, out var s) ? s : 0;
-            int userPin = int.TryParse(lastUser?.pin, out var u) ? u : 0;
+            //int sysPin = int.TryParse(lastSysPerson?.pin, out var s) ? s : 0;
+            //int userPin = int.TryParse(lastUser?.pin, out var u) ? u : 0;
 
-            var lastId = Math.Max(sysPin, userPin) + 1;
+            //var lastId = Math.Max(sysPin, userPin) + 1;
             var newUser = new ApplicationUser
             {
                 Id = id,
@@ -72,10 +78,17 @@ namespace Application.Features.User.Commands.Create.CreateUser
                 AcademicQualification = request._dto.AcademicQualification,
                 Appreciation = request._dto.Appreciation,
                 ImagePath = request._dto.ImagePath
-                ,pin=lastId.ToString
-                ()??"0"
+                ,pin=request._dto.pin.ToString()
 
             };
+            //update user in the sys database
+            userInSys.name = newUser.FirstName;
+            userInSys.last_name = newUser.LastName;
+            userInSys.mobile_phone  = newUser.PhoneNumber;
+            userInSys.email= newUser.Email;
+            userInSys.birthday = newUser.BirthDate;
+
+
             var result = await _userManager.CreateAsync(newUser, request._dto.Password);
             if (!result.Succeeded)
             {
@@ -89,24 +102,25 @@ namespace Application.Features.User.Commands.Create.CreateUser
                 return BaseResponse<UserDTO>.FailureResponse("User creation failed", errors.ToList());
             }
 
+            _sysUnitOfWork.ISysPersonRepository.Update(userInSys);
+            await _sysUnitOfWork.Complete();
+            //var newSysUser = new ZkPersonCreateDto
+            //{
+            //    Pin = request._dto.pin.ToString()??"0",
+            //    Name = newUser.FirstName,
+            //    LastName = newUser.LastName,
+            //    Email = newUser.Email,
+            //    Gender = newUser.Gender!=Gender.male&& newUser.Gender != Gender.female ? 'M' : newUser.Gender.GetDescription()[0],
+            //    MobilePhone=newUser.PhoneNumber
 
-            var newSysUser = new ZkPersonCreateDto
-            {
-                Pin = lastId.ToString()??"0",
-                Name = newUser.FirstName,
-                LastName = newUser.LastName,
-                Email = newUser.Email,
-                Gender = newUser.Gender!=Gender.male&& newUser.Gender != Gender.female ? 'M' : newUser.Gender.GetDescription()[0],
-                MobilePhone=newUser.PhoneNumber
-
-            };
-            var res = await _httpClient.PostAsJsonAsync(MainConstants.Use("person/add"), newSysUser);
-            if (!res.IsSuccessStatusCode)
-            {
-                await _userManager.RemoveFromRolesAsync(newUser, request._dto.roles);
-                await _userManager.DeleteAsync(newUser);
-                return BaseResponse<UserDTO>.FailureResponse("Error, Please try again");
-            }
+            //};
+            //var res = await _httpClient.PostAsJsonAsync(MainConstants.Use("person/add"), newSysUser);
+            //if (!res.IsSuccessStatusCode)
+            //{
+            //    await _userManager.RemoveFromRolesAsync(newUser, request._dto.roles);
+            //    await _userManager.DeleteAsync(newUser);
+            //    return BaseResponse<UserDTO>.FailureResponse("Error, Please try again");
+            //}
 
             return BaseResponse<UserDTO>.SuccessResponse(data:new UserDTO
             {

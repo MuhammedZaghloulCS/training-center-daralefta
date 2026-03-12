@@ -4,6 +4,8 @@ using Application.Features.User.DTOs;
 using Application.Features.User.Queries.Model;
 using Domain.Entities;
 using Domain.Enums;
+using Infrastructure.Abstractions.IUnitOfWork.ISysUnitOfWork;
+using Infrastructure.Implementations.UnitOfWork.SysUnitOfWork;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -17,9 +19,11 @@ namespace Application.Features.User.Queries.Handler
     public class GetAllUsersPagedHandler : IRequestHandler<GetAllUsersPagedQuery, BaseResponse<List<UserDTO>>>
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        public GetAllUsersPagedHandler(UserManager<ApplicationUser> userManager)
+        private readonly ISysUnitOfWork sysUnitOfWork;
+        public GetAllUsersPagedHandler(UserManager<ApplicationUser> userManager,ISysUnitOfWork sysUnitOfWork)
         {
             _userManager = userManager;
+            this.sysUnitOfWork = sysUnitOfWork;
         }
         public async Task<BaseResponse<List<UserDTO>>> Handle(GetAllUsersPagedQuery request, CancellationToken cancellationToken)
         {
@@ -80,6 +84,43 @@ namespace Application.Features.User.Queries.Handler
             }
 
             var usersQuery = _userManager.Users.Where(u=>!u.IsDeleted).AsNoTracking();
+            var pins   = await usersQuery.Select(u => u.pin).ToListAsync();
+
+            var usersInSys = await sysUnitOfWork.ISysPersonRepository.GetAllAsync(p => !pins.Contains(p.pin));
+
+            var inCompleteUsers = usersInSys.Select(u => new UserDTO
+            {
+                Id = Guid.Empty,
+                UserName = String.Empty,
+
+                Email = String.Empty,
+                PhoneNumber = String.Empty,
+
+                FirstName = String.Empty,
+                LastName = String.Empty,
+                Gender = Gender.male,
+
+
+                JobTitle = String.Empty,
+                AcademicTitle = String.Empty,
+                Organization = String.Empty,
+                Specialization = String.Empty,
+                Skills = String.Empty,
+                WhatsappNumber = String.Empty,
+
+                BirthDate = DateTime.MinValue, // أو سيبها nullable لو عدلت DTO
+                NationalIdImage = String.Empty,
+
+                AddressInsideCairo = String.Empty,
+                AddressOutsideCairo = String.Empty,
+
+                Doctrine = String.Empty,
+                MaritalState = String.Empty,
+                AcademicQualification = String.Empty,
+                Appreciation = String.Empty,
+                ImagePath = String.Empty,
+                pin = u.pin
+            }).ToList();
             IEnumerable<ApplicationUser> users;
 
             if (!string.IsNullOrWhiteSpace(request.Search))
@@ -89,7 +130,7 @@ namespace Application.Features.User.Queries.Handler
           
                  users = await usersQuery.Skip((request.PageNumber - 1) * request.PageSize).Take(request.PageSize).AsNoTracking().ToListAsync();
             
-
+            
             if (users == null||users.All(r=>r.IsDeleted))
             {
                 return BaseResponse<List<UserDTO>>.FailureResponse("No users found");
@@ -130,7 +171,11 @@ namespace Application.Features.User.Queries.Handler
                
 
             }).ToList();
-
+            if (inCompleteUsers.Count() > 0)
+            {
+                userDTOs.InsertRange(0, inCompleteUsers);
+                
+            }
             return BaseResponse<List<UserDTO>>.SuccessResponse(data: userDTOs, message: "Users retrieved successfully");
         }
     }

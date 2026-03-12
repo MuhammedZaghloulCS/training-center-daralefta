@@ -4,11 +4,13 @@ using Application.Features.Building.Commands.Update;
 using Application.Features.Building.Queries.Model;
 using Domain.Entities;
 using Domain.Helper;
+using Infrastructure.Context;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
@@ -20,11 +22,13 @@ namespace API.Controllers
         IMediator _mediator;
         UserManager<ApplicationUser> _userManager;
         HttpClient HttpClient;
+        private readonly ApplicationContext context;
 
-        public BuildingController(IMediator mediator, IHttpClientFactory httpClientFactory)
+        public BuildingController(IMediator mediator, IHttpClientFactory httpClientFactory, ApplicationContext context)
         {
             _mediator = mediator;
             HttpClient = httpClientFactory.CreateClient("ExternalApi");
+            this.context = context;
         }
             [HttpGet]
         public async Task<IActionResult> GetAsync()
@@ -81,6 +85,12 @@ namespace API.Controllers
             door.EnsureSuccessStatusCode();
             var result = await door.Content.ReadAsStringAsync();
             return Ok(result);
+
+        }
+        [HttpGet("db-test")]
+        public IActionResult TestDb()
+        {
+            return Ok(new { message = "API IS RUNNING" });
 
         }
     }

@@ -28,9 +28,12 @@ namespace Infrastructure.Implementations.Repository.SysRepository
             _dbSet.Remove(entity);
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T,bool>>predicate=null)
         {
-          return await _dbSet.AsNoTracking().ToListAsync();
+            IQueryable<T> query=_dbSet.AsNoTracking();
+            if(predicate is not null)
+                query=query.Where(predicate);
+            return await query.ToListAsync();
         }
 
         public async Task<T> GetByIdAsync(string id)
