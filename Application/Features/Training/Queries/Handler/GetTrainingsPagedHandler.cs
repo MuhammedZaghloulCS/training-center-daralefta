@@ -28,24 +28,19 @@ namespace Application.Features.Training.Queries.Handler
             }
 
 
-            Expression<Func<Domain.Entities.Training, bool>> searchPredicate = null;
+            Expression<Func<Domain.Entities.Training, bool>> searchPredicate = s => !s.IsDeleted;
 
             if (!string.IsNullOrWhiteSpace(request.Search))
             {
                 var search = request.Search.Trim();
 
-                // جرّب parse من غير ما يطلع exception
                 if (int.TryParse(search, out var id))
                 {
-                    // لو رقم → ابحث بالـ ID
-                    searchPredicate = s => s.Id == id;
+                    searchPredicate = s => !s.IsDeleted && s.Id == id;
                 }
                 else
                 {
-                    // لو نص → ابحث نصي
-                    searchPredicate = s =>
-                        s.Title.Contains(search);
-                       
+                    searchPredicate = s => !s.IsDeleted && s.Title.Contains(search);
                 }
             }
 
@@ -73,7 +68,7 @@ namespace Application.Features.Training.Queries.Handler
                     "No training found");
             }
 
-            var data = items.Where(r => !r.IsDeleted).Select(t => new TrainingListDTO
+            var data = items.Select(t => new TrainingListDTO
             {
                 Id = t.Id,
                 CreatedBy = t.CreatedBy,
@@ -83,6 +78,8 @@ namespace Application.Features.Training.Queries.Handler
                 Title = t.Title,
                 StartDate = t.StartDate,
                 EndDate = t.EndDate,
+                CoursesIds = t.Courses?.Select(c => c.Id).ToList() ?? new List<int>()
+
             }).ToList();
 
             return BaseResponse<List<TrainingListDTO>>.SuccessResponse(

@@ -9,5 +9,7 @@ namespace Application.Features.Course.Queries.Model
     {
         public int PageNumber { get; set; }
         public int PageSize { get; set; }
+        public int? trainingId { get; set; }
+      
     }
 }

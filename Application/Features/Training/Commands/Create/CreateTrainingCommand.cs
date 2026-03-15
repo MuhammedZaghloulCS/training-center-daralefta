@@ -11,5 +11,6 @@ namespace Application.Features.Training.Commands.Create
         public string Title { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public List<int> CoursesIds { get; set; }
     }
 }

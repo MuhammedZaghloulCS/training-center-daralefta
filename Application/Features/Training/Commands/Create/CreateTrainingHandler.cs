@@ -40,14 +40,15 @@ namespace Application.Features.Training.Commands.Create
 
             if (errors.Any())
                 return BaseResponse<TrainingDto>.FailureResponse("Validation failed", errors);
-
+            var courses = await _unitOfWork.ICourse.FindRowAsync(c => request.CoursesIds.Contains(c.Id));
             var training = new Domain.Entities.Training
             {
                 CreatedBy = request.CreatedBy,
                 CreatedDate = DateTime.UtcNow,
                 Title = request.Title,
                 StartDate = request.StartDate,
-                EndDate = request.EndDate
+                EndDate = request.EndDate,
+                Courses =courses,
             };
 
             await _unitOfWork.ITraining.AddAsync(training);
@@ -62,7 +63,8 @@ namespace Application.Features.Training.Commands.Create
                 UpdatedAt = training.UpdatedAt,
                 Title = training.Title,
                 StartDate = training.StartDate,
-                EndDate = training.EndDate
+                EndDate = training.EndDate,
+                
             };
 
             return BaseResponse<TrainingDto>.SuccessResponse(dto, "Training created successfully");

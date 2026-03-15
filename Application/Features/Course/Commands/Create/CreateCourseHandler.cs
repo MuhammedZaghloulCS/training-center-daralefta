@@ -23,9 +23,6 @@ namespace Application.Features.Course.Commands.Create
         {
             var errors = new List<string>();
 
-            if (string.IsNullOrWhiteSpace(request.CreatedBy))
-                errors.Add("CreatedBy is required");
-
             if (string.IsNullOrWhiteSpace(request.Name))
                 errors.Add("Name is required");
 
@@ -46,7 +43,7 @@ namespace Application.Features.Course.Commands.Create
 
             var course = new Domain.Entities.Course
             {
-                CreatedBy = request.CreatedBy,
+                CreatedBy="system",
                 CreatedDate = DateTime.UtcNow,
                 Name = request.Name,
                 Description = request.Description,
@@ -61,10 +58,6 @@ namespace Application.Features.Course.Commands.Create
             var dto = new CourseDto
             {
                 Id = course.Id,
-                CreatedBy = course.CreatedBy,
-                CreatedDate = course.CreatedDate,
-                UpdatedBy = course.UpdatedBy,
-                UpdatedAt = course.UpdatedAt,
                 Name = course.Name,
                 Description = course.Description,
                 Prerequisites = course.Prerequisites,

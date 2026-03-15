@@ -44,12 +44,14 @@ namespace Application.Features.Training.Commands.Update
             if (errors.Any())
                 return BaseResponse<TrainingDto>.FailureResponse("Validation failed", errors);
 
+            var courses=await   _unitOfWork.ICourse.FindRowAsync(c => !c.IsDeleted && request.CoursesIds.Contains(c.Id));
+
             training.Title = request.Title;
             training.StartDate = request.StartDate;
             training.EndDate = request.EndDate;
             training.UpdatedBy = request.UpdatedBy;
             training.UpdatedAt = DateTime.UtcNow;
-
+            training.Courses = courses;
             _unitOfWork.ITraining.Update(training);
             await _unitOfWork.Complete();
 
@@ -62,8 +64,10 @@ namespace Application.Features.Training.Commands.Update
                 UpdatedAt = training.UpdatedAt,
                 Title = training.Title,
                 StartDate = training.StartDate,
-                EndDate = training.EndDate
-            };
+                EndDate = training.EndDate,
+                     CoursesIds=request.CoursesIds
+
+    };
 
             return BaseResponse<TrainingDto>.SuccessResponse(dto, "Training updated successfully");
         }

@@ -46,8 +46,8 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAsync([FromBody] CreateCourseCommand command)
         {
-            var user = await _userManager.GetUserAsync(User);
-            command.CreatedBy = user?.FullName;
+            //var user = await _userManager.GetUserAsync(User);
+            //command.CreatedBy = user?.FullName;
             var response = await _mediator.Send(command);
             return response.Success ? Ok(response) : BadRequest(response);
         }
