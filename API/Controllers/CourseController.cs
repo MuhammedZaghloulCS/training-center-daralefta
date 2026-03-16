@@ -55,9 +55,9 @@ namespace API.Controllers
         [HttpPatch("{id:int}")]
         public async Task<IActionResult> UpdateAsync(int id, [FromBody] UpdateCourseCommand command)
         {
-            command.Id = id;
-            var user = await _userManager.GetUserAsync(User);
-            command.UpdatedBy = user?.FullName;
+            //command.Id = id;
+            //var user = await _userManager.GetUserAsync(User);
+            //command.UpdatedBy = user?.FullName;
             var response = await _mediator.Send(command);
             return response.Success ? Ok(response) : BadRequest(response);
         }

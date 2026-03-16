@@ -33,32 +33,36 @@ namespace Application.Features.Session.Queries.Handler
             }
 
 
-            Expression<Func<Domain.Entities.Session, bool>> searchPredicate = null;
+            Expression<Func<Domain.Entities.Session, bool>> predicate = s => !s.IsDeleted;
+
+            if (request.CourseId.HasValue)
+            {
+                predicate = s => !s.IsDeleted && s.CourseId == request.CourseId.Value;
+            }
 
             if (!string.IsNullOrWhiteSpace(request.Search))
             {
                 var search = request.Search.Trim();
 
-                // جرّب parse من غير ما يطلع exception
                 if (int.TryParse(search, out var id))
                 {
-                    // لو رقم → ابحث بالـ ID
-                    searchPredicate = s => s.Id == id;
+                    predicate = s => !s.IsDeleted &&
+                                     (!request.CourseId.HasValue || s.CourseId == request.CourseId.Value) &&
+                                     s.Id == id;
                 }
                 else
                 {
-                    // لو نص → ابحث نصي
-                    searchPredicate = s =>
-                        s.Topic.Contains(search) ||
-                        s.Room.Name.Contains(search) ||
-                        s.Course.Name.Contains(search);
+                    predicate = s => !s.IsDeleted &&
+                                     (!request.CourseId.HasValue || s.CourseId == request.CourseId.Value) &&
+                                     (s.Topic.Contains(search) ||
+                                      s.Room.Name.Contains(search) ||
+                                      s.Course.Name.Contains(search));
                 }
             }
-
             var (items, totalCount) = await _unitOfWork.ISession.GetPaginatedAsync(
                 request.PageNumber,
                 request.PageSize,
-                searchPredicate,
+                predicate,
                 s => s.Id,
                 true,
                 s => s.Room,
