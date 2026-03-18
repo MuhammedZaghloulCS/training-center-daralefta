@@ -17,8 +17,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
-
+using System.Net.Http;
+using System.Text.Json;
 namespace API.Controllers
 {
     [Route("api/[controller]")]
@@ -27,16 +29,70 @@ namespace API.Controllers
     {
         UserManager<ApplicationUser> _userManager;
         MediatR.IMediator _mediator;
+        private readonly HttpClient _httpClientFactory;
 
-        public UserController(UserManager<ApplicationUser> userManager, IMediator mediator)
+        public UserController(UserManager<ApplicationUser> userManager, IMediator mediator, IHttpClientFactory httpClientFactory)
         {
             _userManager = userManager;
             _mediator = mediator;
+            _httpClientFactory  = httpClientFactory.CreateClient("ExternalApi");
         }
+
+        [HttpGet("test-image")]
+        public async Task<IActionResult> testImagePreview()
+        {
+
+
+            var client = _httpClientFactory;
+
+            var token = "0699F386CB16161E0AD3E86AA0A08CA8F178C0823C23119CDF34A53C84E7783C";
+            var url = $"https://10.0.250.169:8098/api/person/get/1?access_token={token}";
+
+            var response = await client.GetStringAsync(url);
+            var json = JsonDocument.Parse(response);
+
+            // جيب الصورة من الـ JSON
+            var base64 = json.RootElement
+                             .GetProperty("data")
+                             .GetProperty("personPhoto")
+                             .GetString();
+
+            // حوّل base64 لـ bytes
+            var imageBytes = Convert.FromBase64String(base64);
+
+            // احفظها في wwwroot
+            var savePath = Path.Combine("wwwroot", "images", "employees");
+            Directory.CreateDirectory(savePath);
+
+            var filePath = Path.Combine(savePath, "admin_photo.jpg");
+            await System.IO.File.WriteAllBytesAsync(filePath, imageBytes);
+            return Ok("see wwwroot");
+        }
+        
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
             var response = await _mediator.Send(new Application.Features.User.Queries.Model.GetAllUsersQuery());
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+        [HttpGet("sysusers")]
+        public async Task<IActionResult> GetSysUsers()
+        {
+            var response = await _mediator.Send(new Application.Features.User.Queries.Model.GetAllSysUsersQuery());
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+        [HttpGet("sysusers/{pin}")]
+        public async Task<IActionResult> GetSysUsers(string pin)
+        {
+            var response = await _mediator.Send(new Application.Features.User.Queries.Model.GetSysUserByPinQuery{ Pin=pin});
             if (!response.Success)
             {
                 return BadRequest(response);

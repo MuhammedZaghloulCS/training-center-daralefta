@@ -1,7 +1,9 @@
 ﻿using Application.Common;
+using Application.Features.Session.DTOs;
 using Application.Features.User.DTOs;
 using del.Models;
 using Domain.Entities;
+using Domain.Entities.Models;
 using Domain.Enums;
 using Domain.Helper;
 using Infrastructure.Abstractions.IUnitOfWork.ISysUnitOfWork;
@@ -102,25 +104,26 @@ namespace Application.Features.User.Commands.Create.CreateUser
                 return BaseResponse<UserDTO>.FailureResponse("User creation failed", errors.ToList());
             }
 
-            _sysUnitOfWork.ISysPersonRepository.Update(userInSys);
-            await _sysUnitOfWork.Complete();
-            //var newSysUser = new ZkPersonCreateDto
-            //{
-            //    Pin = request._dto.pin.ToString()??"0",
-            //    Name = newUser.FirstName,
-            //    LastName = newUser.LastName,
-            //    Email = newUser.Email,
-            //    Gender = newUser.Gender!=Gender.male&& newUser.Gender != Gender.female ? 'M' : newUser.Gender.GetDescription()[0],
-            //    MobilePhone=newUser.PhoneNumber
 
-            //};
-            //var res = await _httpClient.PostAsJsonAsync(MainConstants.Use("person/add"), newSysUser);
-            //if (!res.IsSuccessStatusCode)
-            //{
-            //    await _userManager.RemoveFromRolesAsync(newUser, request._dto.roles);
-            //    await _userManager.DeleteAsync(newUser);
-            //    return BaseResponse<UserDTO>.FailureResponse("Error, Please try again");
-            //}
+            var newSysUser = new ZkPersonCreateDto
+            {
+                Pin = request._dto.pin.ToString() ,
+                Name = newUser.FirstName,
+                LastName = newUser.LastName,
+                Email = newUser.Email,
+                Gender = newUser.Gender != Gender.male && newUser.Gender != Gender.female ? "M" : newUser.Gender.GetDescription(),
+                MobilePhone = newUser.PhoneNumber
+
+            };
+            var res = await _httpClient.PostAsJsonAsync(MainConstants.Use("person/add"), newSysUser);
+            var success = await res.Content.ReadFromJsonAsync<ExternalApiResponse < List<string> >> ();
+            if (success.Message == "false" || success.Code != 0)
+            { 
+               
+                await _userManager.RemoveFromRolesAsync(newUser, request._dto.roles);
+                await _userManager.DeleteAsync(newUser);
+                return BaseResponse<UserDTO>.FailureResponse("Failed to edit the users");
+            }
 
             return BaseResponse<UserDTO>.SuccessResponse(data:new UserDTO
             {

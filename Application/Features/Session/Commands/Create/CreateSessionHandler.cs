@@ -57,6 +57,8 @@ namespace Application.Features.Session.Commands.Create
 
             if (errors.Any())
                 return BaseResponse<SessionDto>.FailureResponse("Validation failed", errors);
+            //give lecturer the same privilages of rest of users
+            request.usersIds.Add(request.LecturerId);
             //set time period
             var lastTime=await _SysunitOfWork.ISysTimeSessionRepository.GetFirstOrderedByAsync(p => p.business_id,descending:true);
             var time = new acc_timeseg { 
@@ -172,7 +174,6 @@ namespace Application.Features.Session.Commands.Create
 
             //check if the users on the sys
 
-            var usersSysPins =( await _SysunitOfWork.ISysPersonRepository.GetAllAsync()).Select(u=>u.pin).ToList();
             var lastSysPerson = await _SysunitOfWork.ISysPersonRepository.GetFirstOrderedByAsync<int>(p => Convert.ToInt32(p.pin), descending: true);
 
             var lastUser = await userManager.Users
@@ -184,70 +185,30 @@ namespace Application.Features.Session.Commands.Create
             int userPin = int.TryParse(lastUser?.pin, out var u) ? u : 0;
 
             var lastId = Math.Max(sysPin, userPin) + 1;
-            var diffUsers=users.Where(u => !usersSysPins.Contains(u.pin)&&!u.IsDeleted).ToList();
-            var diffUsersOnSys = diffUsers.Select(old => new pers_person
-            {
-                id=Guid.NewGuid().ToString("N"),
-                create_time=DateTime.Now,
-                creater_code="admin",
-                creater_id= "8a807a299b0d347b019b0d355f320002",
-                creater_name="admin",
-                op_version=0,
-                update_time= DateTime.Now,
-                updater_code="admin",
-                updater_id= "8a807a299b0d347b019b0d355f320002",
-                updater_name="admin",
-                auth_dept_id= "8a807a299b0d347b019b0d355fb10004",
-                enabled_credential=true,
-                exception_flag=0,
-                gender=old.Gender.GetDescription(),
-                id_card="",
-                id_card_physical_no="",
-                is_from= "PERS_USER_MANUALLY_ADDED",
-                is_sendmail=false,
-                last_name=old.LastName,
-                mobile_phone=old.PhoneNumber,
-                name=old.FirstName,
-                name_spell=old.FullName,
-                number_pin=lastId,
-                person_pwd=old.UserName,
-                person_type=0,
-                pin=(++lastId).ToString(),
-                pin_letter=false,
-                self_pwd=old.UserName,
-                send_app=true,
-                send_sms=false,
-                status=0
-                
-            }).ToList();
 
-
-            await _SysunitOfWork.ISysPersonRepository.AddRangeAsync(diffUsersOnSys);
-            await _SysunitOfWork.Complete();
-            var usersPins = users.Select(u => u.pin).ToList();
-            var usersOnSysWithPin = await _SysunitOfWork.ISysPersonRepository.GetAllByPropAsync(u => usersPins.Contains(u.pin));
-            var accPersons = usersOnSysWithPin.Select(u=>new acc_level_person
+            var editedUsersOnSys = users.Select(u=>new ZkPersonCreateDto
             {
-                id = Guid.NewGuid().ToString("N"),
-                create_time = DateTime.Now,
-                creater_code = "admin",
-                creater_id = "8a807a299b0d347b019b0d355f320002",
-                creater_name = "admin",
-                op_version = 0,
-                update_time = DateTime.Now,
-                updater_code = "admin",
-                updater_id = "8a807a299b0d347b019b0d355f320002",
-                updater_name = "admin",
-                pers_person_id=u.id,
-                level_id= accLevel.id
+              Pin=u.pin,
+              DeptCode= "1",
+              Name= u.FirstName,
+              LastName=u.LastName,
+                Gender = u.Gender.GetDescription(),
+              AccLevelIds= accLevel.id
             }).ToList();
-            await _SysunitOfWork.ISysAccessLevelPersonRepository.AddRangeAsync(accPersons);
+            foreach(var response in editedUsersOnSys)
+            {
+                var result=await _httpClientFactory.PostAsJsonAsync(MainConstants.Use("person/add"),response);
+                var message = await result.Content.ReadFromJsonAsync<ExternalApiResponse<List<string>>>();
+
+                if (message.Message== "false"|| message.Code!=0)
+                    return BaseResponse<SessionDto>.FailureResponse("Failed to edit the users");
+            }
+       
 
             await _unitOfWork.ISession.AddAsync(session);
             await _unitOfWork.Complete();
             var usersSession = request.usersIds.Select(s => new UserSession { SessionId = session.Id, UserId = s });
             await _unitOfWork.IAssignUserSession.AddRangeIfNotExistsAsync(usersSession.ToList());
-            await _SysunitOfWork.Complete();
             await _unitOfWork.Complete();
 
 
