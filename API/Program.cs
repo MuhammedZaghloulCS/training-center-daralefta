@@ -12,29 +12,40 @@ using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// -----------------------
+// Logging Configuration
+// -----------------------
+builder.Logging.ClearProviders();          // Remove default providers (EventLog)
+builder.Logging.AddConsole();              // Only use Console logging
+builder.Logging.AddDebug();                // Optional debug logging
 
+// -----------------------
+// Controllers + JSON Options
+// -----------------------
 builder.Services.AddControllers()
-.AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-});
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    });
+
+// -----------------------
+// Swagger/OpenAPI
+// -----------------------
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<ApplicationContext>(option =>
-{
-    option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
-builder.Services.AddDbContext<security_dbContext>(option =>
-{
-    option.UseSqlServer(builder.Configuration.GetConnectionString("SecondConnection"));
-});
+// -----------------------
+// Database Contexts
+// -----------------------
+builder.Services.AddDbContext<ApplicationContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddDbContext<security_dbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("SecondConnection")));
 
-//JWT
-// إعداد JWT Authentication
+// -----------------------
+// JWT Authentication
+// -----------------------
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -53,7 +64,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
-//Identity Dependencies
+// -----------------------
+// Identity Configuration
+// -----------------------
 builder.Services.AddIdentityCore<ApplicationUser>(options =>
 {
     options.Password.RequiredLength = 8;
@@ -63,11 +76,13 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
     options.Password.RequireNonAlphanumeric = true;
 })
 .AddRoles<IdentityRole<Guid>>()
-.AddSignInManager() 
+.AddSignInManager()
 .AddEntityFrameworkStores<ApplicationContext>()
 .AddDefaultTokenProviders();
 
-//HTTP Client
+// -----------------------
+// HttpClient
+// -----------------------
 builder.Services.AddHttpClient("ExternalApi")
     .ConfigurePrimaryHttpMessageHandler(() =>
         new HttpClientHandler
@@ -75,16 +90,19 @@ builder.Services.AddHttpClient("ExternalApi")
             ServerCertificateCustomValidationCallback =
                 HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
         });
-// Adding Infrastructure Dependencies
-builder.Services.AddedModuleInfraStructureDependencies();
 
-// Adding Infrastructure Dependencies
+// -----------------------
+// Infrastructure Dependencies
+// -----------------------
+builder.Services.AddedModuleInfraStructureDependencies();
 builder.Services.AddedModuleApplicationDependencies();
 
-//CORS Policy
+// -----------------------
+// CORS
+// -----------------------
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("CorsPolicy", builder =>
+    options.AddPolicy("AllowAll", builder =>
     {
         builder.AllowAnyOrigin()
                .AllowAnyMethod()
@@ -92,21 +110,34 @@ builder.Services.AddCors(options =>
     });
 });
 
+// -----------------------
+// Mapster
+// -----------------------
 builder.Services.AddMapster();
 
+// -----------------------
+// Build app
+// -----------------------
 var app = builder.Build();
 
-// Enable CORS
-app.UseCors("CorsPolicy");
+app.UseCors("AllowAll");
 
-// Configure the HTTP request pipeline.
+// -----------------------
+// Middleware
+// -----------------------
 if (app.Environment.IsDevelopment())
 {
- 
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
-app.UseSwagger();
-app.UseSwaggerUI();
-//app.UseHttpsRedirection();
+else
+{
+    // In production you can still enable Swagger if needed
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+//app.UseHttpsRedirection(); // optional for HTTP
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -114,17 +145,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 
-//using (var scope = app.Services.CreateScope())
-//{
-//    var roleManager = scope.ServiceProvider
-//        .GetRequiredService<RoleManager<IdentityRole<Guid>>>();
-
-//    var userManager = scope.ServiceProvider
-//        .GetRequiredService<UserManager<ApplicationUser>>();
-
-//    await IdentitySeeder.SeedAsync(roleManager, userManager);
-//}
-
-
 app.Run();
-
