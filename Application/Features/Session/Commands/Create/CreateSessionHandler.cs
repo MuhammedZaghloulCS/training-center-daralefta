@@ -192,7 +192,7 @@ namespace Application.Features.Session.Commands.Create
               DeptCode= "1",
               Name= u.FirstName,
               LastName=u.LastName,
-                Gender = u.Gender.GetDescription(),
+              Gender = u.Gender.GetDescription(),
               AccLevelIds= accLevel.id
             }).ToList();
             foreach(var response in editedUsersOnSys)

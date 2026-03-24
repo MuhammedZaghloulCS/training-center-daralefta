@@ -148,7 +148,8 @@ namespace Application.Features.User.Commands.Create.CreateUser
                 MaritalState =newUser.MaritalState,
                 AcademicQualification =newUser.AcademicQualification,
                 Appreciation =newUser.Appreciation,
-                ImagePath =newUser.ImagePath
+                ImagePath =newUser.ImagePath,
+                pin = newUser.pin
 
             });
             }
