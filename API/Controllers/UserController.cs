@@ -89,6 +89,16 @@ namespace API.Controllers
             }
             return Ok(response);
         }
+        [HttpGet("diffsysusers")]
+        public async Task<IActionResult> GetDiffSysUsers()
+        {
+            var response = await _mediator.Send(new Application.Features.User.Queries.Model.GetDiffSysUsersQuery());
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
         [HttpGet("sysusers/{pin}")]
         public async Task<IActionResult> GetSysUsers(string pin)
         {

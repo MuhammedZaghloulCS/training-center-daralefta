@@ -7,11 +7,10 @@ using Infrastructure.Abstractions.IUnitOfWork.ISysUnitOfWork;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 
 namespace Application.Features.User.Queries.Handler
 {
-    public class GetAllUsersPagedHandler 
+    public class GetAllUsersPagedHandler
         : IRequestHandler<GetAllUsersPagedQuery, BaseResponse<List<UserDTO>>>
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -36,6 +35,9 @@ namespace Application.Features.User.Queries.Handler
                     .BadRequestResponse("Invalid pagination parameters");
             }
 
+            // ✅ Limit PageSize (حماية)
+            var pageSize = request.PageSize > 50 ? 50 : request.PageSize;
+
             // ✅ Base query
             var usersQuery = _userManager.Users
                 .Where(u => !u.IsDeleted)
@@ -50,62 +52,54 @@ namespace Application.Features.User.Queries.Handler
                 bool dateParsed = DateTime.TryParse(term, out var birthDate);
 
                 usersQuery = usersQuery.Where(u =>
-                    // Identity
                     u.UserName.Contains(term) ||
                     u.Email.Contains(term) ||
                     u.PhoneNumber.Contains(term) ||
 
-                    // Basic
                     u.FirstName.Contains(term) ||
                     u.LastName.Contains(term) ||
 
-                    // Enum
                     (genderParsed && u.Gender == gender) ||
 
-                    // Professional
                     u.JobTitle.Contains(term) ||
                     u.AcademicTitle.Contains(term) ||
                     u.Organization.Contains(term) ||
                     u.Specialization.Contains(term) ||
                     u.Skills.Contains(term) ||
 
-                    // Contact
                     u.WhatsappNumber.Contains(term) ||
                     u.AddressInsideCairo.Contains(term) ||
                     u.AddressOutsideCairo.Contains(term) ||
 
-                    // Other
                     u.Doctrine.Contains(term) ||
                     u.MaritalState.Contains(term) ||
                     u.AcademicQualification.Contains(term) ||
                     u.Appreciation.Contains(term) ||
 
-                    // Date
                     (dateParsed &&
                      u.BirthDate.HasValue &&
                      u.BirthDate.Value.Date == birthDate.Date)
                 );
             }
 
+            // ✅ Total count (قبل pagination)
+            var totalCount = await usersQuery.CountAsync(cancellationToken);
+
+            // ✅ Sorting (مهم جداً)
+            usersQuery = usersQuery.OrderBy(u => u.UserName);
+
             // ✅ Pagination
             var users = await usersQuery
-                .Skip((request.PageNumber - 1) * request.PageSize)
-                .Take(request.PageSize)
+                .Skip((request.PageNumber - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync(cancellationToken);
-
-            // ✅ No data
-            if (!users.Any())
-            {
-                return BaseResponse<List<UserDTO>>
-                    .SuccessResponse(new List<UserDTO>(), "No users found");
-            }
 
             // ✅ Mapping
             var userDTOs = new List<UserDTO>();
 
             foreach (var user in users)
             {
-                var roles = await _userManager.GetRolesAsync(user);
+                var roles = await _userManager.GetRolesAsync(user); // ⚠️ N+1 (مقبولة مؤقتاً)
 
                 userDTOs.Add(new UserDTO
                 {
@@ -135,16 +129,21 @@ namespace Application.Features.User.Queries.Handler
                     MaritalState = user.MaritalState,
                     AcademicQualification = user.AcademicQualification,
                     Appreciation = user.Appreciation,
-
+                    pin = user.pin,
                     ImagePath = user.ImagePath,
 
                     roles = roles.ToList()
                 });
             }
 
-            // ✅ Response
-            return BaseResponse<List<UserDTO>>
-                .SuccessResponse(userDTOs, "Users retrieved successfully");
+            // ✅ Return with pagination
+            return BaseResponse<List<UserDTO>>.SuccessResponse(
+                userDTOs,
+                request.PageNumber,
+                pageSize,
+                totalCount,
+                "Users retrieved successfully"
+            );
         }
     }
 }

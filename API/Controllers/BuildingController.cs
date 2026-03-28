@@ -28,13 +28,13 @@ namespace API.Controllers
         public BuildingController(IMediator mediator, IHttpClientFactory httpClientFactory, ApplicationContext context)
         {
             _mediator = mediator;
-            //HttpClient = httpClientFactory.CreateClient("ExternalApi");
+            HttpClient = httpClientFactory.CreateClient("ExternalApi");
             this.context = context;
         }
             [HttpGet]
         public async Task<IActionResult> GetAsync()
         {
-            return Ok("Reda Test ");
+           
             var response = await _mediator.Send(new GetAllBuildingsListQuery());
             return response.Success ? Ok(response) : BadRequest(response);
         }

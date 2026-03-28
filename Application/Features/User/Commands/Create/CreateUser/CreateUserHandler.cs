@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Net.Http.Json;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Application.Features.User.Commands.Create.CreateUser
 {
@@ -59,7 +60,7 @@ namespace Application.Features.User.Commands.Create.CreateUser
             var newUser = new ApplicationUser
             {
                 Id = id,
-                UserName = userName,
+                UserName = Regex.Replace(userName, @"[^a-zA-Z0-9]", ""),
                 Email = request._dto.Email,
                 PhoneNumber = request._dto.PhoneNumber,
                 FirstName = request._dto.FirstName,
@@ -91,7 +92,7 @@ namespace Application.Features.User.Commands.Create.CreateUser
             userInSys.birthday = newUser.BirthDate;
 
 
-            var result = await _userManager.CreateAsync(newUser, request._dto.Password);
+            var result = await _userManager.CreateAsync(newUser);
             if (!result.Succeeded)
             {
                 var errors = result.Errors.Select(e => e.Description);

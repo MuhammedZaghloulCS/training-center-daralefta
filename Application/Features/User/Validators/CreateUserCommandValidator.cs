@@ -18,17 +18,17 @@ public class CreateUserCommandValidator
             .NotEmpty().WithMessage("البريد الإلكتروني مطلوب")
             .EmailAddress().WithMessage("البريد الإلكتروني غير صالح");
 
-        RuleFor(x => x._dto.Password)
-            .NotEmpty().WithMessage("كلمة المرور مطلوبة")
-            .MinimumLength(8).WithMessage("كلمة المرور يجب ألا تقل عن 8 أحرف")
-            .Matches(@"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$")
-            .WithMessage("كلمة المرور يجب أن تحتوي على حرف كبير، حرف صغير، رقم، ورمز خاص");
+    //    RuleFor(x => x._dto.Password)
+    //        .NotEmpty().WithMessage("كلمة المرور مطلوبة")
+    //        .MinimumLength(8).WithMessage("كلمة المرور يجب ألا تقل عن 8 أحرف")
+    //        .Matches(@"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$")
+    //        .WithMessage("كلمة المرور يجب أن تحتوي على حرف كبير، حرف صغير، رقم، ورمز خاص");
 
 
-        RuleFor(x => x._dto.ConfirmPassword)
-    .NotEmpty().WithMessage("تأكيد كلمة المرور مطلوبة")
-    .Equal(x => x._dto.Password)
-    .WithMessage("كلمات المرور غير متطابقة");
+    //    RuleFor(x => x._dto.ConfirmPassword)
+    //.NotEmpty().WithMessage("تأكيد كلمة المرور مطلوبة")
+    //.Equal(x => x._dto.Password)
+    //.WithMessage("كلمات المرور غير متطابقة");
 
 
         RuleFor(x => x._dto.PhoneNumber)

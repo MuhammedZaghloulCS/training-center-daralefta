@@ -49,6 +49,8 @@ namespace Application.Features.Room.Commands.Update
             room.Location = request.Location;
             room.BuildId = request.BuildId;
             room.HaveProjector = request.HaveProjector;
+            room.AttRoomIdOutSide = request.AttRoomIdOutSide;
+            room.AttRoomIdinside = request.AttRoomIdinside;
             room.UpdatedBy = request.UpdatedBy;
             room.UpdatedAt = DateTime.UtcNow;
 

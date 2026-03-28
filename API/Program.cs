@@ -120,22 +120,17 @@ builder.Services.AddMapster();
 // -----------------------
 var app = builder.Build();
 
-app.UseCors("AllowAll");
+
 
 // -----------------------
 // Middleware
-// -----------------------
-if (app.Environment.IsDevelopment())
-{
+
     app.UseSwagger();
     app.UseSwaggerUI();
-}
-else
-{
-    // In production you can still enable Swagger if needed
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+
+app.UseRouting(); // ✅ مهم جدًا
+
+app.UseCors("AllowAll");
 
 //app.UseHttpsRedirection(); // optional for HTTP
 

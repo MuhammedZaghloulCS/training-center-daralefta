@@ -35,78 +35,50 @@ namespace Application.Features.User.Queries.Handler
             else if (users.Count == 0) {
                 return BaseResponse<List<UserDTO>>.SuccessResponse(data: default, message: "No users found");
             }
-            var pins = users.Select(u => u.pin).ToList();
-            var usersInSys = await sysUnitOfWork.ISysPersonRepository.GetAllAsync(p => !pins.Contains(p.pin));
 
-            var inCompleteUsers = usersInSys.Select(u => new UserDTO
+            // ✅ Mapping
+            var userDTOs = new List<UserDTO>();
+
+            foreach (var user in users)
             {
-                Id = Guid.Empty,
-                UserName = String.Empty,
+                var roles = await _userManager.GetRolesAsync(user);
 
-                Email = String.Empty,
-                PhoneNumber = String.Empty,
-
-                FirstName = String.Empty,
-                LastName = String.Empty,
-                Gender = Gender.male,
-
-
-                JobTitle = String.Empty,
-                AcademicTitle = String.Empty,
-                Organization = String.Empty,
-                Specialization = String.Empty,
-                Skills = String.Empty,
-                WhatsappNumber = String.Empty,
-
-                BirthDate = DateTime.MinValue, // أو سيبها nullable لو عدلت DTO
-                NationalIdImage = String.Empty,
-
-                AddressInsideCairo = String.Empty,
-                AddressOutsideCairo = String.Empty,
-
-                Doctrine = String.Empty,
-                MaritalState = String.Empty,
-                AcademicQualification = String.Empty,
-                Appreciation = String.Empty,
-                ImagePath = String.Empty,
-                pin = u.pin
-            }).ToList();
-            var userDTOs = users.Select(u => new UserDTO
+                userDTOs.Add(new UserDTO
                 {
-                    Id = u.Id,
-                    UserName = u.UserName,
+                    Id = user.Id,
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    PhoneNumber = user.PhoneNumber,
 
-                    Email = u.Email,
-                    PhoneNumber = u.PhoneNumber,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Gender = user.Gender,
 
-                    FirstName = u.FirstName,
-                    LastName = u.LastName,
-                    Gender = u.Gender,
+                    JobTitle = user.JobTitle,
+                    AcademicTitle = user.AcademicTitle,
+                    Organization = user.Organization,
+                    Specialization = user.Specialization,
+                    Skills = user.Skills,
+                    WhatsappNumber = user.WhatsappNumber,
 
-                    JobTitle = u.JobTitle,
-                    AcademicTitle = u.AcademicTitle,
-                    Organization = u.Organization,
-                    Specialization = u.Specialization,
-                    Skills = u.Skills,
-                    WhatsappNumber = u.WhatsappNumber,
+                    BirthDate = user.BirthDate ?? DateTime.MinValue,
+                    NationalIdImage = user.NationalIdImage,
 
-                    BirthDate = u.BirthDate ?? DateTime.MinValue, // أو سيبها nullable لو عدلت DTO
-                    NationalIdImage = u.NationalIdImage,
+                    AddressInsideCairo = user.AddressInsideCairo,
+                    AddressOutsideCairo = user.AddressOutsideCairo,
 
-                    AddressInsideCairo = u.AddressInsideCairo,
-                    AddressOutsideCairo = u.AddressOutsideCairo,
+                    Doctrine = user.Doctrine,
+                    MaritalState = user.MaritalState,
+                    AcademicQualification = user.AcademicQualification,
+                    Appreciation = user.Appreciation,
 
-                    Doctrine = u.Doctrine,
-                    MaritalState = u.MaritalState,
-                    AcademicQualification = u.AcademicQualification,
-                    Appreciation = u.Appreciation,
-                    ImagePath = u.ImagePath,
-                    pin = u.pin
-                
+                    ImagePath = user.ImagePath,
 
-            }).ToList();
-            if(inCompleteUsers.Count()>0)
-            userDTOs.InsertRange(0,inCompleteUsers);
+                    roles = roles.ToList()
+                });
+            }
+
+
             return BaseResponse<List<UserDTO>>.SuccessResponse(data: userDTOs, message: "Users retrieved successfully");
         }
     }

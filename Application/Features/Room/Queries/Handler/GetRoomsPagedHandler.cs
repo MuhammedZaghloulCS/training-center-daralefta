@@ -26,20 +26,20 @@ namespace Application.Features.Room.Queries.Handler
             {
                 return BaseResponse<List<RoomListDTO>>.BadRequestResponse("Invalid pagination parameters");
             }
-            Expression<Func<Domain.Entities.Room, bool>> filter = null;
+            Expression<Func<Domain.Entities.Room, bool>> filter = r => !r.IsDeleted;
             // 1️⃣ Guard
             if (!string.IsNullOrWhiteSpace(request.SearchTerm))
             { 
 
             // 2️⃣ Base filter (string)
             filter =
-                r => r.Name.Contains(request.SearchTerm)
-                  || r.Location.Contains(request.SearchTerm);
+                r => (r.Name.Contains(request.SearchTerm)
+                  || r.Location.Contains(request.SearchTerm)&& !r.IsDeleted);
 
             // 3️⃣ int search (Capacity)
             if (int.TryParse(request.SearchTerm, out int capacity))
             {
-                filter = filter.Or(r => r.Capacity == capacity);
+                filter = filter.Or(r => r.Capacity == capacity && !r.IsDeleted);
             }
 
             // 4️⃣ bool? search (HaveProjector)
@@ -47,7 +47,7 @@ namespace Application.Features.Room.Queries.Handler
             {
                 filter = filter.Or(r =>
                     r.HaveProjector.HasValue &&
-                    r.HaveProjector == haveProjector
+                    r.HaveProjector == haveProjector && !r.IsDeleted
                 );
             }
             }
@@ -71,7 +71,7 @@ namespace Application.Features.Room.Queries.Handler
                     "No room found");
             }
 
-            var data = items.Where(r=>!r.IsDeleted).Select(r => new RoomListDTO
+            var data = items.Select(r => new RoomListDTO
             {
                 Id = r.Id,
                 CreatedBy = r.CreatedBy,
