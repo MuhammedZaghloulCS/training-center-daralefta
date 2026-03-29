@@ -30,22 +30,7 @@ namespace Infrastructure.Configurations
             var date = new DateTime(2025, 5, 1);
             var surveys = new List<Survey>();
 
-            for (int i = 1; i <= 30; i++)
-            {
-                surveys.Add(new Survey
-                {
-                    Id = i,
-                    Title = $"Survey {i}",
-                    Description = $"Description for Survey {i}",
 
-                    CreatedBy = "System",
-                    CreatedDate = date.AddDays(50),
-
-                    TrainingId = (i % 5) + 1,        
-                });
-            }
-
-            builder.HasData(surveys);
         }
 
 

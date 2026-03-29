@@ -24,6 +24,7 @@ namespace Application.Features.User.Queries.Handler
             {
                 return BaseResponse<UserDTO>.NotFoundResponse("User not found");
             }
+            var roles = await _userManager.GetRolesAsync(user);
             var userDto = new UserDTO
             {
                 Id = user.Id,
@@ -53,7 +54,8 @@ namespace Application.Features.User.Queries.Handler
                 MaritalState = user.MaritalState,
                 AcademicQualification = user.AcademicQualification,
                 Appreciation = user.Appreciation,
-                ImagePath = user.ImagePath
+                ImagePath = user.ImagePath,
+                roles = roles.ToList()
             };
             return (BaseResponse<UserDTO>.SuccessResponse(userDto));
         }

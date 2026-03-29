@@ -26,23 +26,33 @@ namespace Application.Features.Room.Commands.Create
         {
             var errors = new List<string>();
 
-            if (string.IsNullOrWhiteSpace(request.CreatedBy))
-                errors.Add("CreatedBy is required");
-
+            var validRoom= await _unitOfWork.IRooms.GetFirstByPropAsync(r => (r.Name == request.Name)&&!r.IsDeleted);
+            var validRoomByAtt= await _unitOfWork.IRooms.GetFirstByPropAsync(r => (r.AttRoomIdOutSide == request.AttRoomIdOutSide)&&!r.IsDeleted);
             if (string.IsNullOrWhiteSpace(request.Name))
-                errors.Add("Name is required");
+                errors.Add("الاسم مطلوب");
+            if(request.Name.Length>50)
+                errors.Add("اسم الغرفة لا يجب أن يتجاوز 50 حرفًا");
 
             if (string.IsNullOrWhiteSpace(request.Location))
-                errors.Add("Location is required");
+                errors.Add("المكان مطلوب");
 
             if (request.Capacity < 0)
-                errors.Add("Capacity is invalid");
+                errors.Add("السعة مطلوبة");
+
+            if (request.Capacity> 300)
+                errors.Add("السعة اكبر من الممكن");
 
             if (request.BuildId.HasValue && request.BuildId.Value < 1)
-                errors.Add("BuildId is invalid");
+                errors.Add("المبني المقابل غير موجود");
+            if(validRoom!=null)
+                errors.Add("الاسم مستخدم من قبل");
+            if(validRoomByAtt != null)
+                errors.Add("الغرفة المقابلة مستخدمة بالفعل");
+
 
             if (errors.Any())
-                return BaseResponse<RoomDto>.FailureResponse("Validation failed", errors);
+                return BaseResponse<RoomDto>.FailureResponse("خطأ", errors);
+
             var outsideDoor=await _sysUnitOfWork.ISysDoorRepository.GetByPropAsync(d => d.id == request.AttRoomIdOutSide);
             var outsideDoorName = outsideDoor.name
                 .Replace("-outside", "", StringComparison.OrdinalIgnoreCase);

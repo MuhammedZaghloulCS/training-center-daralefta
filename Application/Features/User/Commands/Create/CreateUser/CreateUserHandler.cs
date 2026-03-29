@@ -46,17 +46,7 @@ namespace Application.Features.User.Commands.Create.CreateUser
 
                 var id = Guid.NewGuid();
             string userName = request._dto.FirstName + id.ToString("N")[..6];
-            //var lastSysPerson = await _sysUnitOfWork.ISysPersonRepository.GetFirstOrderedByAsync<int>(p => Convert.ToInt32(p.pin), descending: true);
 
-            //var lastUser = await _userManager.Users
-            //.Where(u => u.pin != null)
-            //.OrderByDescending(u => Convert.ToInt64(u.pin))
-            //.FirstOrDefaultAsync();
-
-            //int sysPin = int.TryParse(lastSysPerson?.pin, out var s) ? s : 0;
-            //int userPin = int.TryParse(lastUser?.pin, out var u) ? u : 0;
-
-            //var lastId = Math.Max(sysPin, userPin) + 1;
             var newUser = new ApplicationUser
             {
                 Id = id,

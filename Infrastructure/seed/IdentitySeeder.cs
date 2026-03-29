@@ -1,52 +1,91 @@
 ﻿using Domain.Entities;
+using Domain.Enums;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
-public static class IdentitySeeder
+public static class AdminSeeder
 {
-    public static async Task SeedAsync(
-        RoleManager<IdentityRole<Guid>> roleManager,
-        UserManager<ApplicationUser> userManager)
+    public static async Task SeedAsync(IServiceProvider serviceProvider)
     {
-        // 1️⃣ Seed Roles
-        await SeedRolesAsync(roleManager);
+        var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+        var configuration = serviceProvider.GetRequiredService<IConfiguration>();
 
-        // 2️⃣ Seed Users
-        await SeedAdminUserAsync(userManager);
-    }
-
-    private static async Task SeedRolesAsync(
-        RoleManager<IdentityRole<Guid>> roleManager)
-    {
-        string[] roles = { "Admin", "Instructor", "Student" };
-
-        foreach (var role in roles)
+        // -----------------------
+        // Seed Admin Role
+        // -----------------------
+        Console.WriteLine("entered to seeding");
+        const string adminRole = "Admin";
+        if (!await roleManager.RoleExistsAsync(adminRole))
         {
-            if (!await roleManager.RoleExistsAsync(role))
+            await roleManager.CreateAsync(new IdentityRole<Guid>(adminRole));
+        }
+
+        // -----------------------
+        // Seed Admin User
+        // -----------------------
+     
+
+        var existingAdmin = await userManager.FindByEmailAsync("admin@daraliftaa.com");
+
+        if (existingAdmin == null)
+        {
+            var adminUser = new ApplicationUser
             {
-                await roleManager.CreateAsync(
-                    new IdentityRole<Guid>(role));
+                Id = Guid.NewGuid(),
+                UserName = "admin",
+                Email = "admin@daraliftaa.com",
+              PhoneNumber=" ",
+
+                // ✅ أضف الـ Required Fields
+                FirstName = "Admin",
+                LastName = "System",
+                Gender = Gender.male,
+                BirthDate = DateTime.Now.Date,
+                IsDeleted = false,
+                LockoutEnabled = false,
+                PhoneNumberConfirmed = false,
+                TwoFactorEnabled = false,
+                AccessFailedCount = 0,
+                // String fields - خليها empty مش null
+                AcademicQualification = " ",
+                AcademicTitle = " ",
+                AddressInsideCairo = " ",
+                AddressOutsideCairo = " ",
+                Appreciation = " ",
+                Doctrine = " ",
+                ImagePath = " ",
+                JobTitle = " ",
+                NationalIdImage = " ",
+                Organization = " ",
+                Skills = " ",
+                Specialization = " ",
+                WhatsappNumber = " ",
+                pin = "1",
+                MaritalState = " ",
+
+            };
+
+            var result = await userManager.CreateAsync(adminUser, "Admin@1234");
+
+            if (result.Succeeded)
+            {
+                await userManager.AddToRoleAsync(adminUser, adminRole);
+            }
+            else
+            {
+                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                throw new Exception($"Failed to seed admin: {errors}");
             }
         }
-    }
-
-    private static async Task SeedAdminUserAsync(
-        UserManager<ApplicationUser> userManager)
-    {
-        var email = "admin@trainingcenter.com";
-
-        var admin = await userManager.FindByEmailAsync(email);
-        if (admin != null) return;
-
-        admin = new ApplicationUser
+        else
         {
-            UserName = email,
-            Email = email,
-            EmailConfirmed = true,
-            FirstName = "System",
-            LastName = "Admin"
-        };
-
-        await userManager.CreateAsync(admin, "Admin@123");
-        await userManager.AddToRoleAsync(admin, "Admin");
+            // لو الأدمن موجود بس مش في الـ Role، حطه فيها
+            if (!await userManager.IsInRoleAsync(existingAdmin, adminRole))
+            {
+                await userManager.AddToRoleAsync(existingAdmin, adminRole);
+            }
+        }
     }
 }

@@ -1,4 +1,7 @@
+using Application.Common.Abstraction;
+using Application.Common.Implementation;
 using Domain.Entities;
+using Hangfire;
 using Infrastructure.Context;
 using Infrastructure.Dependencies;
 using Mapster;
@@ -6,6 +9,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
+using Microsoft.OpenApi.Models;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
@@ -15,9 +20,9 @@ var builder = WebApplication.CreateBuilder(args);
 // -----------------------
 // Logging Configuration
 // -----------------------
-builder.Logging.ClearProviders();          // Remove default providers (EventLog)
-builder.Logging.AddConsole();              // Only use Console logging
-builder.Logging.AddDebug();                // Optional debug logging
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
 
 // -----------------------
 // Controllers + JSON Options
@@ -28,11 +33,42 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
     });
 
+builder.Services.AddHangfire(x =>
+    x.UseSqlServerStorage(builder.Configuration.GetConnectionString("HangfireConnection")));
+
+builder.Services.AddHangfireServer();
+
 // -----------------------
 // Swagger/OpenAPI
 // -----------------------
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "أدخل التوكن هنا. مثال: eyJhbGci..."
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 
 // -----------------------
 // Database Contexts
@@ -42,6 +78,9 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
 
 builder.Services.AddDbContext<security_dbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SecondConnection")));
+
+builder.Services.AddScoped<IFacePrintService, FacePrintService>();
+builder.Services.AddScoped<HangfireJob>();
 
 // -----------------------
 // JWT Authentication
@@ -63,7 +102,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddAuthorization();
-
+Console.WriteLine("KEY: " + builder.Configuration["Jwt:Key"]);
+Console.WriteLine("ISSUER: " + builder.Configuration["Jwt:Issuer"]);
+Console.WriteLine("AUDIENCE: " + builder.Configuration["Jwt:Audience"]);
 // -----------------------
 // Identity Configuration
 // -----------------------
@@ -120,24 +161,49 @@ builder.Services.AddMapster();
 // -----------------------
 var app = builder.Build();
 
-
-
 // -----------------------
 // Middleware
+// -----------------------
+app.UseSwagger();
+app.UseSwaggerUI();
 
-    app.UseSwagger();
-    app.UseSwaggerUI();
-
-app.UseRouting(); // ✅ مهم جدًا
+app.UseRouting();
 
 app.UseCors("AllowAll");
 
-//app.UseHttpsRedirection(); // optional for HTTP
+using (var scope = app.Services.CreateScope())
+{
+    var recurringJobManager = scope.ServiceProvider.GetRequiredService<IRecurringJobManager>();
+    var backgroundJobClient = scope.ServiceProvider.GetRequiredService<IBackgroundJobClient>();
 
+    backgroundJobClient.Enqueue<HangfireJob>(
+        x => x.ProcessSessions()
+    );
+
+    recurringJobManager.AddOrUpdate<HangfireJob>(
+        "assign-users-to-sessions",
+        x => x.ProcessSessions(),
+        "0 0 * * *",
+        TimeZoneInfo.FindSystemTimeZoneById("Egypt Standard Time")
+    );
+}
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        await AdminSeeder.SeedAsync(services);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while seeding the admin user.");
+    }
+}
+app.UseHangfireDashboard("/dashboard");
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
 
 app.Run();

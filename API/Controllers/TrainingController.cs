@@ -4,6 +4,7 @@ using Application.Features.Training.Commands.Update;
 using Application.Features.Training.Queries.Model;
 using Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +12,8 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
+
     public class TrainingController : ControllerBase
     {
         IMediator _mediator;

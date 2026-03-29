@@ -74,7 +74,6 @@ namespace Infrastructure.Implementations.Repository
                 query = query.Where(predicate);
 
             // Get total count before pagination
-            var totalCount = await query.CountAsync();
 
             // Apply ordering
             if (orderBy != null)
@@ -91,7 +90,7 @@ namespace Infrastructure.Implementations.Repository
                 .AsNoTracking()
                 .ToListAsync();
 
-            return (items, totalCount);
+            return (items, dbSet.Count());
         }
 
         public Task<T?> GetByPkAsync(TKey PK,params Expression<Func<T, object>>[] includeProperties)
@@ -108,7 +107,12 @@ namespace Infrastructure.Implementations.Repository
         {
             dbSet.Update(entity);
         }
+        public async Task<T> GetFirstByPropAsync(Expression<Func<T, bool>> predicate)
+        {
+            var result=await dbSet.Where(predicate).FirstOrDefaultAsync();
+            return result;
+        }
 
-       
+
     }
 }

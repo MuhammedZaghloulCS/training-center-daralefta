@@ -20,47 +20,8 @@ namespace Infrastructure.Configurations
             CreatedBy = "system",
             CreatedDate = new DateTime(2024, 1, 1),
             SysBuildingId= "8a807a299b0d347b019b0d355f9a0003"
-        },
-        new Building
-        {
-            Id = 2,
-            Name = "مبنى القاعات الدراسية",
-            Description = "مخصص للمحاضرات والدروس النظرية ويحتوي على قاعات مجهزة",
-            CreatedBy = "system",
-            CreatedDate = new DateTime(2024, 1, 1),
-            SysBuildingId = "8a807a299b0d347b019b0d355f9a0003"
-
-        },
-        new Building
-        {
-            Id = 3,
-            Name = "مبنى المعامل والتطبيقات",
-            Description = "يحتوي على معامل الحاسب الآلي والمعامل العملية",
-            CreatedBy = "system",
-            CreatedDate = new DateTime(2024, 1, 1),
-            SysBuildingId = "8a807a299b0d347b019b0d355f9a0003"
-
-        },
-        new Building
-        {
-            Id = 4,
-            Name = "مبنى شؤون الطلاب",
-            Description = "مسؤول عن تسجيل الطلاب وتقديم الخدمات الطلابية",
-            CreatedBy = "system",
-            CreatedDate = new DateTime(2024, 1, 1),
-            SysBuildingId = "8a807a299b0d347b019b0d355f9a0003"
-
-        },
-        new Building
-        {
-            Id = 5,
-            Name = "مبنى الخدمات",
-            Description = "يضم الكافيتريا والخدمات العامة وقاعات الأنشطة",
-            CreatedBy = "system",
-            CreatedDate = new DateTime(2024, 1, 1),
-            SysBuildingId = "8a807a299b0d347b019b0d355f9a0003"
-
         }
+      
     );
         }
     }

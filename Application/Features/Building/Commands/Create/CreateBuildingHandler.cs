@@ -24,17 +24,26 @@ namespace Application.Features.Building.Commands.Create
         {
             var errors = new List<string>();
 
-            if (string.IsNullOrWhiteSpace(request.CreatedBy))
-                errors.Add("CreatedBy is required");
+            var buildings=await _unitOfWork.IBuildings.GetFirstByPropAsync(b => b.SysBuildingId == request.SysBuildingId || b.Name==request.Name&&!b.IsDeleted);
+            if (buildings != null)
+                errors.Add("يوجد مبنى بنفس المعرف");
 
             if (string.IsNullOrWhiteSpace(request.Name))
-                errors.Add("Name is required");
+                errors.Add("الاسم مطلوب");
 
             if (string.IsNullOrWhiteSpace(request.Description))
-                errors.Add("Description is required");
+                errors.Add("الوصف مطلوب");
+            if (string.IsNullOrWhiteSpace(request.SysBuildingId))
+                errors.Add("معرف المبنى مطلوب");
+            if (request.Name.Length > 50)
+                errors.Add("اسم المبنى لا يجب أن يتجاوز 50 حرفًا");
+
+
 
             if (errors.Any())
                 return BaseResponse<BuildingDto>.FailureResponse("Validation failed", errors);
+
+
 
             var building = new Domain.Entities.Building
             {

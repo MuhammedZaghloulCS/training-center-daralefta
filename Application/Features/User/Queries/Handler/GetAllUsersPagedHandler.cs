@@ -36,7 +36,7 @@ namespace Application.Features.User.Queries.Handler
             }
 
             // ✅ Limit PageSize (حماية)
-            var pageSize = request.PageSize > 50 ? 50 : request.PageSize;
+            var pageSize = request.PageSize > 100 ? 100 : request.PageSize;
 
             // ✅ Base query
             var usersQuery = _userManager.Users
