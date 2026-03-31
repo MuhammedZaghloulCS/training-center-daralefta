@@ -28,7 +28,8 @@ namespace Application.Features.Training.Commands.Create
 
             if (string.IsNullOrWhiteSpace(request.Title))
                 errors.Add("Title is required");
-
+            if(request.Title.Length>50)
+                errors.Add("العنوان يجب أن لا يتعدي ال 50 حرفا");
             if (request.StartDate == default)
                 errors.Add("StartDate is required");
 

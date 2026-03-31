@@ -23,11 +23,14 @@ namespace API.Controllers
         UserManager<ApplicationUser> _userManager;
         HttpClient HttpClient;
 
-        public RoomController(IMediator mediator, IHttpClientFactory httpClientFactory)
+        public RoomController(IMediator mediator, IHttpClientFactory httpClientFactory, UserManager<ApplicationUser> userManager)
         {
             _mediator = mediator;
             HttpClient = httpClientFactory.CreateClient("ExternalApi");
+       
+            _userManager = userManager;
         }
+
 
         [HttpGet]
         public async Task<IActionResult> GetAsync()
@@ -53,8 +56,8 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAsync([FromBody] CreateRoomCommand command)
         {
-          //  var user = await _userManager.GetUserAsync(User);
-           // command.CreatedBy = user?.FullName;
+            var user = await _userManager.GetUserAsync(User);
+            command.CreatedBy = user?.FullName;
             var response = await _mediator.Send(command);
             return response.Success ? Ok(response) : BadRequest(response);
         }
@@ -63,8 +66,8 @@ namespace API.Controllers
         public async Task<IActionResult> UpdateAsync(int id, [FromBody] UpdateRoomCommand command)
         {
             command.Id = id;
-            //var user = await _userManager.GetUserAsync(User);
-            //command.UpdatedBy = user?.FullName;
+            var user = await _userManager.GetUserAsync(User);
+            command.UpdatedBy = user?.FullName;
             var response = await _mediator.Send(command);
             return response.Success ? Ok(response) : BadRequest(response);
         }

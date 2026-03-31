@@ -7,6 +7,7 @@ namespace Application.Features.Session.Commands.Create
 {
     public class CreateSessionCommand : IRequest<BaseResponse<SessionDto>>
     {
+        public string CreatedBy { get; set; }
         public DateTime SessionDate { get; set; }
         public TimeSpan StartTime { get; set; }
         public TimeSpan EndTime { get; set; }

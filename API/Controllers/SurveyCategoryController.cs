@@ -18,9 +18,10 @@ namespace API.Controllers
     {
         IMediator _mediator;
         UserManager<ApplicationUser> _userManager;
-        public SurveyCategoryController(IMediator mediator)
+        public SurveyCategoryController(IMediator mediator, UserManager<ApplicationUser> userManager)
         {
             _mediator = mediator;
+            _userManager = userManager;
         }
 
         [HttpGet]

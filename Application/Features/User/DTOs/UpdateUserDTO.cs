@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace Application.Features.User.DTOs
@@ -14,7 +15,7 @@ namespace Application.Features.User.DTOs
 
         public string? Email { get; set; }
 
-        public int Gender { get; set; }
+        public int? Gender { get; set; }
 
         public string? JobTitle { get; set; }
 
@@ -45,8 +46,14 @@ namespace Application.Features.User.DTOs
         public string? AcademicQualification { get; set; }
 
         public string? Appreciation { get; set; }
-
+        // كلمة مرور البصمة - أرقام فقط
+        [RegularExpression(@"^[0-9]*$", ErrorMessage = "personPwd must contain only numbers.")]
+        public string? personPwd { get; set; }
         public string? ImagePath { get; set; }
+        public string? pin { get; set; }
+        public List<string> roles { get; set; }
+
+        public string UpdatedBy { get; set; }
 
     }
 }

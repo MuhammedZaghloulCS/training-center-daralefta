@@ -38,13 +38,17 @@ namespace Application.Features.User.Commands.Create.CreateUser
             {
                 return BaseResponse<UserDTO>.FailureResponse("الايميل مستخدم بالفعل");
             }
+            pers_person userInSys=null;
+            if (request._dto.pin!="0")
+            {
 
-            pers_person userInSys = await _sysUnitOfWork.ISysPersonRepository.GetFirstOrderedByAsync(p => p.pin == request._dto.pin.ToString());
+            
+             userInSys = await _sysUnitOfWork.ISysPersonRepository.GetFirstOrderedByAsync(p => p.pin == request._dto.pin.ToString());
 
             if (userInSys is null)
                 return BaseResponse<UserDTO>.BadRequestResponse("المستخدم لم يسجل علي جهاز البصمة");
-
-                var id = Guid.NewGuid();
+            }
+            var id = Guid.NewGuid();
             string userName = request._dto.FirstName + id.ToString("N")[..6];
 
             var newUser = new ApplicationUser
@@ -71,41 +75,47 @@ namespace Application.Features.User.Commands.Create.CreateUser
                 AcademicQualification = request._dto.AcademicQualification,
                 Appreciation = request._dto.Appreciation,
                 ImagePath = request._dto.ImagePath
-                ,pin=request._dto.pin.ToString()
+                ,pin=request._dto.pin.ToString()=="0"?null:request._dto.pin.ToString()
 
             };
-            //update user in the sys database
-            userInSys.name = newUser.FirstName;
-            userInSys.last_name = newUser.LastName;
-            userInSys.mobile_phone  = newUser.PhoneNumber;
-            userInSys.email= newUser.Email;
-            userInSys.birthday = newUser.BirthDate;
+            if (userInSys != null)
+            {
+                //update user in the sys database
+                userInSys.name = newUser.FirstName;
+                userInSys.last_name = newUser.LastName;
+                userInSys.mobile_phone = newUser.PhoneNumber;
+                userInSys.email = newUser.Email;
+                userInSys.birthday = newUser.BirthDate;
+            }
 
-
-            var result = await _userManager.CreateAsync(newUser);
+            var result = await _userManager.CreateAsync(newUser, request._dto.Password);
             if (!result.Succeeded)
             {
-                var errors = result.Errors.Select(e => e.Description);
-                return BaseResponse<UserDTO>.FailureResponse("User creation failed", errors.ToList());
+                var errors = result.Errors.Select(e => e.Description).ToList();
+                var errorMessage = string.Join(" | ", errors);
+                return BaseResponse<UserDTO>.FailureResponse($"فشل إنشاء المستخدم: {errorMessage}", errors);
             }
             result=await _userManager.AddToRolesAsync(newUser, request._dto.roles);
             if (!result.Succeeded)
             {
                 var errors = result.Errors.Select(e => e.Description);
-                return BaseResponse<UserDTO>.FailureResponse("User creation failed", errors.ToList());
+                return BaseResponse<UserDTO>.FailureResponse("فشل انشاء المستخدم", errors.ToList());
             }
-
-
-            var newSysUser = new ZkPersonCreateDto
+            if (userInSys != null)
             {
-                Pin = request._dto.pin.ToString() ,
-                Name = newUser.FirstName,
-                LastName = newUser.LastName,
-                Email = newUser.Email,
-                Gender = newUser.Gender != Gender.male && newUser.Gender != Gender.female ? "M" : newUser.Gender.GetDescription(),
-                MobilePhone = newUser.PhoneNumber
 
-            };
+
+
+                var newSysUser = new
+                {
+                    Pin = request._dto.pin.ToString(),
+                    Name = newUser.FirstName,
+                    LastName = newUser.LastName,
+                    Email = newUser.Email,
+                    Gender = newUser.Gender != Gender.male && newUser.Gender != Gender.female ? "M" : newUser.Gender.GetDescription(),
+                    MobilePhone = newUser.PhoneNumber,
+                    personPwd = request._dto.personPwd
+                };
             var res = await _httpClient.PostAsJsonAsync(MainConstants.Use("person/add"), newSysUser);
             var success = await res.Content.ReadFromJsonAsync<ExternalApiResponse < List<string> >> ();
             if (success.Message == "false" || success.Code != 0)
@@ -113,9 +123,17 @@ namespace Application.Features.User.Commands.Create.CreateUser
                
                 await _userManager.RemoveFromRolesAsync(newUser, request._dto.roles);
                 await _userManager.DeleteAsync(newUser);
-                return BaseResponse<UserDTO>.FailureResponse("Failed to edit the users");
-            }
+                    if (success.Message == "Repeated Password")
 
+                        return BaseResponse<UserDTO>.FailureResponse("كلمة المرور الخاصة بمكينة البصمة موجود بالفعل,اختر كلمة أخري من فضلك");
+                    else if(success.Message== "Mobile number already exists")
+                        return BaseResponse<UserDTO>.FailureResponse("رقم الهاتف مستخدم بالفعل");
+
+                    return BaseResponse<UserDTO>.FailureResponse("حاول مره أخري");
+
+                }
+
+            }
             return BaseResponse<UserDTO>.SuccessResponse(data:new UserDTO
             {
                 Id = newUser.Id,

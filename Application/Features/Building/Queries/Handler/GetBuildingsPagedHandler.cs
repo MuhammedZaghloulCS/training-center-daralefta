@@ -5,6 +5,7 @@ using Infrastructure.Abstractions.IUnitOfWork;
 using MediatR;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,14 +26,19 @@ namespace Application.Features.Building.Queries.Handler
             {
                 return BaseResponse<List<BuildingListDTO>>.BadRequestResponse("Invalid pagination parameters");
             }
+            Expression<Func<Domain.Entities.Building, bool>>? filter = b => b.IsDeleted == false;
+            if (!string.IsNullOrEmpty(request.Search))
+            {
+                filter = b => !b.IsDeleted && (b.Name.Contains(request.Search) || b.Description.Contains(request.Search));
+            }
 
             var (items, totalCount) = await _unitOfWork.IBuildings.GetPaginatedAsync(
                 request.PageNumber,
                 request.PageSize,
-                null,
+                filter,
                 b => b.Id,
-                true,
-                b => b.Rooms);
+                true
+                );
 
             if (items == null || !items.Any()||items.All(r=>r.IsDeleted))
             {
@@ -55,7 +61,6 @@ namespace Application.Features.Building.Queries.Handler
                 Description = b.Description,
                 SysBuildingId = b.SysBuildingId
             }).ToList();
-
             return BaseResponse<List<BuildingListDTO>>.SuccessResponse(
                 data,
                 request.PageNumber,

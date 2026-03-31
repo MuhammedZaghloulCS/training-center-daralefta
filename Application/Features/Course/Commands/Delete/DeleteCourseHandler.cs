@@ -24,6 +24,8 @@ namespace Application.Features.Course.Commands.Delete
             }
             course.IsDeleted=true;
             _unitOfWork.ICourse.Update(course);
+            var userCourse = await _unitOfWork.IUserCourseRepository.FindRowAsync(us => us.CourseId == request.Id);
+            _unitOfWork.IUserCourseRepository.DeleteRange(userCourse);
             await _unitOfWork.Complete();
 
             return BaseResponse<bool>.SuccessResponse(true, "Deleted successfully");

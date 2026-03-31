@@ -25,11 +25,12 @@ namespace API.Controllers
         HttpClient HttpClient;
         private readonly ApplicationContext context;
 
-        public BuildingController(IMediator mediator, IHttpClientFactory httpClientFactory, ApplicationContext context)
+        public BuildingController(IMediator mediator, IHttpClientFactory httpClientFactory, ApplicationContext context, UserManager<ApplicationUser> userManager)
         {
             _mediator = mediator;
             HttpClient = httpClientFactory.CreateClient("ExternalApi");
             this.context = context;
+            _userManager = userManager;
         }
             [HttpGet]
         public async Task<IActionResult> GetAsync()
@@ -56,8 +57,8 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAsync([FromBody] CreateBuildingCommand command)
         {
-            //var user = await _userManager.GetUserAsync(User);
-            //command.CreatedBy = user?.FullName;
+            var user = await _userManager.GetUserAsync(User);
+            command.CreatedBy = user?.FullName;
             var response = await _mediator.Send(command);
             return response.Success ? Ok(response) : BadRequest(response);
         }
@@ -66,8 +67,8 @@ namespace API.Controllers
         public async Task<IActionResult> UpdateAsync(int id, [FromBody] UpdateBuildingCommand command)
         {
             command.Id = id;
-           // var user = await _userManager.GetUserAsync(User);
-            //command.UpdatedBy = user?.FullName;
+            var user = await _userManager.GetUserAsync(User);
+            command.UpdatedBy = user?.FullName;
             var response = await _mediator.Send(command);
             return response.Success ? Ok(response) : BadRequest(response);
         }

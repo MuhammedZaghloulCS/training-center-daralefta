@@ -24,6 +24,8 @@ namespace Application.Features.Training.Commands.Delete
             }
             training.IsDeleted = true;
             _unitOfWork.ITraining.Update(training);
+            var userTrainging = await _unitOfWork.IUserTrainingRepository.FindRowAsync(us => us.TrainingId == request.Id);
+            _unitOfWork.IUserTrainingRepository.DeleteRange(userTrainging);
             await _unitOfWork.Complete();
 
             return BaseResponse<bool>.SuccessResponse(true, "Deleted successfully");

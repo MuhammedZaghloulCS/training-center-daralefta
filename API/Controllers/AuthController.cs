@@ -72,12 +72,17 @@ namespace API.Controllers
             var user = await _userManager.FindByIdAsync(userId);
 
             // التحقق من الـ Refresh Token
-            if (user == null ||user.IsDeleted||
-                user.RefreshToken != request.RefreshToken ||
-                user.RefreshTokenExpiryTime <= DateTime.UtcNow)
-            {
-                return BadRequest(new { message = "Invalid refresh token" });
-            }
+            if (user == null)
+                return BadRequest(new { message = "User not found" });
+            
+            if (user.IsDeleted)
+                return BadRequest(new { message = "User is deleted" });
+            
+            if (user.RefreshToken != request.RefreshToken)
+                return BadRequest(new { message = $"Token mismatch. DB: {(user.RefreshToken ?? "NULL")}, Request: {(request.RefreshToken ?? "NULL")}" });
+            
+            if (user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+                return BadRequest(new { message = $"Token expired. Expiry: {user.RefreshTokenExpiryTime}, Now: {DateTime.UtcNow}" });
 
             var roles = await _userManager.GetRolesAsync(user);
 

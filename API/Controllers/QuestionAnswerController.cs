@@ -17,10 +17,12 @@ namespace API.Controllers
     {
         IMediator _mediator;
         UserManager<ApplicationUser> _userManager;
-        public QuestionAnswerController(IMediator mediator)
+        public QuestionAnswerController(IMediator mediator, UserManager<ApplicationUser> userManager)
         {
             _mediator = mediator;
+            _userManager = userManager;
         }
+
 
         [HttpGet]
         public async Task<IActionResult> GetAsync()

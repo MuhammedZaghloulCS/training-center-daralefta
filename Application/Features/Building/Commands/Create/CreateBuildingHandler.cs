@@ -24,7 +24,7 @@ namespace Application.Features.Building.Commands.Create
         {
             var errors = new List<string>();
 
-            var buildings=await _unitOfWork.IBuildings.GetFirstByPropAsync(b => b.SysBuildingId == request.SysBuildingId || b.Name==request.Name&&!b.IsDeleted);
+            var buildings=await _unitOfWork.IBuildings.GetFirstByPropAsync(b => (b.SysBuildingId == request.SysBuildingId || b.Name==request.Name)&&!b.IsDeleted);
             if (buildings != null)
                 errors.Add("يوجد مبنى بنفس المعرف");
 

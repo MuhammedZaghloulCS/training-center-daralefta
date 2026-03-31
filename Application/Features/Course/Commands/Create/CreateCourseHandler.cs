@@ -24,19 +24,21 @@ namespace Application.Features.Course.Commands.Create
             var errors = new List<string>();
 
             if (string.IsNullOrWhiteSpace(request.Name))
-                errors.Add("Name is required");
+                errors.Add("الاسم مطلوب");
 
             if (string.IsNullOrWhiteSpace(request.Description))
-                errors.Add("Description is required");
+                errors.Add("الوصف مطلوب");
 
             if (string.IsNullOrWhiteSpace(request.Prerequisites))
-                errors.Add("Prerequisites is required");
+                errors.Add("المتطلبات مطلوبة");
 
             if (request.Duration < 0)
-                errors.Add("Duration is invalid");
+                errors.Add("المدة مطلوبة");
+            if (request.Duration > 120)
+                errors.Add("المدة لا يمكن أن تتعدي 120 ساعة");
 
             if (request.TrainingId.HasValue && request.TrainingId.Value < 1)
-                errors.Add("TrainingId is invalid");
+                errors.Add("التدريب غير  معروف");
 
             if (errors.Any())
                 return BaseResponse<CourseDto>.FailureResponse("Validation failed", errors);

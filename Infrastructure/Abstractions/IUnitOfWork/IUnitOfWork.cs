@@ -22,6 +22,9 @@ namespace Infrastructure.Abstractions.IUnitOfWork
         IAssignUserTrainingRepository IAssignUserTraining { get; }
         IAssignUserCourseRepository IAssignUserCourse { get; }
         IAssignUserSessionRepository IAssignUserSession { get; }
+        IUserSessionRepository IUserSessionRepository { get; }
+        IUserCourseRepository IUserCourseRepository { get; }
+        IUserTrainingRepository IUserTrainingRepository { get; }
 
         #endregion
         Task<int> Complete();

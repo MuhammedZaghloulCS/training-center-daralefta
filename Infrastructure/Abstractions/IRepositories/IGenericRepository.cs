@@ -9,6 +9,7 @@ namespace Infrastructure.Abstractions.IRepositories
     {
         Task AddAsync(T entity);
         void Delete(T entity);
+        void DeleteRange(List<T> entities);
         void Update(T entity);
         Task<List<T>> GetAllAsync(params Expression<Func<T, object>>[] includeProperties);
         Task<T?> GetByPkAsync(TKey PK, params Expression<Func<T, object>>[] includeProperties);

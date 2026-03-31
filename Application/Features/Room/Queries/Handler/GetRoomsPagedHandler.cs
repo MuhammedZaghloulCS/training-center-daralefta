@@ -26,32 +26,36 @@ namespace Application.Features.Room.Queries.Handler
             {
                 return BaseResponse<List<RoomListDTO>>.BadRequestResponse("Invalid pagination parameters");
             }
-            Expression<Func<Domain.Entities.Room, bool>> filter = r => !r.IsDeleted;
-            // 1️⃣ Guard
-            if (!string.IsNullOrWhiteSpace(request.SearchTerm))
-            { 
+        
+            Expression<Func<Domain.Entities.Room, bool>> filter;
+            var term = request.SearchTerm?.Trim();
 
-            // 2️⃣ Base filter (string)
-            filter =
-                r => (r.Name.Contains(request.SearchTerm)
-                  || r.Location.Contains(request.SearchTerm)&& !r.IsDeleted);
+            bool isInt = int.TryParse(term, out int capacity);
+            bool isBool = bool.TryParse(term, out bool haveProjector);
 
-            // 3️⃣ int search (Capacity)
-            if (int.TryParse(request.SearchTerm, out int capacity))
+            if (string.IsNullOrWhiteSpace(term))
             {
-                filter = filter.Or(r => r.Capacity == capacity && !r.IsDeleted);
+                filter = r => !r.IsDeleted;
             }
-
-            // 4️⃣ bool? search (HaveProjector)
-            if (bool.TryParse(request.SearchTerm, out bool haveProjector))
+            else if (isInt)
             {
-                filter = filter.Or(r =>
+                filter = r => !r.IsDeleted && r.Capacity == capacity;
+            }
+            else if (isBool)
+            {
+                filter = r => !r.IsDeleted &&
                     r.HaveProjector.HasValue &&
-                    r.HaveProjector == haveProjector && !r.IsDeleted
-                );
+                    r.HaveProjector == haveProjector;
             }
+            else
+            {
+                filter = r =>
+                    !r.IsDeleted &&
+                    (
+                        r.Name.Contains(term) ||
+                        r.Location.Contains(term)
+                    );
             }
-
             var (items, totalCount) = await _unitOfWork.IRooms.GetPaginatedAsync(
                 request.PageNumber,
                 request.PageSize,
@@ -92,12 +96,13 @@ namespace Application.Features.Room.Queries.Handler
                    
                 }
             }).ToList();
-
+            var all = await _unitOfWork.IRooms.GetAllAsync() ;
+            totalCount= all.Count(r => !r.IsDeleted);
             return BaseResponse<List<RoomListDTO>>.SuccessResponse(
                 data,
                 request.PageNumber,
                 request.PageSize,
-                totalCount,
+                data.Count(),
                 "Rooms retrieved successfully");
         }
     }

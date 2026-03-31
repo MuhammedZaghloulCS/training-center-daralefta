@@ -48,6 +48,7 @@ namespace Application.Features.User.Commands.Delete
             var pin = existingUser.pin;
             existingUser.IsDeleted = true;
             // حذف المستخدم
+            existingUser.pin= null;
             var result = await _userManager.UpdateAsync(existingUser);
 
             if (!result.Succeeded)

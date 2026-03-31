@@ -24,6 +24,8 @@ namespace Application.Features.Session.Commands.Delete
             }
             session.IsDeleted = true;
             _unitOfWork.ISession.Update(session);
+            var userSession = await _unitOfWork.IUserSessionRepository.FindRowAsync(us => us.SessionId == request.Id);
+             _unitOfWork.IUserSessionRepository.DeleteRange(userSession);
             await _unitOfWork.Complete();
 
             return BaseResponse<bool>.SuccessResponse(true, "Deleted successfully");

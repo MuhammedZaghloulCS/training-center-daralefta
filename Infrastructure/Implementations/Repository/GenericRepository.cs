@@ -74,7 +74,7 @@ namespace Infrastructure.Implementations.Repository
                 query = query.Where(predicate);
 
             // Get total count before pagination
-
+           
             // Apply ordering
             if (orderBy != null)
             {
@@ -90,7 +90,7 @@ namespace Infrastructure.Implementations.Repository
                 .AsNoTracking()
                 .ToListAsync();
 
-            return (items, dbSet.Count());
+            return (items, query.Count());
         }
 
         public Task<T?> GetByPkAsync(TKey PK,params Expression<Func<T, object>>[] includeProperties)
@@ -111,6 +111,10 @@ namespace Infrastructure.Implementations.Repository
         {
             var result=await dbSet.Where(predicate).FirstOrDefaultAsync();
             return result;
+        }
+        public void DeleteRange(List<T> entities)
+        {
+            dbSet.RemoveRange(entities);
         }
 
 

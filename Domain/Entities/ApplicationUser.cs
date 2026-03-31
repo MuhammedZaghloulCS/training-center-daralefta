@@ -11,45 +11,45 @@ namespace Domain.Entities
     public class ApplicationUser : IdentityUser<Guid>
     {
         public bool IsDeleted { get; set; } = false;
-        public string pin { get; set; } = "";
+        public string? pin { get; set; } = "";
         public String FirstName { get; set; }
         public String LastName { get; set; }
         public string FullName => $"{FirstName} {LastName}";
         public Gender Gender { get; set; }
         [Required]
         [MaxLength(300)]
-        public string JobTitle { get; set; }
+        public string? JobTitle { get; set; }
 
         [MaxLength(500)]
-        public string AcademicTitle { get; set; }
+        public string? AcademicTitle { get; set; }
 
         [MaxLength(500)]
-        public string Organization { get; set; }
+        public string? Organization { get; set; }
 
         [MaxLength(500)]
-        public string Specialization { get; set; }
+        public string? Specialization { get; set; }
 
         [MaxLength(500)]
-        public string Skills { get; set; }
+        public string? Skills { get; set; }
 
         [MaxLength(50)]
-        public string WhatsappNumber { get; set; }
+        public string? WhatsappNumber { get; set; }
 
         public DateTime? BirthDate { get; set; }
 
-        public string NationalIdImage { get; set; }
+        public string? NationalIdImage { get; set; }
 
         [MaxLength(500)]
-        public string AddressInsideCairo { get; set; }
+        public string? AddressInsideCairo { get; set; }
 
         [MaxLength(500)]
-        public string AddressOutsideCairo { get; set; }
+        public string? AddressOutsideCairo { get; set; }
 
-        public string Doctrine { get; set; }
-        public string MaritalState { get; set; }
-        public string AcademicQualification { get; set; }
-        public string Appreciation { get; set; }
-        public string ImagePath { get; set; }
+        public string? Doctrine { get; set; }
+        public string? MaritalState { get; set; }
+        public string? AcademicQualification { get; set; }
+        public string? Appreciation { get; set; }
+        public string? ImagePath { get; set; }
 
 
         //refresh token

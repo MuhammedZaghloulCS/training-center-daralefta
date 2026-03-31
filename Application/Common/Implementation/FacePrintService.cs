@@ -40,31 +40,6 @@ namespace Application.Common.Implementation
         public async Task AssignUsersToSession()
         {
             //retrieve the session for the current day
-            var sessionsInLastDate = await _unitOfWork.ISession.FindRowAsync(s => s.SessionDate.Date <DateTime.Now.Date, s => s.UserSessions);
-            try
-            {
-
-          
-            foreach (var session in sessionsInLastDate)
-            {
-                var lastTimeSession = await _sysUnitOfWork.ISysTimeSessionRepository.GetByPropAsync(t=>t.remark==session.Topic);
-                if (lastTimeSession != null)
-                {
-                    _sysUnitOfWork.ISysTimeSessionRepository.Delete(lastTimeSession);
-                }
-                var accLevelToDelete = await _sysUnitOfWork.ISysAccessLevelRepository.GetByPropAsync(a => a.name == session.Topic);
-                if (accLevelToDelete != null)
-                {
-                    _sysUnitOfWork.ISysAccessLevelRepository.Delete(accLevelToDelete);
-                }
-            }
-            await _sysUnitOfWork.Complete();
-            }
-            catch (Exception ex)
-            {
-                // Handle exceptions that may occur during the deletion process
-                Console.WriteLine($"An error occurred while deleting old time sessions and access levels: {ex.Message}");
-            }
 
             var sessionsInDate = await _unitOfWork.ISession.FindRowAsync(s => s.SessionDate.Date == DateTime.Now.Date, s => s.UserSessions);
             var accLevsWithSessionsIds = new List<(string accLevelId, int sessionId)>();

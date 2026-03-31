@@ -18,9 +18,10 @@ namespace API.Controllers
     {
         IMediator _mediator;
         UserManager<ApplicationUser> _userManager;
-        public SessionController(IMediator mediator)
+        public SessionController(IMediator mediator, UserManager<ApplicationUser> userManager)
         {
             _mediator = mediator;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -47,8 +48,8 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAsync([FromBody] CreateSessionCommand command)
         {
-            //var user = await _userManager.GetUserAsync(User);
-           // command.CreatedBy = user?.FullName;
+            var user = await _userManager.GetUserAsync(User);
+            command.CreatedBy = user?.FullName;
             var response = await _mediator.Send(command);
             return response.Success ? Ok(response) : BadRequest(response);
         }
@@ -57,8 +58,8 @@ namespace API.Controllers
         public async Task<IActionResult> UpdateAsync(int id, [FromBody] UpdateSessionCommand command)
         {
             command.Id = id;
-            //var user = await _userManager.GetUserAsync(User);
-            //command.UpdatedBy = user?.FullName;
+            var user = await _userManager.GetUserAsync(User);
+            command.UpdatedBy = user?.FullName;
             var response = await _mediator.Send(command);
             return response.Success ? Ok(response) : BadRequest(response);
         }

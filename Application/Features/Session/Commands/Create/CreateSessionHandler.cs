@@ -46,29 +46,30 @@ namespace Application.Features.Session.Commands.Create
         public async Task<BaseResponse<SessionDto>> Handle(CreateSessionCommand request, CancellationToken cancellationToken)
         {
             var errors = new List<string>();
-
+            if(request.Topic.Length>100)
+                errors.Add("الموضوع لا يجب ان يتعدى 100 حرف");
             if (string.IsNullOrWhiteSpace(request.Topic))
-                errors.Add("Topic is required");
+                errors.Add("الموضوع مطلوب");
 
             if (request.RoomId < 1)
-                errors.Add("RoomId is invalid");
+                errors.Add("رقم الغرفة خاطئ");
 
             if (request.CourseId < 1)
-                errors.Add("CourseId is invalid");
+                errors.Add("رقم الكورس خاطئ");
 
             if (request.SessionDate == default)
-                errors.Add("SessionDate is required");
-            if (request.SessionDate < DateTime.Now)
-                errors.Add("Session Date should be in the future");
+                errors.Add("تاريح الجلسة مطلوب");
+
 
             if (request.EndTime <= request.StartTime)
-                errors.Add("EndTime must be greater than StartTime");
+                errors.Add("وقت الانتهاء يجب ان يكون بعد وقت البدأ");
 
             if (errors.Any())
                 return BaseResponse<SessionDto>.FailureResponse("Validation failed", errors);
             //give lecturer the same privilages of rest of users
+            if(!request.usersIds.Contains(request.LecturerId))
             request.usersIds.Add(request.LecturerId);
-       
+            
 
             var session = new Domain.Entities.Session
             {

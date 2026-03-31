@@ -3,21 +3,31 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Application.Features.User.DTOs
 {
     public class CreateUserDTO
     {
-
+        public string CreatedBy { get; set; }
         public string pin { set; get; }
 
         public string Email { get; set; }
-        //public string Password { get; set; }
 
-        //[Compare("Password", ErrorMessage = "Passwords do not match.")]
-        //public string ConfirmPassword { get; set; }
+        [MinLength(8, ErrorMessage = "Password must be at least 8 characters long.")]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).+$", 
+            ErrorMessage = "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.")]
+        public string Password { get; set; }
 
-        public int passwordForPrint { get; set; }
+        [Compare("Password", ErrorMessage = "Passwords do not match.")]
+        public string ConfirmPassword { get; set; }
+
+        
+
+        // كلمة مرور البصمة - أرقام فقط
+        [RegularExpression(@"^[0-9]*$", ErrorMessage = "personPwd must contain only numbers.")]
+        public string? personPwd { get; set; }
+
         public string PhoneNumber { get; set; }
         public String FirstName { get; set; }
         public String LastName { get; set; }
@@ -25,41 +35,39 @@ namespace Application.Features.User.DTOs
         public Gender Gender { get; set; }
 
 
-        [Required]
-
         [MaxLength(300)]
-        public string JobTitle { get; set; }
+        public string? JobTitle { get; set; }
 
         [MaxLength(500)]
-        public string AcademicTitle { get; set; }
+        public string? AcademicTitle { get; set; }
 
         [MaxLength(500)]
-        public string Organization { get; set; }
+        public string? Organization { get; set; }
 
         [MaxLength(500)]
-        public string Specialization { get; set; }
+        public string? Specialization { get; set; }
 
         [MaxLength(500)]
-        public string Skills { get; set; }
+        public string? Skills { get; set; }
 
         [MaxLength(50)]
-        public string WhatsappNumber { get; set; }
+        public string? WhatsappNumber { get; set; }
 
-        public DateTime BirthDate { get; set; }
+        public DateTime? BirthDate { get; set; }
 
-        public string NationalIdImage { get; set; }
-
-        [MaxLength(500)]
-        public string AddressInsideCairo { get; set; }
+        public string? NationalIdImage { get; set; }
 
         [MaxLength(500)]
-        public string AddressOutsideCairo { get; set; }
+        public string? AddressInsideCairo { get; set; }
 
-        public string Doctrine { get; set; }
-        public string MaritalState { get; set; }
-        public string AcademicQualification { get; set; }
-        public string Appreciation { get; set; }
-        public string ImagePath { get; set; }
+        [MaxLength(500)]
+        public string? AddressOutsideCairo { get; set; }
+
+        public string? Doctrine { get; set; }
+        public string? MaritalState { get; set; }
+        public string? AcademicQualification { get; set; }
+        public string ?Appreciation { get; set; }
+        public string? ImagePath { get; set; }
 
 
         public List<string> roles {get;set;}

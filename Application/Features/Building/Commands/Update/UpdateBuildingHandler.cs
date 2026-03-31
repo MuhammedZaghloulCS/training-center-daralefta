@@ -24,16 +24,16 @@ namespace Application.Features.Building.Commands.Update
             var building = await _unitOfWork.IBuildings.GetByPkAsync(request.Id);
             if (building == null||building.IsDeleted)
             {
-                return BaseResponse<BuildingDto>.NotFoundResponse("Building not found");
+                return BaseResponse<BuildingDto>.NotFoundResponse("المبني غير موجود");
             }
 
             var errors = new List<string>();
 
             if (string.IsNullOrWhiteSpace(request.Name))
-                errors.Add("Name is required");
+                errors.Add("الاسم مطلوب");
 
             if (string.IsNullOrWhiteSpace(request.Description))
-                errors.Add("Description is required");
+                errors.Add("الوصف مطلوب");
 
             if (errors.Any())
                 return BaseResponse<BuildingDto>.FailureResponse("Validation failed", errors);

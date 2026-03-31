@@ -90,6 +90,7 @@ namespace API.Controllers
             {
                 return BadRequest(response);
             }
+
             return Ok(response);
         }
         [HttpGet("diffsysusers")]
@@ -115,12 +116,14 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserDTO user)
         {
-
+            var user1 = await _userManager.GetUserAsync(User);
+            user.CreatedBy = user1?.FullName;
             var response = await _mediator.Send(new CreateUserCommand { _dto = user });
             if (!response.Success)
             {
                 return BadRequest(response);
             }
+            
             return Ok(response);
         }
         [HttpGet("paged")]
@@ -178,6 +181,8 @@ namespace API.Controllers
         [HttpPatch("{userName}")]
         public async Task<IActionResult> UpdateUser([FromRoute] string userName, [FromBody] UpdateUserDTO user)
         {
+            var user1 = await _userManager.GetUserAsync(User);
+            user.UpdatedBy = user1?.FullName;
             user.UserName = userName; // Ensure the username in the URL is used
             
             var response = await _mediator.Send(new Application.Features.User.Commands.Update.UpdateUserCommand { UpdateUser = user });
@@ -310,6 +315,7 @@ namespace API.Controllers
         [HttpPost("assignCourse")]
         public async Task<IActionResult> AssignUserToCourse([FromBody] UsersCourseDTO dto)
         {
+          
             var response = await _mediator.Send(new AssignCourseToUserCommand { _dto=dto });
             if (!response.Success)
             {
@@ -327,10 +333,10 @@ namespace API.Controllers
             }
             return Ok(response);
         }
-        [HttpGet("userinrole")]
+        [HttpGet("userinroleV2")]
         public async Task<IActionResult> GetUsersInRole ( UsersRolesEnum role)
         {
-            var response = await _mediator.Send(new GetUsersInRoleQuery { Role=role });
+            var response = await _mediator.Send(new GetUserInRoleWithinSysQuery { Role=role });
             if (!response.Success)
             {
                 return BadRequest(response);

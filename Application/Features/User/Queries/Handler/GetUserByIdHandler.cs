@@ -55,6 +55,7 @@ namespace Application.Features.User.Queries.Handler
                 AcademicQualification = user.AcademicQualification,
                 Appreciation = user.Appreciation,
                 ImagePath = user.ImagePath,
+                pin=user.pin,
                 roles = roles.ToList()
             };
             return (BaseResponse<UserDTO>.SuccessResponse(userDto));

@@ -13,7 +13,7 @@ namespace Infrastructure.Configurations
         {
             builder.HasIndex(u => u.pin).IsUnique();
             builder.HasIndex(u => u.Email).IsUnique();
-            builder.HasIndex(u => u.PhoneNumber).IsUnique();
+          
         }
     }
 }

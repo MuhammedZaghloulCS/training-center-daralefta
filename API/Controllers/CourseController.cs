@@ -17,9 +17,10 @@ namespace API.Controllers
     {
         IMediator _mediator;
         UserManager<ApplicationUser> _userManager;
-        public CourseController(IMediator mediator)
+        public CourseController(IMediator mediator, UserManager<ApplicationUser> userManager)
         {
             _mediator = mediator;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -46,8 +47,8 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAsync([FromBody] CreateCourseCommand command)
         {
-            //var user = await _userManager.GetUserAsync(User);
-            //command.CreatedBy = user?.FullName;
+            var user = await _userManager.GetUserAsync(User);
+            command.CreatedBy = user?.FullName;
             var response = await _mediator.Send(command);
             return response.Success ? Ok(response) : BadRequest(response);
         }
@@ -55,9 +56,9 @@ namespace API.Controllers
         [HttpPatch("{id:int}")]
         public async Task<IActionResult> UpdateAsync(int id, [FromBody] UpdateCourseCommand command)
         {
-            //command.Id = id;
-            //var user = await _userManager.GetUserAsync(User);
-            //command.UpdatedBy = user?.FullName;
+            command.Id = id;
+            var user = await _userManager.GetUserAsync(User);
+            command.UpdatedBy = user?.FullName;
             var response = await _mediator.Send(command);
             return response.Success ? Ok(response) : BadRequest(response);
         }
