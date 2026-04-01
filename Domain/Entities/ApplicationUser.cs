@@ -11,12 +11,17 @@ namespace Domain.Entities
     public class ApplicationUser : IdentityUser<Guid>
     {
         public bool IsDeleted { get; set; } = false;
+
+        [RegularExpression(@"^\d+$",
+        ErrorMessage = "يقبل أرقام فقط")]
         public string? pin { get; set; } = "";
         public String FirstName { get; set; }
         public String LastName { get; set; }
-        public string FullName => $"{FirstName} {LastName}";
+
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public string FullName { get; private set; }
         public Gender Gender { get; set; }
-        [Required]
+
         [MaxLength(300)]
         public string? JobTitle { get; set; }
 
@@ -32,7 +37,7 @@ namespace Domain.Entities
         [MaxLength(500)]
         public string? Skills { get; set; }
 
-        [MaxLength(50)]
+        [RegularExpression(@"^\+?[1-9]\d{7,14}$", ErrorMessage = "رقم الهاتف غير صحيح")]
         public string? WhatsappNumber { get; set; }
 
         public DateTime? BirthDate { get; set; }
@@ -46,11 +51,12 @@ namespace Domain.Entities
         public string? AddressOutsideCairo { get; set; }
 
         public string? Doctrine { get; set; }
-        public string? MaritalState { get; set; }
+
+        public MaritalStatus? MaritalState { get; set; }
         public string? AcademicQualification { get; set; }
         public string? Appreciation { get; set; }
         public string? ImagePath { get; set; }
-
+        public bool IsActive { get; set; } = true;
 
         //refresh token
         public string? RefreshToken { get; set; }

@@ -33,6 +33,11 @@ namespace Application.Features.User.Commands.Create.CreateUser
         }
         public async Task<BaseResponse<UserDTO>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
+            var userPhone= await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == request._dto.PhoneNumber);
+            if (userPhone != null)
+            {
+                return BaseResponse<UserDTO>.FailureResponse("رقم الهاتف مستخدم بالفعل");
+            }
 
             if (await _userManager.FindByEmailAsync(request._dto.Email) != null)
             {
@@ -74,8 +79,10 @@ namespace Application.Features.User.Commands.Create.CreateUser
                 MaritalState = request._dto.MaritalState,
                 AcademicQualification = request._dto.AcademicQualification,
                 Appreciation = request._dto.Appreciation,
-                ImagePath = request._dto.ImagePath
-                ,pin=request._dto.pin.ToString()=="0"?null:request._dto.pin.ToString()
+                ImagePath = request._dto.ImagePath,
+                IsActive = true
+                ,
+                pin=request._dto.pin.ToString()=="0"?null:request._dto.pin.ToString()
 
             };
             if (userInSys != null)
@@ -114,7 +121,7 @@ namespace Application.Features.User.Commands.Create.CreateUser
                     Email = newUser.Email,
                     Gender = newUser.Gender != Gender.male && newUser.Gender != Gender.female ? "M" : newUser.Gender.GetDescription(),
                     MobilePhone = newUser.PhoneNumber,
-                    personPwd = request._dto.personPwd
+                   
                 };
             var res = await _httpClient.PostAsJsonAsync(MainConstants.Use("person/add"), newSysUser);
             var success = await res.Content.ReadFromJsonAsync<ExternalApiResponse < List<string> >> ();

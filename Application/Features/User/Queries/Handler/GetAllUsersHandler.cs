@@ -73,7 +73,7 @@ namespace Application.Features.User.Queries.Handler
                     Appreciation = user.Appreciation,
 
                     ImagePath = user.ImagePath,
-
+                    IsActive = user.IsActive,
                     roles = roles.ToList()
                 });
             }

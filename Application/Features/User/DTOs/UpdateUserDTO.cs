@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
@@ -41,7 +42,7 @@ namespace Application.Features.User.DTOs
 
         public string? Doctrine { get; set; }
 
-        public string? MaritalState { get; set; }
+        public MaritalStatus? MaritalState { get; set; }
 
         public string? AcademicQualification { get; set; }
 

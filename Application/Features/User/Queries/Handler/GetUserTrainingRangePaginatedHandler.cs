@@ -55,7 +55,7 @@ namespace Application.Features.User.Queries.Handler
 
                 // Date parsing
                 bool dateParsed = DateTime.TryParse(term, out var birthDate);
-
+                bool maritalParsed = Enum.TryParse<MaritalStatus>(term, true, out var maritalStatus);
                 search = u =>
                     // Identity
                     u.UserName.Contains(term) ||
@@ -84,8 +84,8 @@ namespace Application.Features.User.Queries.Handler
 
                     // Other info
                     u.Doctrine.Contains(term) ||
-                    u.MaritalState.Contains(term) ||
-                    u.AcademicQualification.Contains(term) ||
+       (maritalParsed && u.MaritalState == maritalStatus) ||
+       u.AcademicQualification.Contains(term) ||
                     u.Appreciation.Contains(term) ||
 
                     // Dates

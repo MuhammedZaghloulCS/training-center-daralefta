@@ -1,9 +1,11 @@
 ﻿using Application.Common;
+using Application.Features.User.Commands.Activation.Command;
 using Application.Features.User.Commands.Create;
 using Application.Features.User.Commands.Create.AssignCourseToUser;
 using Application.Features.User.Commands.Create.AssignSessionToUser;
 using Application.Features.User.Commands.Create.AssignTrainingToUser;
 using Application.Features.User.Commands.Create.CreateUser;
+using Application.Features.User.Commands.DeActivate.Command;
 using Application.Features.User.Commands.Delete;
 using Application.Features.User.DTOs;
 using Application.Features.User.Queries;
@@ -38,7 +40,7 @@ namespace API.Controllers
         {
             _userManager = userManager;
             _mediator = mediator;
-            _httpClientFactory  = httpClientFactory.CreateClient("ExternalApi");
+            _httpClientFactory = httpClientFactory.CreateClient("ExternalApi");
         }
 
         [HttpGet("test-image")]
@@ -71,7 +73,7 @@ namespace API.Controllers
             await System.IO.File.WriteAllBytesAsync(filePath, imageBytes);
             return Ok("see wwwroot");
         }
-        
+
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
@@ -106,7 +108,7 @@ namespace API.Controllers
         [HttpGet("sysusers/{pin}")]
         public async Task<IActionResult> GetSysUsers(string pin)
         {
-            var response = await _mediator.Send(new Application.Features.User.Queries.Model.GetSysUserByPinQuery{ Pin=pin});
+            var response = await _mediator.Send(new Application.Features.User.Queries.Model.GetSysUserByPinQuery { Pin = pin });
             if (!response.Success)
             {
                 return BadRequest(response);
@@ -123,7 +125,7 @@ namespace API.Controllers
             {
                 return BadRequest(response);
             }
-            
+
             return Ok(response);
         }
         [HttpGet("paged")]
@@ -184,7 +186,7 @@ namespace API.Controllers
             var user1 = await _userManager.GetUserAsync(User);
             user.UpdatedBy = user1?.FullName;
             user.UserName = userName; // Ensure the username in the URL is used
-            
+
             var response = await _mediator.Send(new Application.Features.User.Commands.Update.UpdateUserCommand { UpdateUser = user });
             if (!response.Success)
             {
@@ -230,7 +232,7 @@ namespace API.Controllers
 
 
         [HttpGet("training/{trainingId}")]
-        public async Task<IActionResult> GetUsersByTrainingId(int trainingId,int pageNumber = 1, int pageSize = 10)
+        public async Task<IActionResult> GetUsersByTrainingId(int trainingId, int pageNumber = 1, int pageSize = 10)
         {
             var response = await _mediator.Send(new GetUsersTrainingRangePaginatedQuery { PageNumber = pageNumber, PageSize = pageSize, TrainingId = trainingId });
             if (!response.Success)
@@ -240,7 +242,7 @@ namespace API.Controllers
             return Ok(response);
 
         }
-        
+
         [HttpGet("trainings/{userId}/training")]
         public async Task<IActionResult> GetTrainingByUserId(Guid userId, int pageNumber = 1, int pageSize = 10)
         {
@@ -305,7 +307,7 @@ namespace API.Controllers
         [HttpPost("assignTraining")]
         public async Task<IActionResult> AssignUserToTraining([FromBody] UsersTrainingDTO dto)
         {
-            var response = await _mediator.Send(new AssignTrainingToUserCommand { _dto=dto });
+            var response = await _mediator.Send(new AssignTrainingToUserCommand { _dto = dto });
             if (!response.Success)
             {
                 return BadRequest(response);
@@ -315,8 +317,8 @@ namespace API.Controllers
         [HttpPost("assignCourse")]
         public async Task<IActionResult> AssignUserToCourse([FromBody] UsersCourseDTO dto)
         {
-          
-            var response = await _mediator.Send(new AssignCourseToUserCommand { _dto=dto });
+
+            var response = await _mediator.Send(new AssignCourseToUserCommand { _dto = dto });
             if (!response.Success)
             {
                 return BadRequest(response);
@@ -326,7 +328,7 @@ namespace API.Controllers
         [HttpPost("assignSession")]
         public async Task<IActionResult> AssignUserToSession([FromBody] UsersSessionDTO dto)
         {
-            var response = await _mediator.Send(new AssignSessionToUsersCommand { _dto=dto });
+            var response = await _mediator.Send(new AssignSessionToUsersCommand { _dto = dto });
             if (!response.Success)
             {
                 return BadRequest(response);
@@ -334,9 +336,43 @@ namespace API.Controllers
             return Ok(response);
         }
         [HttpGet("userinroleV2")]
-        public async Task<IActionResult> GetUsersInRole ( UsersRolesEnum role)
+        public async Task<IActionResult> GetUsersInRole(UsersRolesEnum role)
         {
-            var response = await _mediator.Send(new GetUserInRoleWithinSysQuery { Role=role });
+            var response = await _mediator.Send(new GetUserInRoleWithinSysQuery { Role = role });
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+
+        [HttpPatch("activate/{username}")]
+        public async Task<IActionResult> ActivateUser(string username)
+        {
+            var response = await _mediator.Send(new ActivateUserByUsernameCommand { Username = username });
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+
+        [HttpPatch("deactivate/{username}")]
+        public async Task<IActionResult> DeactivateUser(string username)
+        {
+            var response = await _mediator.Send(new DeactivateUserByUsernameCommand { Username = username });
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+
+        [HttpGet("activatedusers")]
+
+        public async Task<IActionResult> GetActivatedUsers()
+        {
+            var response = await _mediator.Send(new GetAllActivatedUsersQuery());
             if (!response.Success)
             {
                 return BadRequest(response);

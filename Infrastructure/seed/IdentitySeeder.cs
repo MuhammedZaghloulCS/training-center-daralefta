@@ -67,7 +67,7 @@ public static class AdminSeeder
                 Specialization = " ",
                 WhatsappNumber = " ",
                 pin = "1",
-                MaritalState = " ",
+                MaritalState = null,
 
             };
 

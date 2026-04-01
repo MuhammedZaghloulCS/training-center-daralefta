@@ -51,49 +51,55 @@ namespace Application.Features.User.Queries.Handler
 
                 // Enum parsing
                 bool personTypeParsed = Enum.TryParse<PersonType>(term, true, out var personType);
-                bool genderParsed = Enum.TryParse<Gender>(term, true, out var gender);
 
                 // Date parsing
+
+                var roleMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                {
+                    { "مدير", "Admin" },
+                    { "محاضر", "Instructor" },
+                    { "طالب", "Student" }
+                };
+                bool isRoleSearch = roleMap.TryGetValue(term, out var mappedRole);
+                bool genderParsed = Enum.TryParse<Gender>(term, true, out var gender);
                 bool dateParsed = DateTime.TryParse(term, out var birthDate);
+                bool maritalParsed = Enum.TryParse<MaritalStatus>(term, true, out var maritalStatus);
 
                 search = u =>
                     // Identity
                     u.UserName.Contains(term) ||
                     u.Email.Contains(term) ||
                     u.PhoneNumber.Contains(term) ||
+                    u.FullName.Contains(term) ||
 
-                    // Basic info
                     u.FirstName.Contains(term) ||
                     u.LastName.Contains(term) ||
 
-                    // Enums
-
                     (genderParsed && u.Gender == gender) ||
 
-                    // Professional info
+                    (maritalParsed && u.MaritalState == maritalStatus) ||
+
                     u.JobTitle.Contains(term) ||
                     u.AcademicTitle.Contains(term) ||
                     u.Organization.Contains(term) ||
                     u.Specialization.Contains(term) ||
                     u.Skills.Contains(term) ||
 
-                    // Contact & address
                     u.WhatsappNumber.Contains(term) ||
                     u.AddressInsideCairo.Contains(term) ||
                     u.AddressOutsideCairo.Contains(term) ||
 
-                    // Other info
                     u.Doctrine.Contains(term) ||
-                    u.MaritalState.Contains(term) ||
                     u.AcademicQualification.Contains(term) ||
                     u.Appreciation.Contains(term) ||
 
-                    // Dates
-                    (dateParsed && u.BirthDate.HasValue &&
+                    (dateParsed &&
+                     u.BirthDate.HasValue &&
                      u.BirthDate.Value.Date == birthDate.Date);
+                
 
             }
-
+           
             var users = await query.Where(r => !r.IsDeleted).Where(search)
                 .OrderBy(u => u.UserName) // مهم جدًا
                 .Skip((request.PageNumber - 1) * request.PageSize)

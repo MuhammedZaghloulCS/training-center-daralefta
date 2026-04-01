@@ -26,7 +26,8 @@ namespace Application.Features.Building.Commands.Create
 
             var buildings=await _unitOfWork.IBuildings.GetFirstByPropAsync(b => (b.SysBuildingId == request.SysBuildingId || b.Name==request.Name)&&!b.IsDeleted);
             if (buildings != null)
-                errors.Add("يوجد مبنى بنفس المعرف");
+                errors.Add("تم استخدام هذا المبني المقابل من قبل");
+
 
             if (string.IsNullOrWhiteSpace(request.Name))
                 errors.Add("الاسم مطلوب");

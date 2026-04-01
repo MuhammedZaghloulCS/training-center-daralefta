@@ -48,18 +48,101 @@ namespace Application.Features.User.Queries.Handler
             {
                 var term = request.Search.Trim();
 
+                var roles = new List<(string Ar, string En)>
+    {
+        ("مدير", "Admin"),
+        ("محاضر", "Instructor"),
+        ("طالب", "Student")
+    };
+
+                var matchedRoles = roles
+                    .Where(r => r.Ar.Contains(term, StringComparison.OrdinalIgnoreCase))
+                    .Select(r => r.En)
+                    .ToList();
+
                 bool genderParsed = Enum.TryParse<Gender>(term, true, out var gender);
                 bool dateParsed = DateTime.TryParse(term, out var birthDate);
+                bool maritalParsed = Enum.TryParse<MaritalStatus>(term, true, out var maritalStatus);
 
+                // ✅ لو فيه roles متطابقة
+                if (matchedRoles.Any())
+                {
+                    var usersSearchedFor = new List<ApplicationUser>();
+
+                    foreach (var role in matchedRoles)
+                    {
+                        var usersInRole = await _userManager.GetUsersInRoleAsync(role);
+                        usersSearchedFor.AddRange(usersInRole);
+                    }
+
+                    usersSearchedFor = usersSearchedFor
+                        .Where(u => !u.IsDeleted)
+                        .Distinct()
+                        .ToList();
+
+                    var usersDTO = new List<UserDTO>();
+
+                    foreach (var user in usersSearchedFor)
+                    {
+                        var userRoles = await _userManager.GetRolesAsync(user);
+
+                        usersDTO.Add(new UserDTO
+                        {
+                            Id = user.Id,
+                            UserName = user.UserName,
+                            Email = user.Email,
+                            PhoneNumber = user.PhoneNumber,
+
+                            FirstName = user.FirstName,
+                            LastName = user.LastName,
+                            Gender = user.Gender,
+
+                            JobTitle = user.JobTitle,
+                            AcademicTitle = user.AcademicTitle,
+                            Organization = user.Organization,
+                            Specialization = user.Specialization,
+                            Skills = user.Skills,
+                            WhatsappNumber = user.WhatsappNumber,
+
+                            BirthDate = user.BirthDate ?? DateTime.MinValue,
+                            NationalIdImage = user.NationalIdImage,
+
+                            AddressInsideCairo = user.AddressInsideCairo,
+                            AddressOutsideCairo = user.AddressOutsideCairo,
+
+                            Doctrine = user.Doctrine,
+                            MaritalState = user.MaritalState,
+                            AcademicQualification = user.AcademicQualification,
+                            Appreciation = user.Appreciation,
+                            pin = user.pin,
+                            ImagePath = user.ImagePath,
+                            IsActive = user.IsActive,
+                            roles = userRoles.ToList()
+                        });
+                    }
+
+                    return BaseResponse<List<UserDTO>>.SuccessResponse(
+                        usersDTO,
+                        request.PageNumber,
+                        pageSize,
+                        usersDTO.Count,
+                        "Users retrieved successfully"
+                    );
+                }
+
+                // ❗ fallback search (زي ما عندك)
                 usersQuery = usersQuery.Where(u =>
                     u.UserName.Contains(term) ||
                     u.Email.Contains(term) ||
                     u.PhoneNumber.Contains(term) ||
+                    u.FullName.Contains(term) ||
 
                     u.FirstName.Contains(term) ||
                     u.LastName.Contains(term) ||
 
                     (genderParsed && u.Gender == gender) ||
+
+                    (maritalParsed && u.MaritalState == maritalStatus) ||
 
                     u.JobTitle.Contains(term) ||
                     u.AcademicTitle.Contains(term) ||
@@ -72,7 +155,6 @@ namespace Application.Features.User.Queries.Handler
                     u.AddressOutsideCairo.Contains(term) ||
 
                     u.Doctrine.Contains(term) ||
-                    u.MaritalState.Contains(term) ||
                     u.AcademicQualification.Contains(term) ||
                     u.Appreciation.Contains(term) ||
 
@@ -99,7 +181,7 @@ namespace Application.Features.User.Queries.Handler
 
             foreach (var user in users)
             {
-                var roles = await _userManager.GetRolesAsync(user); // ⚠️ N+1 (مقبولة مؤقتاً)
+                var roles = await _userManager.GetRolesAsync(user); 
 
                 userDTOs.Add(new UserDTO
                 {
@@ -131,7 +213,7 @@ namespace Application.Features.User.Queries.Handler
                     Appreciation = user.Appreciation,
                     pin = user.pin,
                     ImagePath = user.ImagePath,
-
+                    IsActive= user.IsActive,
                     roles = roles.ToList()
                 });
             }

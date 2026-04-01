@@ -22,12 +22,10 @@ namespace Application.Features.User.DTOs
         [Compare("Password", ErrorMessage = "Passwords do not match.")]
         public string ConfirmPassword { get; set; }
 
-        
 
-        // كلمة مرور البصمة - أرقام فقط
-        [RegularExpression(@"^[0-9]*$", ErrorMessage = "personPwd must contain only numbers.")]
-        public string? personPwd { get; set; }
 
+        [Required(ErrorMessage = "رقم الهاتف مطلوب")]
+        [RegularExpression(@"^\+?[0-9]\d{3,14}$", ErrorMessage = "رقم الهاتف غير صحيح")]
         public string PhoneNumber { get; set; }
         public String FirstName { get; set; }
         public String LastName { get; set; }
@@ -50,7 +48,7 @@ namespace Application.Features.User.DTOs
         [MaxLength(500)]
         public string? Skills { get; set; }
 
-        [MaxLength(50)]
+        [RegularExpression(@"^\+?[0-9]\d{3,14}$", ErrorMessage = "رقم الهاتف غير صحيح")]
         public string? WhatsappNumber { get; set; }
 
         public DateTime? BirthDate { get; set; }
@@ -64,7 +62,7 @@ namespace Application.Features.User.DTOs
         public string? AddressOutsideCairo { get; set; }
 
         public string? Doctrine { get; set; }
-        public string? MaritalState { get; set; }
+        public MaritalStatus? MaritalState { get; set; }
         public string? AcademicQualification { get; set; }
         public string ?Appreciation { get; set; }
         public string? ImagePath { get; set; }

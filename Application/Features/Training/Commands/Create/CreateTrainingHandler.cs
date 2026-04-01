@@ -23,11 +23,9 @@ namespace Application.Features.Training.Commands.Create
         {
             var errors = new List<string>();
 
-            if (string.IsNullOrWhiteSpace(request.CreatedBy))
-                errors.Add("CreatedBy is required");
 
             if (string.IsNullOrWhiteSpace(request.Title))
-                errors.Add("Title is required");
+                errors.Add("اسم التدريب مطلوب");
             if(request.Title.Length>50)
                 errors.Add("العنوان يجب أن لا يتعدي ال 50 حرفا");
             if (request.StartDate == default)
