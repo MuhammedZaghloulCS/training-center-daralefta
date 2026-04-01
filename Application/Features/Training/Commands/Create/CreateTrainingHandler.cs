@@ -31,13 +31,13 @@ namespace Application.Features.Training.Commands.Create
             if(request.Title.Length>50)
                 errors.Add("العنوان يجب أن لا يتعدي ال 50 حرفا");
             if (request.StartDate == default)
-                errors.Add("StartDate is required");
+                errors.Add("تاريخ البدأ مطلوب");
 
             if (request.EndDate == default)
-                errors.Add("EndDate is required");
+                errors.Add("تاريخ الانتهاء مطلوب");
 
             if (request.EndDate < request.StartDate)
-                errors.Add("EndDate must be greater than or equal to StartDate");
+                errors.Add("تاريخ الانتهاء يجب أن يكون بعد تاريخ البدأ");
 
             if (errors.Any())
                 return BaseResponse<TrainingDto>.FailureResponse("Validation failed", errors);

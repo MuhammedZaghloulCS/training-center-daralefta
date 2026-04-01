@@ -3,7 +3,6 @@ using Application.Features.User.DTOs;
 using Application.Features.User.Queries.Model;
 using Domain.Entities;
 using Domain.Enums;
-using Infrastructure.Migrations;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using System;

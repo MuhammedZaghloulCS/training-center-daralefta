@@ -26,9 +26,7 @@ namespace Infrastructure.Configurations
                 .HasForeignKey(s => s.TrainingId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            // 🔹 Seeding
-            var date = new DateTime(2025, 5, 1);
-            var surveys = new List<Survey>();
+            
 
 
         }

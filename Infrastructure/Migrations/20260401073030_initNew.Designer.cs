@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20260127072514_seedingRooms")]
-    partial class seedingRooms
+    [Migration("20260401073030_initNew")]
+    partial class initNew
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,21 +25,6 @@ namespace Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ApplicationUserTraining", b =>
-                {
-                    b.Property<int>("TrainingsId")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("UsersId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("TrainingsId", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("ApplicationUserTraining");
-                });
-
             modelBuilder.Entity("Domain.Entities.ApplicationUser", b =>
                 {
                     b.Property<Guid>("Id")
@@ -47,11 +32,9 @@ namespace Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AcademicQualification")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("AcademicTitle")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
@@ -59,17 +42,14 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("AddressInsideCairo")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("AddressOutsideCairo")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Appreciation")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("BirthDate")
@@ -80,7 +60,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Doctrine")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
@@ -94,13 +73,14 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
 
                     b.Property<string>("ImagePath")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("JobTitle")
                         .IsRequired()
@@ -118,11 +98,9 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("MaritalState")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NationalIdImage")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
@@ -134,15 +112,11 @@ namespace Infrastructure.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("Organization")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PersonType")
-                        .HasColumnType("int");
 
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
@@ -150,16 +124,20 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RefreshTokenExpiryTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Skills")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Specialization")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
@@ -171,11 +149,17 @@ namespace Infrastructure.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("WhatsappNumber")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("pin")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasFilter("[Email] IS NOT NULL");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -184,6 +168,10 @@ namespace Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("pin")
+                        .IsUnique()
+                        .HasFilter("[pin] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -207,7 +195,14 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SysBuildingId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -220,48 +215,6 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Building");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "يضم مكاتب الإدارة العليا والشؤون الإدارية والمالية",
-                            Name = "المبنى الإداري الرئيسي"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "مخصص للمحاضرات والدروس النظرية ويحتوي على قاعات مجهزة",
-                            Name = "مبنى القاعات الدراسية"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "يحتوي على معامل الحاسب الآلي والمعامل العملية",
-                            Name = "مبنى المعامل والتطبيقات"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "مسؤول عن تسجيل الطلاب وتقديم الخدمات الطلابية",
-                            Name = "مبنى شؤون الطلاب"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "يضم الكافيتريا والخدمات العامة وقاعات الأنشطة",
-                            Name = "مبنى الخدمات"
-                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Course", b =>
@@ -271,9 +224,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<Guid?>("ApplicationUserId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
@@ -288,6 +238,9 @@ namespace Infrastructure.Migrations
 
                     b.Property<int>("Duration")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -308,8 +261,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("TrainingId");
 
@@ -334,6 +285,9 @@ namespace Infrastructure.Migrations
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<int>("SurveyQuestionId")
                         .HasColumnType("int");
@@ -365,6 +319,14 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AttRoomIdOutSide")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AttRoomIdinside")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("BuildId")
                         .HasColumnType("int");
 
@@ -379,6 +341,9 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<bool?>("HaveProjector")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("Location")
@@ -402,96 +367,6 @@ namespace Infrastructure.Migrations
                     b.HasIndex("BuildId");
 
                     b.ToTable("Room");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            BuildId = 1,
-                            Capacity = 30,
-                            CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            HaveProjector = true,
-                            Location = "الدور الأول - المبنى الإداري",
-                            Name = "قاعة الاجتماعات الكبرى"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            BuildId = 1,
-                            Capacity = 10,
-                            CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            HaveProjector = false,
-                            Location = "الدور الأرضي - المبنى الإداري",
-                            Name = "مكتب شؤون الموظفين"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            BuildId = 2,
-                            Capacity = 80,
-                            CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            HaveProjector = true,
-                            Location = "الدور الثاني - مبنى القاعات الدراسية",
-                            Name = "قاعة محاضرات 1"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            BuildId = 2,
-                            Capacity = 60,
-                            CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            HaveProjector = true,
-                            Location = "الدور الأول - مبنى القاعات الدراسية",
-                            Name = "قاعة محاضرات 2"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            BuildId = 3,
-                            Capacity = 25,
-                            CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            HaveProjector = true,
-                            Location = "الدور الأرضي - مبنى المعامل",
-                            Name = "معمل حاسب آلي 1"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            BuildId = 3,
-                            Capacity = 20,
-                            CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            HaveProjector = false,
-                            Location = "الدور الأول - مبنى المعامل",
-                            Name = "معمل شبكات"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            BuildId = 4,
-                            Capacity = 15,
-                            CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            HaveProjector = false,
-                            Location = "الدور الأرضي - مبنى شؤون الطلاب",
-                            Name = "مكتب تسجيل الطلاب"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            BuildId = 5,
-                            Capacity = 50,
-                            CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            HaveProjector = true,
-                            Location = "الدور الأول - مبنى الخدمات",
-                            Name = "قاعة أنشطة طلابية"
-                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Session", b =>
@@ -502,7 +377,7 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CourseId")
+                    b.Property<int?>("CourseId")
                         .HasColumnType("int");
 
                     b.Property<string>("CreatedBy")
@@ -514,6 +389,9 @@ namespace Infrastructure.Migrations
 
                     b.Property<TimeSpan>("EndTime")
                         .HasColumnType("time");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<int>("RoomId")
                         .HasColumnType("int");
@@ -534,11 +412,16 @@ namespace Infrastructure.Migrations
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("lecturerId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CourseId");
 
                     b.HasIndex("RoomId");
+
+                    b.HasIndex("lecturerId");
 
                     b.ToTable("Session");
                 });
@@ -555,7 +438,7 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("CreatedByUserId")
+                    b.Property<Guid?>("CreatedByUserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedDate")
@@ -566,7 +449,10 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<int>("SurveyCategoryId")
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("SurveyCategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -614,6 +500,9 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(150)
@@ -653,6 +542,9 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("QuestionText")
                         .IsRequired()
                         .HasMaxLength(500)
@@ -691,6 +583,9 @@ namespace Infrastructure.Migrations
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("SubmittedAt")
                         .HasColumnType("datetime2");
@@ -734,6 +629,9 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
@@ -750,6 +648,51 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Training");
+                });
+
+            modelBuilder.Entity("Domain.Entities.UserSession", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SessionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "SessionId");
+
+                    b.HasIndex("SessionId");
+
+                    b.ToTable("UserSessions");
+                });
+
+            modelBuilder.Entity("Domain.Entities.UsersCourse", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "CourseId");
+
+                    b.HasIndex("CourseId");
+
+                    b.ToTable("UsersCourse", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.UsersTrainings", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("TrainingId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "TrainingId");
+
+                    b.HasIndex("TrainingId");
+
+                    b.ToTable("UsersTrainings");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
@@ -883,30 +826,12 @@ namespace Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("ApplicationUserTraining", b =>
-                {
-                    b.HasOne("Domain.Entities.Training", null)
-                        .WithMany()
-                        .HasForeignKey("TrainingsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Domain.Entities.Course", b =>
                 {
-                    b.HasOne("Domain.Entities.ApplicationUser", null)
-                        .WithMany("Courses")
-                        .HasForeignKey("ApplicationUserId");
-
                     b.HasOne("Domain.Entities.Training", "Training")
                         .WithMany("Courses")
-                        .HasForeignKey("TrainingId");
+                        .HasForeignKey("TrainingId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Training");
                 });
@@ -943,9 +868,7 @@ namespace Infrastructure.Migrations
                 {
                     b.HasOne("Domain.Entities.Course", "Course")
                         .WithMany("Sessions")
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CourseId");
 
                     b.HasOne("Domain.Entities.Room", "Room")
                         .WithMany("Sessions")
@@ -953,7 +876,13 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Domain.Entities.ApplicationUser", "Lecturer")
+                        .WithMany()
+                        .HasForeignKey("lecturerId");
+
                     b.Navigation("Course");
+
+                    b.Navigation("Lecturer");
 
                     b.Navigation("Room");
                 });
@@ -963,14 +892,11 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.ApplicationUser", "CreatedByUser")
                         .WithMany("CreatedSurveys")
                         .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Domain.Entities.SurveyCategory", "SurveyCategory")
                         .WithMany("Surveys")
-                        .HasForeignKey("SurveyCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SurveyCategoryId");
 
                     b.HasOne("Domain.Entities.Training", "Training")
                         .WithMany("Surveys")
@@ -1011,6 +937,63 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Survey");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Entities.UserSession", b =>
+                {
+                    b.HasOne("Domain.Entities.Session", "Session")
+                        .WithMany("UserSessions")
+                        .HasForeignKey("SessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.ApplicationUser", "User")
+                        .WithMany("UserSession")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Session");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Entities.UsersCourse", b =>
+                {
+                    b.HasOne("Domain.Entities.Course", "Course")
+                        .WithMany("UsersCourse")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.ApplicationUser", "User")
+                        .WithMany("UsersCourse")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Entities.UsersTrainings", b =>
+                {
+                    b.HasOne("Domain.Entities.Training", "Training")
+                        .WithMany("UsersTrainings")
+                        .HasForeignKey("TrainingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.ApplicationUser", "User")
+                        .WithMany("UsersTrainings")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Training");
 
                     b.Navigation("User");
                 });
@@ -1068,11 +1051,15 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.ApplicationUser", b =>
                 {
-                    b.Navigation("Courses");
-
                     b.Navigation("CreatedSurveys");
 
                     b.Navigation("SurveyResponses");
+
+                    b.Navigation("UserSession");
+
+                    b.Navigation("UsersCourse");
+
+                    b.Navigation("UsersTrainings");
                 });
 
             modelBuilder.Entity("Domain.Entities.Building", b =>
@@ -1083,11 +1070,18 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Course", b =>
                 {
                     b.Navigation("Sessions");
+
+                    b.Navigation("UsersCourse");
                 });
 
             modelBuilder.Entity("Domain.Entities.Room", b =>
                 {
                     b.Navigation("Sessions");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Session", b =>
+                {
+                    b.Navigation("UserSessions");
                 });
 
             modelBuilder.Entity("Domain.Entities.Survey", b =>
@@ -1117,6 +1111,8 @@ namespace Infrastructure.Migrations
                     b.Navigation("Courses");
 
                     b.Navigation("Surveys");
+
+                    b.Navigation("UsersTrainings");
                 });
 #pragma warning restore 612, 618
         }

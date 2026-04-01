@@ -212,18 +212,6 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Building");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "يضم مكاتب الإدارة العليا والشؤون الإدارية والمالية",
-                            IsDeleted = false,
-                            Name = "المبنى الإداري الرئيسي",
-                            SysBuildingId = "8a807a299b0d347b019b0d355f9a0003"
-                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Course", b =>
@@ -376,50 +364,6 @@ namespace Infrastructure.Migrations
                     b.HasIndex("BuildId");
 
                     b.ToTable("Room");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            AttRoomIdOutSide = "8a807a299b0d347b019b0d983cc70712",
-                            AttRoomIdinside = "8a807a299b0d347b019b0d9df51b085d",
-                            BuildId = 1,
-                            Capacity = 10,
-                            CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            HaveProjector = true,
-                            IsDeleted = false,
-                            Location = "الدور 1",
-                            Name = "غرفة رقم 1"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            AttRoomIdOutSide = "8a807a299b1c0bad019b1cf94f3c0177",
-                            AttRoomIdinside = "8a807a299b1c0bad019b1cf987d702c6",
-                            BuildId = 1,
-                            Capacity = 10,
-                            CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            HaveProjector = true,
-                            IsDeleted = false,
-                            Location = "الدور 2",
-                            Name = "غرفة رقم 2"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            AttRoomIdOutSide = "8a807a299b1c0bad019b1cf98bcd03c0",
-                            AttRoomIdinside = "8a807a299b1c0bad019b1cf98d7304f1",
-                            BuildId = 1,
-                            Capacity = 10,
-                            CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            HaveProjector = true,
-                            IsDeleted = false,
-                            Location = "الدور 3",
-                            Name = "غرفة رقم 3"
-                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Session", b =>
@@ -883,7 +827,8 @@ namespace Infrastructure.Migrations
                 {
                     b.HasOne("Domain.Entities.Training", "Training")
                         .WithMany("Courses")
-                        .HasForeignKey("TrainingId");
+                        .HasForeignKey("TrainingId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Training");
                 });

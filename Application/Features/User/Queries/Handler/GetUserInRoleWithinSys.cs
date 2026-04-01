@@ -9,7 +9,6 @@ namespace Application.Features.User.Queries.Handler {
     using global::Application.Common;
     using global::Application.Features.User.DTOs;
     using global::Application.Features.User.Queries.Model;
-    using Infrastructure.Migrations;
     using Mapster;
     using MediatR;
     using Microsoft.AspNetCore.Identity;

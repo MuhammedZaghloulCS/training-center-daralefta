@@ -13,13 +13,17 @@ public static class AdminSeeder
         var configuration = serviceProvider.GetRequiredService<IConfiguration>();
 
         // -----------------------
-        // Seed Admin Role
+        // Seed Roles (Admin, Instructor, Student)
         // -----------------------
         Console.WriteLine("entered to seeding");
-        const string adminRole = "Admin";
-        if (!await roleManager.RoleExistsAsync(adminRole))
+        var roles = new[] { "Admin", "Instructor", "Student" };
+        
+        foreach (var role in roles)
         {
-            await roleManager.CreateAsync(new IdentityRole<Guid>(adminRole));
+            if (!await roleManager.RoleExistsAsync(role))
+            {
+                await roleManager.CreateAsync(new IdentityRole<Guid>(role));
+            }
         }
 
         // -----------------------
@@ -71,7 +75,7 @@ public static class AdminSeeder
 
             if (result.Succeeded)
             {
-                await userManager.AddToRoleAsync(adminUser, adminRole);
+                await userManager.AddToRoleAsync(adminUser, "Admin");
             }
             else
             {
@@ -82,9 +86,9 @@ public static class AdminSeeder
         else
         {
             // لو الأدمن موجود بس مش في الـ Role، حطه فيها
-            if (!await userManager.IsInRoleAsync(existingAdmin, adminRole))
+            if (!await userManager.IsInRoleAsync(existingAdmin, "Admin"))
             {
-                await userManager.AddToRoleAsync(existingAdmin, adminRole);
+                await userManager.AddToRoleAsync(existingAdmin, "Admin");
             }
         }
     }
