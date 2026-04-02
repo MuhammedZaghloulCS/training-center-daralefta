@@ -24,8 +24,15 @@ namespace Application.Features.User.Queries.Handler
         }
         public async Task<BaseResponse<List<UserDTO>>> Handle(GetAllActivatedUsersQuery request, CancellationToken cancellationToken)
         {
-            var activatedUsers = await _userManager.Users.Where(u => u.IsActive && !u.IsDeleted).ToListAsync();
 
+            var activatedUsers = await _userManager.Users
+                .Where(u =>
+                    u.IsActive &&
+                    !u.IsDeleted &&
+                    !string.IsNullOrWhiteSpace(u.pin) &&
+                    u.pin != "0"
+                )
+                .ToListAsync();
             if (activatedUsers == null || !activatedUsers.Any())
             {
                 return BaseResponse<List<UserDTO>>.NotFoundResponse("No activated users found.");

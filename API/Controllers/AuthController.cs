@@ -1,5 +1,8 @@
 ﻿using Application.Common.Abstraction;
+using Application.Features.User.Commands.ResetPassword.Command;
 using Domain.Entities;
+using Domain.Entities.Models;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
@@ -15,29 +18,33 @@ namespace API.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IJwtService _jwtService;
+        private readonly IMediator _mediator;
 
         public AuthController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            IJwtService jwtService)
+            IJwtService jwtService,
+            IMediator mediator
+            )
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _jwtService = jwtService;
+            _mediator = mediator;
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        public async Task<IActionResult> Login([FromBody] Domain.Entities.Models.LoginRequest request)
         {
             if (request == null)
                 throw new Exception("Request is null");
             var user = await _userManager.FindByEmailAsync(request.Email);
             if (user == null||user.IsDeleted)
-                return Unauthorized(new { message = "Invalid email or password" });
+                return Unauthorized(new { message = "الإيميل او كلمة السر خاطئة" });
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, lockoutOnFailure: true);
             if (!result.Succeeded)
-                return Unauthorized(new { message = "Invalid email or password" });
+                return Unauthorized(new { message = "الإيميل او كلمة السر خاطئة" });
 
             var roles = await _userManager.GetRolesAsync(user);
 
@@ -47,7 +54,9 @@ namespace API.Controllers
 
             // حفظ Refresh Token في الداتابيز
             user.RefreshToken = refreshToken;
-            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7); // صالح لمدة 7 أيام
+            // إذا كان Remember Me = true، اجعل الـ Refresh Token صالح لمدة شهر، وإلا 7 أيام
+            var expiryDays = request.RememberMe ? 30 : 7;
+            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(expiryDays);
             await _userManager.UpdateAsync(user);
 
             return Ok(new LoginResponse
@@ -119,6 +128,16 @@ namespace API.Controllers
             await _userManager.UpdateAsync(user);
 
             return Ok(new { message = "Token revoked successfully" });
+        }
+
+        [Authorize(Roles ="Admin")]
+        [HttpPost("resetPasswordByAdmin")]
+        public async Task<IActionResult> ResetPasswordByAdmin([FromBody] ResetPasswordCommand command)
+        {
+            var response = await _mediator.Send(command);
+            if (!response.Success)
+                return BadRequest(response);
+            return Ok(response);
         }
     }
 

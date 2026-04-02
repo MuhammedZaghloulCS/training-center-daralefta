@@ -183,8 +183,7 @@ using (var scope = app.Services.CreateScope())
     recurringJobManager.AddOrUpdate<HangfireJob>(
         "assign-users-to-sessions",
         x => x.ProcessSessions(),
-        "0 0 * * *",
-        TimeZoneInfo.FindSystemTimeZoneById("Egypt Standard Time")
+    Cron.Daily
     );
 }
 using (var scope = app.Services.CreateScope())
