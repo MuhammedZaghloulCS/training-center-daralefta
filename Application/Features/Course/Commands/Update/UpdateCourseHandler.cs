@@ -41,8 +41,6 @@ namespace Application.Features.Course.Commands.Update
             if (request.Duration < 0)
                 errors.Add("Duration is invalid");
 
-            if (request.TrainingId.HasValue && request.TrainingId.Value < 1)
-                errors.Add("TrainingId is invalid");
 
             if (errors.Any())
                 return BaseResponse<CourseDto>.FailureResponse("Validation failed", errors);
@@ -51,8 +49,7 @@ namespace Application.Features.Course.Commands.Update
             course.Description = request.Description;
             course.Prerequisites = request.Prerequisites;
             course.Duration = request.Duration;
-            course.TrainingId = request.TrainingId;
-            //.UpdatedBy = request.UpdatedBy;
+            course.UpdatedBy = request.UpdatedBy;
             course.UpdatedAt = DateTime.UtcNow;
 
             _unitOfWork.ICourse.Update(course);
@@ -69,7 +66,6 @@ namespace Application.Features.Course.Commands.Update
                 Description = course.Description,
                 Prerequisites = course.Prerequisites,
                 Duration = course.Duration,
-                TrainingId = course.TrainingId
             };
 
             return BaseResponse<CourseDto>.SuccessResponse(dto, "Course updated successfully");

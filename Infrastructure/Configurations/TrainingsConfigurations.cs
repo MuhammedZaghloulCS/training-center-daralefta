@@ -10,7 +10,10 @@ namespace Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<Training> builder)
         {
-          
+          builder.HasMany(t => t.Sessions)
+                 .WithOne(s => s.Training)
+                 .HasForeignKey(s => s.TrainingId)
+                 .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

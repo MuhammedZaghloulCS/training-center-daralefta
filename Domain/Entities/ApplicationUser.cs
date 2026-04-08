@@ -61,7 +61,9 @@ namespace Domain.Entities
         //refresh token
         public string? RefreshToken { get; set; }
         public DateTime RefreshTokenExpiryTime { get; set; }
-        public ICollection<UserSession> UserSession { get; set; }
+
+     
+        public ICollection<UserSession> LecturerersSessions { get; set; }
         public ICollection<UsersTrainings> UsersTrainings { get; set; }
         public ICollection<UsersCourse> UsersCourse { get; set; }
         [InverseProperty(nameof(Survey.CreatedByUser))]

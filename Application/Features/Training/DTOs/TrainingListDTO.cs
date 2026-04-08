@@ -14,6 +14,8 @@ namespace Application.Features.Training.DTOs
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public  List<int> CoursesIds { get; set; }
+        public int sessionCount { get; set; }
+        public List<Guid> LecturersIds { get; set; }
 
     }
 }

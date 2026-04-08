@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Application.Features.Training.Queries.Model
 {
-    public class GetTrainingsPagedQuery : IRequest<BaseResponse<List<TrainingListDTO>>>
+    public class GetTrainingsPagedQuery : IRequest<BaseResponse<List<TrainingDto>>>
     {
         public int PageNumber { get; set; }
         public int PageSize { get; set; }

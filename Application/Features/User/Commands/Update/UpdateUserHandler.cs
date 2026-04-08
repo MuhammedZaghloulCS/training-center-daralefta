@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Json;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -74,6 +75,12 @@ namespace Application.Features.User.Commands.Update
             {
                 var errors = result.Errors.Select(e => e.Description);
                 return BaseResponse<UserDTO>.FailureResponse("User update failed", errors.ToList());
+            }
+            var emailRegex = new Regex(@"^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$");
+            bool isValid = emailRegex.IsMatch(request.UpdateUser.Email);
+            if (!isValid)
+            {
+                return BaseResponse<UserDTO>.FailureResponse("البريد الإلكتروني غير صالح");
             }
 
             // Fingerprint update

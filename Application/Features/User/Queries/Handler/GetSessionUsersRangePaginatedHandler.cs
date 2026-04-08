@@ -61,7 +61,6 @@ namespace Application.Features.User.Queries.Handler
                     Topic = session.Topic,
                     RoomId = session.RoomId,
                     CourseId = session?.CourseId,
-                    LecturerId = session?.lecturerId
 
                 }).ToList();
             return BaseResponse<List<SessionDto>>.SuccessResponse(sessionDtos);

@@ -1,6 +1,7 @@
 using Application.Features.Training.Commands.Create;
 using Application.Features.Training.Commands.Delete;
 using Application.Features.Training.Commands.Update;
+using Application.Features.Training.Commands.Update.Trainees;
 using Application.Features.Training.Queries.Model;
 using Domain.Entities;
 using MediatR;
@@ -41,7 +42,7 @@ namespace API.Controllers
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
-            var response = await _mediator.Send(new GetTrainingByIdQuery { Id = id });
+            var response = await _mediator.Send(new GetTrainingWithCoursesQuery { TrainingId = id });
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
@@ -60,6 +61,13 @@ namespace API.Controllers
             command.Id = id;
             var user = await _userManager.GetUserAsync(User);
             command.UpdatedBy = user?.FullName;
+            var response = await _mediator.Send(command);
+            return response.Success ? Ok(response) : BadRequest(response);
+        }
+        [HttpPatch("updatetrainees")]
+        public async Task<IActionResult> UpdateAsync([FromBody] UpdateTrainingTraineesCommand command)
+        {
+           
             var response = await _mediator.Send(command);
             return response.Success ? Ok(response) : BadRequest(response);
         }

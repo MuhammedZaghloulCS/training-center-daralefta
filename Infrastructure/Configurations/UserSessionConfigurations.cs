@@ -21,12 +21,12 @@ namespace Infrastructure.Configurations
                 builder.HasKey(x => new { x.UserId, x.SessionId });
 
                 builder.HasOne(x => x.User)
-                    .WithMany(u => u.UserSession)
-                    .HasForeignKey(x => x.UserId);
+                    .WithMany(u => u.LecturerersSessions)
+                    .HasForeignKey(x => x.UserId) ;
 
                 builder.HasOne(x => x.Session)
-                    .WithMany(t => t.UserSessions)
-                    .HasForeignKey(x => x.SessionId);
+                    .WithMany(t => t.LecturerersSessions)
+                    .HasForeignKey(x => x.SessionId).OnDelete(DeleteBehavior.Cascade); ;
             }
         }
     }

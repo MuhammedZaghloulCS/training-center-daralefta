@@ -12,6 +12,6 @@ namespace Application.Features.Course.Commands.Update
         public string Description { get; set; }
         public string Prerequisites { get; set; }
         public int Duration { get; set; }
-        public int? TrainingId { get; set; }
+
     }
 }

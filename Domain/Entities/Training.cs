@@ -12,7 +12,8 @@ namespace Domain.Entities
         public string Title { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public ICollection<Course> Courses { get; set; }
+        public ICollection<Session> Sessions { get; set; }
+        public ICollection<CoursesTrainings> CoursesTrainings { get; set; }
         public ICollection<UsersTrainings> UsersTrainings { get; set; }
         public ICollection<Survey> Surveys { get; set; }
     }

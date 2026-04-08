@@ -67,6 +67,8 @@ namespace Application.Features.Session.Commands.Update
 
             if (request.EndTime <= request.StartTime)
                 errors.Add("EndTime must be greater than StartTime");
+            if(request.LecturersIds.Count()==0)
+                errors.Add("يجب تعيين محاضر واحد على الأقل للجلسة");
 
             if (errors.Any())
                 return BaseResponse<SessionDto>.FailureResponse("Validation failed", errors);
@@ -78,7 +80,7 @@ namespace Application.Features.Session.Commands.Update
             session.Topic = request.Topic;
             session.RoomId = request.RoomId;
             session.CourseId = request.CourseId;
-            session.lecturerId = request.LecturerId;
+            session.LecturerersSessions = request.LecturersIds.Select(l=>new UserSession { SessionId=session.Id,UserId=l}).ToList();
             session.UpdatedBy = request.UpdatedBy;
             session.UpdatedAt = DateTime.UtcNow;
 
@@ -106,7 +108,7 @@ namespace Application.Features.Session.Commands.Update
                 Topic = session.Topic,
                 RoomId = session.RoomId,
                 CourseId = session.CourseId,
-                LecturerId = session.lecturerId
+                LecturesrIds = session.LecturerersSessions.Select(l => l.UserId).ToList(),
             };
 
             return BaseResponse<SessionDto>.SuccessResponse(dto, "Session updated successfully");

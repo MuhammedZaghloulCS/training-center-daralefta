@@ -13,7 +13,11 @@ namespace Application.Features.Training.DTOs
         public string Title { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public List<int> CoursesIds { get; set; }
+       
+        public List<Domain.Entities.Session>? Sessions { get; set; }
+        public ICollection<CoursesTrainings>? CoursesTrainings { get; set; }
+
+        public List<Domain.Entities.UsersTrainings>? UsersTrainings { get; set; }
 
     }
 }

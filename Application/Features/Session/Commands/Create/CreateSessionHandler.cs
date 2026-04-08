@@ -56,19 +56,23 @@ namespace Application.Features.Session.Commands.Create
 
             if (request.CourseId < 1)
                 errors.Add("رقم الكورس خاطئ");
+            if (request.TrainingId < 1)
+                errors.Add("رقم التدريب خاطئ");
 
             if (request.SessionDate == default)
                 errors.Add("تاريح الجلسة مطلوب");
-
-
+            if (request.StartTime == default)
+                errors.Add("وقت البدأ مطلوب");
+            if (request.EndTime == default)
+                errors.Add("وقت البدأ مطلوب");
+            if (request.LecturersIds.Count()==0)
+                errors.Add("يجب تعيين محاضر علي الأقل");
             if (request.EndTime <= request.StartTime)
                 errors.Add("وقت الانتهاء يجب ان يكون بعد وقت البدأ");
 
             if (errors.Any())
                 return BaseResponse<SessionDto>.FailureResponse("Validation failed", errors);
             //give lecturer the same privilages of rest of users
-            if(!request.usersIds.Contains(request.LecturerId))
-            request.usersIds.Add(request.LecturerId);
             
 
             var session = new Domain.Entities.Session
@@ -81,16 +85,15 @@ namespace Application.Features.Session.Commands.Create
                 Topic = request.Topic,
                 RoomId = request.RoomId,
                 CourseId = request.CourseId,
-                lecturerId = request.LecturerId,
+                TrainingId = request.TrainingId,
+                LecturerersSessions = request.LecturersIds.Select(s => new UserSession { UserId = s }).ToList()
             };
 
 
 
             await _unitOfWork.ISession.AddAsync(session);
             await _unitOfWork.Complete();
-            var usersSession = request.usersIds.Select(s => new UserSession { SessionId = session.Id, UserId = s });
-            await _unitOfWork.IAssignUserSession.AddRangeIfNotExistsAsync(usersSession.ToList());
-            await _unitOfWork.Complete();
+
             if (session.SessionDate.Date == DateTime.Today)
             {
                 await _facePrintService.AssignUsersToSession();
@@ -108,7 +111,7 @@ namespace Application.Features.Session.Commands.Create
                 Topic = session.Topic,
                 RoomId = session.RoomId,
                 CourseId = session?.CourseId,
-                LecturerId = session?.lecturerId
+           
             };
 
             return BaseResponse<SessionDto>.SuccessResponse(dto, "Session created successfully");

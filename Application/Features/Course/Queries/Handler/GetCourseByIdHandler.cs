@@ -20,7 +20,7 @@ namespace Application.Features.Course.Queries.Handler
 
         public async Task<BaseResponse<CourseDto>> Handle(GetCourseByIdQuery request, CancellationToken cancellationToken)
         {
-            var courses = await _unitOfWork.ICourse.FindRowAsync(c => c.Id == request.Id, c => c.Sessions, c => c.Training);
+            var courses = await _unitOfWork.ICourse.FindRowAsync(c => c.Id == request.Id, c => c.Sessions);
             var course = courses.FirstOrDefault();
 
             if (course == null||course.IsDeleted)
@@ -39,7 +39,6 @@ namespace Application.Features.Course.Queries.Handler
                 Description = course.Description,
                 Prerequisites = course.Prerequisites,
                 Duration = course.Duration,
-                TrainingId = course.TrainingId
             };
 
             return BaseResponse<CourseDto>.SuccessResponse(dto, "Course retrieved successfully");

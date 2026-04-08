@@ -1,4 +1,5 @@
 using Application.Common;
+using Domain.Entities;
 using Infrastructure.Abstractions.IUnitOfWork;
 using MediatR;
 using System.Threading;
@@ -22,8 +23,9 @@ namespace Application.Features.Training.Commands.Delete
             {
                 return BaseResponse<bool>.NotFoundResponse("Training not found");
             }
-            training.IsDeleted = true;
-            _unitOfWork.ITraining.Update(training);
+            var sessions =await  _unitOfWork.ISession.FindRowAsync(s => s.TrainingId == request.Id);
+            _unitOfWork.ISession.DeleteRange(sessions);
+            _unitOfWork.ITraining.Delete(training);
             var userTrainging = await _unitOfWork.IUserTrainingRepository.FindRowAsync(us => us.TrainingId == request.Id);
             _unitOfWork.IUserTrainingRepository.DeleteRange(userTrainging);
             await _unitOfWork.Complete();

@@ -9,5 +9,6 @@ namespace Application.Features.User.DTOs
         public Guid Id { get; set; }
         public string UserName { get; set; }
          public bool IsActive { get; set; }
+        public string FullName { get; set; }
     }
 }

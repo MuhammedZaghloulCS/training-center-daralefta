@@ -20,7 +20,7 @@ namespace Application.Features.User.Commands.Create.AssignTrainingToUser
     AssignTrainingToUserCommand request,
     CancellationToken cancellationToken)
         {
-            if (request == null)
+            /*if (request == null)
                 return BaseResponse<string>.BadRequestResponse("Request cannot be null");
 
             var training = await _unitOfWork.ITraining
@@ -64,7 +64,7 @@ namespace Application.Features.User.Commands.Create.AssignTrainingToUser
                     .AddRangeIfNotExistsAsync(usersSessions);
             
 
-            await _unitOfWork.Complete();
+            await _unitOfWork.Complete();*/
 
             return BaseResponse<string>.SuccessResponse("Success");
         }

@@ -21,7 +21,8 @@ namespace Application.Features.Training.Queries.Handler
 
         public async Task<BaseResponse<List<TrainingListDTO>>> Handle(GetAllTrainingsListQuery request, CancellationToken cancellationToken)
         {
-            var response = await _unitOfWork.ITraining.GetAllAsync(t => t.Courses,t => t.UsersTrainings,t=>t.Surveys);
+            //var response = await _unitOfWork.ITraining.GetAllAsync(t => t.Courses,t => t.UsersTrainings,t=>t.Surveys);
+            var response = await _unitOfWork.ITraining.GetAllAsync(t => t.UsersTrainings,t=>t.Sessions,t=>t.CoursesTrainings);
 
             if (response == null || !response.Any()||response.All(r=>r.IsDeleted))
             {
@@ -30,8 +31,21 @@ namespace Application.Features.Training.Queries.Handler
                     "No training found"
                 );
             }
+            List<Guid> lecIds = new List<Guid>();
 
-            var data = response.Where(r => !r.IsDeleted).Select(t => new TrainingListDTO
+            foreach (var training in response)
+            {
+                foreach (var session in training.Sessions)
+                {
+                    if (!session.IsDeleted)
+                    {
+                        var sessionLecturers = await _unitOfWork.ISession.GetByPkAsync(session.Id,t=>t.LecturerersSessions);
+                        lecIds.AddRange(sessionLecturers.LecturerersSessions.Select(t=>t.UserId));
+                    }
+                }
+            }
+
+            var data = response.Where(r => !r.IsDeleted).Select( t => new TrainingListDTO
             {
                 Id = t.Id,
                 CreatedBy = t.CreatedBy,
@@ -41,6 +55,8 @@ namespace Application.Features.Training.Queries.Handler
                 Title = t.Title,
                 StartDate = t.StartDate,
                 EndDate = t.EndDate,
+                sessionCount = t.Sessions.Count(s => !s.IsDeleted),
+                LecturersIds = lecIds.Distinct().ToList(),
 
             }).ToList();
 

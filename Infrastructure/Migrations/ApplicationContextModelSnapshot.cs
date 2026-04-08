@@ -259,9 +259,6 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("TrainingId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -270,9 +267,22 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.ToTable("Course");
+                });
+
+            modelBuilder.Entity("Domain.Entities.CoursesTrainings", b =>
+                {
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TrainingId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CourseId", "TrainingId");
+
                     b.HasIndex("TrainingId");
 
-                    b.ToTable("Course");
+                    b.ToTable("CoursesTrainings");
                 });
 
             modelBuilder.Entity("Domain.Entities.QuestionAnswer", b =>
@@ -414,14 +424,14 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("TrainingId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("lecturerId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -429,7 +439,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.HasIndex("lecturerId");
+                    b.HasIndex("TrainingId");
 
                     b.ToTable("Session");
                 });
@@ -834,12 +844,21 @@ namespace Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entities.Course", b =>
+            modelBuilder.Entity("Domain.Entities.CoursesTrainings", b =>
                 {
+                    b.HasOne("Domain.Entities.Course", "Course")
+                        .WithMany("CoursesTrainings")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Domain.Entities.Training", "Training")
-                        .WithMany("Courses")
+                        .WithMany("CoursesTrainings")
                         .HasForeignKey("TrainingId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
 
                     b.Navigation("Training");
                 });
@@ -884,15 +903,15 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.ApplicationUser", "Lecturer")
-                        .WithMany()
-                        .HasForeignKey("lecturerId");
+                    b.HasOne("Domain.Entities.Training", "Training")
+                        .WithMany("Sessions")
+                        .HasForeignKey("TrainingId");
 
                     b.Navigation("Course");
 
-                    b.Navigation("Lecturer");
-
                     b.Navigation("Room");
+
+                    b.Navigation("Training");
                 });
 
             modelBuilder.Entity("Domain.Entities.Survey", b =>
@@ -952,13 +971,13 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.UserSession", b =>
                 {
                     b.HasOne("Domain.Entities.Session", "Session")
-                        .WithMany("UserSessions")
+                        .WithMany("LecturerersSessions")
                         .HasForeignKey("SessionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.ApplicationUser", "User")
-                        .WithMany("UserSession")
+                        .WithMany("LecturerersSessions")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1061,9 +1080,9 @@ namespace Infrastructure.Migrations
                 {
                     b.Navigation("CreatedSurveys");
 
-                    b.Navigation("SurveyResponses");
+                    b.Navigation("LecturerersSessions");
 
-                    b.Navigation("UserSession");
+                    b.Navigation("SurveyResponses");
 
                     b.Navigation("UsersCourse");
 
@@ -1077,6 +1096,8 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Course", b =>
                 {
+                    b.Navigation("CoursesTrainings");
+
                     b.Navigation("Sessions");
 
                     b.Navigation("UsersCourse");
@@ -1089,7 +1110,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Session", b =>
                 {
-                    b.Navigation("UserSessions");
+                    b.Navigation("LecturerersSessions");
                 });
 
             modelBuilder.Entity("Domain.Entities.Survey", b =>
@@ -1116,7 +1137,9 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Training", b =>
                 {
-                    b.Navigation("Courses");
+                    b.Navigation("CoursesTrainings");
+
+                    b.Navigation("Sessions");
 
                     b.Navigation("Surveys");
 

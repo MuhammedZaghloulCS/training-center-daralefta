@@ -23,7 +23,7 @@ namespace Application.Features.Training.Commands.Create
         {
             var errors = new List<string>();
 
-
+            #region Validation
             if (string.IsNullOrWhiteSpace(request.Title))
                 errors.Add("اسم التدريب مطلوب");
             if(request.Title.Length>50)
@@ -39,15 +39,15 @@ namespace Application.Features.Training.Commands.Create
 
             if (errors.Any())
                 return BaseResponse<TrainingDto>.FailureResponse("Validation failed", errors);
-            var courses = await _unitOfWork.ICourse.FindRowAsync(c => request.CoursesIds.Contains(c.Id));
+            #endregion
+            
             var training = new Domain.Entities.Training
             {
                 CreatedBy = request.CreatedBy,
                 CreatedDate = DateTime.UtcNow,
                 Title = request.Title,
                 StartDate = request.StartDate,
-                EndDate = request.EndDate,
-                Courses =courses,
+                EndDate = request.EndDate
             };
 
             await _unitOfWork.ITraining.AddAsync(training);

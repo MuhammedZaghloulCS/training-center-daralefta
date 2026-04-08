@@ -55,6 +55,12 @@ namespace Application.Features.User.Commands.Create.CreateUser
             }
             var id = Guid.NewGuid();
             string userName = request._dto.FirstName + id.ToString("N")[..6];
+            var emailRegex = new Regex(@"^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$");
+            bool isValid = emailRegex.IsMatch(request._dto.Email);
+            if (!isValid)
+            {
+                return BaseResponse<UserDTO>.FailureResponse("البريد الإلكتروني غير صالح");
+            }
 
             var newUser = new ApplicationUser
             {

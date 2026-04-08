@@ -20,9 +20,8 @@ namespace Domain.Entities
         public ICollection<Session> Sessions { get; set; }
         public ICollection<UsersCourse> UsersCourse { get; set; }
 
-        public int? TrainingId { get; set; }
-        [ForeignKey(nameof(TrainingId))]
-        public Training Training { get; set; }
+
+        public ICollection<CoursesTrainings> CoursesTrainings { get; set; }
 
     
 

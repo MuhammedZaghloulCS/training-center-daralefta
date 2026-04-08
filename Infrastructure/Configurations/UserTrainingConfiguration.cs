@@ -16,11 +16,11 @@ namespace Infrastructure.Configurations
 
             builder.HasOne(x => x.User)
                 .WithMany(u => u.UsersTrainings)
-                .HasForeignKey(x => x.UserId);
+                .HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(x => x.Training)
                 .WithMany(t => t.UsersTrainings)
-                .HasForeignKey(x => x.TrainingId);
+                .HasForeignKey(x => x.TrainingId).OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

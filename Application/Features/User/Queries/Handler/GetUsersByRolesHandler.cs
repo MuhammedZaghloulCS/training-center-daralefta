@@ -39,7 +39,7 @@ namespace Application.Features.User.Queries.Handler
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Gender = user.Gender,
-
+                
                 JobTitle = user.JobTitle,
                 AcademicTitle = user.AcademicTitle,
                 Organization = user.Organization,
@@ -49,16 +49,16 @@ namespace Application.Features.User.Queries.Handler
 
                 BirthDate = user.BirthDate ?? DateTime.MinValue, // أو سيبها nullable لو عدلت DTO
                 NationalIdImage = user.NationalIdImage,
-
                 AddressInsideCairo = user.AddressInsideCairo,
                 AddressOutsideCairo = user.AddressOutsideCairo,
-
+                FullName = $"{user.FirstName} {user.LastName}",
                 Doctrine = user.Doctrine,
                 MaritalState = user.MaritalState,
                 AcademicQualification = user.AcademicQualification,
                 Appreciation = user.Appreciation,
                 ImagePath = user.ImagePath
             }).ToList();
+            
 
             return BaseResponse<List<UserDTO>>.SuccessResponse(userDTOs, $"Users in role '{request.roleName}' retrieved successfully.");
         }

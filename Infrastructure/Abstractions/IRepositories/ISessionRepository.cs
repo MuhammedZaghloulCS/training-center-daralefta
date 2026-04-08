@@ -7,5 +7,6 @@ namespace Infrastructure.Abstractions.IRepositories
 {
     public interface ISessionRepository: IGenericRepository<Session, int>
     {
+        public Task<List<Guid>> GetUsersIdsFromTrainingforSessionsBySessionIdAsync(int sessionId);
     }
 }

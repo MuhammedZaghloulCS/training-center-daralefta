@@ -26,6 +26,15 @@ namespace Application.Features.User.Commands.DeActivate.Handler
             {
                 return BaseResponse<UserDTO>.NotFoundResponse($"المستخدم غير موجود");
             }
+            if (!user.IsActive)
+            {
+                return BaseResponse<UserDTO>.BadRequestResponse($"المستخدم معطل بالفعل.");
+            }
+            var role=await _userManager.GetRolesAsync(user);
+            if (role.Contains("Admin"))
+            {
+                return BaseResponse<UserDTO>.BadRequestResponse($"لا يمكن تعطيل المستخدم المسؤول.");
+            }
             user.IsActive = false;
            await _userManager.UpdateAsync(user);
 

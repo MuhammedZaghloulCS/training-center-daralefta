@@ -1,7 +1,9 @@
 using Application.Common;
 using Application.Features.Training.DTOs;
 using Application.Features.Training.Queries.Model;
+using Domain.Entities;
 using Infrastructure.Abstractions.IUnitOfWork;
+using Mapster;
 using MediatR;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Training.Queries.Handler
 {
-    public class GetTrainingsPagedHandler : IRequestHandler<GetTrainingsPagedQuery, BaseResponse<List<TrainingListDTO>>>
+    public class GetTrainingsPagedHandler : IRequestHandler<GetTrainingsPagedQuery, BaseResponse<List<TrainingDto>>>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -20,11 +22,11 @@ namespace Application.Features.Training.Queries.Handler
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<BaseResponse<List<TrainingListDTO>>> Handle(GetTrainingsPagedQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<TrainingDto>>> Handle(GetTrainingsPagedQuery request, CancellationToken cancellationToken)
         {
             if (request.PageNumber < 1 || request.PageSize < 1)
             {
-                return BaseResponse<List<TrainingListDTO>>.BadRequestResponse("Invalid pagination parameters");
+                return BaseResponse<List<TrainingDto>>.BadRequestResponse("Invalid pagination parameters");
             }
 
 
@@ -44,45 +46,47 @@ namespace Application.Features.Training.Queries.Handler
                 }
             }
 
-            // Avoid deconstructing a tuple in the same statement as 'await' to prevent ENC0046.
-            var paged = await _unitOfWork.ITraining.GetPaginatedAsync(
+            var paged = await _unitOfWork.ITraining.GetTrainingsWithAllCoursesAndSessionsAndLecturersAndStudentsPagedAsync(
                 request.PageNumber,
                 request.PageSize,
-                searchPredicate,
-                t => t.Id,
-                true,
-                t => t.Courses,
-                t => t.UsersTrainings,
-                t => t.Surveys);
+                searchPredicate);
 
-            var items = paged.items;
-            var totalCount = paged.totalCount;
+    
+            var items = paged.Item1;
+            var totalCount = paged.totalNumber;
 
             if (items == null || !items.Any()||items.All(r=>r.IsDeleted))
             {
-                return BaseResponse<List<TrainingListDTO>>.SuccessResponse(
-                    new List<TrainingListDTO>(),
+                return BaseResponse<List<TrainingDto>>.SuccessResponse(
+                    new List<TrainingDto>(),
                     request.PageNumber,
                     request.PageSize,
                     totalCount,
                     "No training found");
             }
 
-            var data = items.Select(t => new TrainingListDTO
+            List<TrainingDto> data = new List<TrainingDto>();
+
+            foreach (var training in items)
             {
-                Id = t.Id,
-                CreatedBy = t.CreatedBy,
-                CreatedDate = t.CreatedDate,
-                UpdatedBy = t.UpdatedBy,
-                UpdatedAt = t.UpdatedAt,
-                Title = t.Title,
-                StartDate = t.StartDate,
-                EndDate = t.EndDate,
-                CoursesIds = t.Courses?.Select(c => c.Id).ToList() ?? new List<int>()
+                var t=new TrainingDto
+                {
+                    Id = training.Id,
+                    CreatedBy = training.CreatedBy,
+                    CreatedDate = training.CreatedDate,
+                    UpdatedBy = training.UpdatedBy,
+                    UpdatedAt = training.UpdatedAt,
+                    Title = training.Title,
+                    StartDate = training.StartDate,
+                    EndDate = training.EndDate,
+                    Sessions = training.Sessions?.ToList() ?? new List<Domain.Entities.Session>(),
+                    CoursesTrainings = training.CoursesTrainings?.ToList() ?? new List<Domain.Entities.CoursesTrainings>(),
+                    UsersTrainings = training.UsersTrainings?.ToList() ?? new List<Domain.Entities.UsersTrainings>(),
+                };
+                data.Add(t);
+            }
 
-            }).ToList();
-
-            return BaseResponse<List<TrainingListDTO>>.SuccessResponse(
+            return BaseResponse<List<TrainingDto>>.SuccessResponse(
                 data,
                 request.PageNumber,
                 request.PageSize,

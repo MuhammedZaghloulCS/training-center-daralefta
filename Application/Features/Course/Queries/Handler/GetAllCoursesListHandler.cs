@@ -21,7 +21,7 @@ namespace Application.Features.Course.Queries.Handler
 
         public async Task<BaseResponse<List<CourseListDTO>>> Handle(GetAllCoursesListQuery request, CancellationToken cancellationToken)
         {
-            var response = await _unitOfWork.ICourse.GetAllAsync(c => c.Sessions, c => c.Training);
+            var response = await _unitOfWork.ICourse.FindRowAsync(c=>c.IsDeleted==false,c => c.Sessions);
 
             if (response == null || !response.Any()||response.All(r=>r.IsDeleted))
             {
@@ -42,7 +42,7 @@ namespace Application.Features.Course.Queries.Handler
                 Description = c.Description,
                 Prerequisites = c.Prerequisites,
                 Duration = c.Duration,
-                TrainingId = c.TrainingId
+              
             }).ToList();
 
             return BaseResponse<List<CourseListDTO>>.SuccessResponse(

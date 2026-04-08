@@ -37,9 +37,6 @@ namespace Application.Features.Course.Commands.Create
             if (request.Duration > 120)
                 errors.Add("المدة لا يمكن أن تتعدي 120 ساعة");
 
-            if (request.TrainingId.HasValue && request.TrainingId.Value < 1)
-                errors.Add("التدريب غير  معروف");
-
             if (errors.Any())
                 return BaseResponse<CourseDto>.FailureResponse("Validation failed", errors);
 
@@ -51,7 +48,6 @@ namespace Application.Features.Course.Commands.Create
                 Description = request.Description,
                 Prerequisites = request.Prerequisites,
                 Duration = request.Duration,
-                TrainingId = request.TrainingId
             };
 
             await _unitOfWork.ICourse.AddAsync(course);
@@ -64,7 +60,6 @@ namespace Application.Features.Course.Commands.Create
                 Description = course.Description,
                 Prerequisites = course.Prerequisites,
                 Duration = course.Duration,
-                TrainingId = course.TrainingId
             };
 
             return BaseResponse<CourseDto>.SuccessResponse(dto, "Course created successfully");

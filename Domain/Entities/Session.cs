@@ -19,12 +19,12 @@ namespace Domain.Entities
         public int? CourseId { get; set; }
         [ForeignKey(nameof(CourseId))]
         public Course Course { get; set; }
+        public int? TrainingId { get; set; }
+        public Training Training { get; set; }
 
-        public ICollection<UserSession> UserSessions { get; set; }
 
-        public Guid? lecturerId { get; set; }
-        [ForeignKey(nameof(lecturerId))]
-        public ApplicationUser Lecturer { get; set; }
+        public ICollection<UserSession> LecturerersSessions { get; set; }
+
 
     }
 }

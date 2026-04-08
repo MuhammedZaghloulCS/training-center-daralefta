@@ -41,7 +41,7 @@ namespace Application.Common.Implementation
         {
             //retrieve the session for the current day
 
-            var sessionsInDate = await _unitOfWork.ISession.FindRowAsync(s => s.SessionDate.Date == DateTime.Now.Date, s => s.UserSessions);
+            var sessionsInDate = await _unitOfWork.ISession.FindRowAsync(s => s.SessionDate.Date == DateTime.Now.Date, s => s.LecturerersSessions);
             var accLevsWithSessionsIds = new List<(string accLevelId, int sessionId)>();
             
             #region Add Time period for the sessions in the face print system
@@ -138,12 +138,29 @@ namespace Application.Common.Implementation
 
             #region Get the users in multiple sessions and assign them to the face print system
 
-            var usersInSessions = sessionsInDate.SelectMany(s => s.UserSessions).GroupBy(us => us.UserId).ToList();
-    
+            var grouping = new List<UserSession>();
+            foreach (var session in sessionsInDate)
+            {
+                var usersIds = await _unitOfWork.ISession
+                    .GetUsersIdsFromTrainingforSessionsBySessionIdAsync(session.Id);
+               usersIds.AddRange(session.LecturerersSessions.Select(ls => ls.UserId));
+                grouping.AddRange(
+                    usersIds.Select(u => new UserSession
+                    {
+                        UserId = u,
+                        SessionId = session.Id
+                    })
+                );
+            }
+
+            var usersInSessions = grouping
+                .GroupBy(x => x.UserId)
+                .ToList();
             var userIds = usersInSessions
             .Select(g => g.Key)
             .ToList();
-            var users=await _userManager.Users.Where(u=>userIds.Contains(u.Id)&&!u.IsDeleted).ToListAsync();
+            var pinsValidations = new[] { " ", "0", "" };
+            var users=await _userManager.Users.Where(u=>userIds.Contains(u.Id)&&!u.IsDeleted&&u.IsActive==true&&!pinsValidations.Contains(u.pin)).ToListAsync();
             foreach (var userSession in usersInSessions)
             {
                 var userId = userSession.Key;

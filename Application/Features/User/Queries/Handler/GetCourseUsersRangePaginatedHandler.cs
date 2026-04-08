@@ -59,8 +59,8 @@ namespace Application.Features.User.Queries.Handler
                     Description = c.Description,
                     Prerequisites = c.Prerequisites,
                     Duration = c.Duration,
-                    TrainingId = c.TrainingId
-
+                    //TrainingId = c.TrainingId
+                    //
                 }).ToList();
             return BaseResponse<List<CourseDto>>.SuccessResponse(CourseDtos);
         }

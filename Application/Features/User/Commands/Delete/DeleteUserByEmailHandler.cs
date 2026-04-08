@@ -49,7 +49,7 @@ namespace Application.Features.User.Commands.Delete
             existingUser.IsDeleted = true;
             // حذف المستخدم
             existingUser.pin= null;
-            var result = await _userManager.UpdateAsync(existingUser);
+            var result = await _userManager.DeleteAsync(existingUser);
 
             if (!result.Succeeded)
             {

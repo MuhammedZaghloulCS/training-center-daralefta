@@ -11,7 +11,7 @@ namespace Application.Features.Course.Commands.Create
         public string Description { get; set; }
         public string Prerequisites { get; set; }
         public int Duration { get; set; }
-        public int? TrainingId { get; set; }
+    
         public string? CreatedBy { get; set; }
     }
 }

@@ -23,7 +23,7 @@ namespace Application.Features.Session.Queries.Handler
         public async Task<BaseResponse<List<SessionListDTO>>> Handle(GetAllSessionsListQuery request, CancellationToken cancellationToken)
         {
         
-            var response = await _unitOfWork.ISession.GetAllAsync(s => s.Room, s => s.Course,s=>s.Lecturer);
+            var response = await _unitOfWork.ISession.GetAllAsync(s => s.Room, s => s.Course,s=>s.LecturerersSessions);
 
             if (response == null || !response.Any()||response.All(r=>r.IsDeleted))
             {
@@ -46,7 +46,7 @@ namespace Application.Features.Session.Queries.Handler
                 Topic = s.Topic,
                 RoomId = s.RoomId,
                 CourseId = s.CourseId,
-                LecturerId=s.lecturerId
+                LecturersIds = s.LecturerersSessions.Select(ls => ls.UserId).ToList()
             }).ToList();
 
             return BaseResponse<List<SessionListDTO>>.SuccessResponse(

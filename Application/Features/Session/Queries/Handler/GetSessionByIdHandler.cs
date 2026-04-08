@@ -20,7 +20,7 @@ namespace Application.Features.Session.Queries.Handler
 
         public async Task<BaseResponse<SessionDto>> Handle(GetSessionByIdQuery request, CancellationToken cancellationToken)
         {
-            var sessions = await _unitOfWork.ISession.FindRowAsync(s => s.Id == request.Id, s => s.Room, s => s.Course,s=>s.UserSessions);
+            var sessions = await _unitOfWork.ISession.FindRowAsync(s => s.Id == request.Id, s => s.Room, s => s.Course,s=>s.LecturerersSessions);
             var session = sessions.FirstOrDefault();
 
             if (session == null||session.IsDeleted)
@@ -41,8 +41,7 @@ namespace Application.Features.Session.Queries.Handler
                 Topic = session.Topic,
                 RoomId = session.RoomId,
                 CourseId = session.CourseId,
-                LecturerId = session.lecturerId,
-                UsersIds = session.UserSessions.Select(us => us.UserId).ToList()
+                LecturesrIds = session.LecturerersSessions.Select(l=>l.UserId).ToList(),
 
             };
 

@@ -50,12 +50,16 @@ namespace Application.Features.User.Commands.Delete
                     new List<string> { $"لا يوجد مستخدم بالمعرف: {request.UserId}" }
                 );
             }
+            if (existingUser.UserName=="admin")
+            {
+                return BaseResponse<string>.FailureResponse("لا يمكن حذف المستخدم المسؤول");
+            }
             var pin = existingUser.pin;
             existingUser.IsDeleted = true;
             existingUser.pin = null;
 
             // حذف المستخدم
-            var result = await _userManager.UpdateAsync(existingUser);
+            var result = await _userManager.DeleteAsync(existingUser);
 
             if (!result.Succeeded)
             {
