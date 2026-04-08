@@ -69,7 +69,22 @@ namespace Application.Features.Session.Commands.Create
                 errors.Add("يجب تعيين محاضر علي الأقل");
             if (request.EndTime <= request.StartTime)
                 errors.Add("وقت الانتهاء يجب ان يكون بعد وقت البدأ");
+            var now = DateTime.Now;
 
+            // 1. تاريخ في الماضي
+            if (request.SessionDate.Date < now.Date)
+            {
+                errors.Add("لا يمكن إنشاء جلسة بتاريخ في الماضي");
+            }
+
+            // 2. لو نفس اليوم → تحقق من الوقت
+            if (request.SessionDate.Date == now.Date)
+            {
+                if (request.StartTime <= now.TimeOfDay)
+                {
+                    errors.Add("وقت البدء لا يمكن أن يكون في الماضي");
+                }
+            }
             if (errors.Any())
                 return BaseResponse<SessionDto>.FailureResponse("Validation failed", errors);
             //give lecturer the same privilages of rest of users

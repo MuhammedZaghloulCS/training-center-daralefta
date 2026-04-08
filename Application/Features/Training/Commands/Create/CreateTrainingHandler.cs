@@ -36,7 +36,17 @@ namespace Application.Features.Training.Commands.Create
 
             if (request.EndDate < request.StartDate)
                 errors.Add("تاريخ الانتهاء يجب أن يكون بعد تاريخ البدأ");
+            var today = DateTime.Now.Date;
 
+            if (request.StartDate.Date < today)
+            {
+                errors.Add("تاريخ بداية التدريب لا يمكن أن يكون في الماضي");
+            }
+
+            if (request.EndDate.Date < today)
+            {
+                errors.Add("تاريخ انتهاء التدريب لا يمكن أن يكون في الماضي");
+            }
             if (errors.Any())
                 return BaseResponse<TrainingDto>.FailureResponse("Validation failed", errors);
             #endregion
