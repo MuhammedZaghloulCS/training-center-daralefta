@@ -22,7 +22,7 @@ namespace Application.Features.User.Queries.Handler
            var user= await _userManager.FindByNameAsync(request.UserName);
             if (user == null|| user.IsDeleted)
             {
-                return BaseResponse<UserDTO>.NotFoundResponse("User not found");
+                return BaseResponse<UserDTO>.NotFoundResponse("السمتخدم غير موجود");
             }
             var userDto = new UserDTO
             {

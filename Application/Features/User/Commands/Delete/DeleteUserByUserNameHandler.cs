@@ -1,6 +1,7 @@
 ﻿using Application.Common;
 using Domain.Entities;
 using Domain.Helper;
+using Infrastructure.Abstractions.IUnitOfWork;
 using Infrastructure.Abstractions.IUnitOfWork.ISysUnitOfWork;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -17,12 +18,15 @@ namespace Application.Features.User.Commands.Delete
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly HttpClient httpClient;
         private readonly ISysUnitOfWork sysUnitOfWork;
-        public DeleteUserByUserNameHandler(UserManager<ApplicationUser> userManager, IHttpClientFactory httpClient,ISysUnitOfWork sysUnitOfWork)
+        private readonly IUnitOfWork _unitOfWork;
+        public DeleteUserByUserNameHandler(UserManager<ApplicationUser> userManager, IHttpClientFactory httpClient, ISysUnitOfWork sysUnitOfWork, IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             this.httpClient = httpClient.CreateClient("ExternalApi");
             this.sysUnitOfWork = sysUnitOfWork;
+            _unitOfWork = unitOfWork;
         }
+
 
         public async Task<BaseResponse<string>> Handle(DeleteUserByUserNameCommand request, CancellationToken cancellationToken)
         {
@@ -49,6 +53,17 @@ namespace Application.Features.User.Commands.Delete
                     "المستخدم غير موجود",
                     new List<string> { $"لا يوجد مستخدم بالمعرف: {request.UserId}" }
                 );
+            }
+            var userRoles = await _userManager.GetRolesAsync(existingUser);
+            if (userRoles.Contains("Instructor"))
+            {
+                var userSessions = await _unitOfWork.IUserSessionRepository.FindRowAsync(x => x.UserId == existingUser.Id);
+                if (userSessions.Any())
+                {
+                    return BaseResponse<string>.FailureResponse(
+                      "فشل حذف المستخدم",
+                      new List<string> { $"لا يمكن حذف المستخدم {existingUser.FullName} لأنه مرتبط بجلسات تدريبية." });
+                }
             }
             if (existingUser.UserName=="admin")
             {

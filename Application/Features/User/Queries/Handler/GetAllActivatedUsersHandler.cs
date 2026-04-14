@@ -31,7 +31,7 @@ namespace Application.Features.User.Queries.Handler
                     !u.IsDeleted &&
                     !string.IsNullOrWhiteSpace(u.pin) &&
                     u.pin != "0"
-                )
+                ).OrderByDescending(u => u.CreatingDate)
                 .ToListAsync();
             if (activatedUsers == null || !activatedUsers.Any())
             {

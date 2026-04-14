@@ -42,8 +42,8 @@ namespace Application.Features.Course.Queries.Handler
                 request.PageNumber,
                 request.PageSize,
                 filter,
-                c => c.Id,
-                true
+                c => c.CreatedDate,
+                false
                 );
 
             if (items == null || !items.Any()||items.All(r=>r.IsDeleted))

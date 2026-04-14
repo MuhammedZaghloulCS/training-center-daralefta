@@ -33,6 +33,72 @@ namespace Application.Features.User.Commands.Create.CreateUser
         }
         public async Task<BaseResponse<UserDTO>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
+            // Name validation
+            if (string.IsNullOrWhiteSpace(request._dto.FirstName))
+            {
+                return BaseResponse<UserDTO>.FailureResponse("الاسم الأول مطلوب");
+            }
+
+            if (string.IsNullOrWhiteSpace(request._dto.LastName))
+            {
+                return BaseResponse<UserDTO>.FailureResponse("الاسم الأخير مطلوب");
+            }
+
+            // Regex: حروف عربي + إنجليزي + مسافة فقط
+            var nameRegex = new Regex(@"^[a-zA-Z\u0600-\u06FF\s]+$");
+
+            if (!nameRegex.IsMatch(request._dto.FirstName))
+            {
+                return BaseResponse<UserDTO>.FailureResponse("الاسم الأول غير صالح");
+            }
+
+            if (!nameRegex.IsMatch(request._dto.LastName))
+            {
+                return BaseResponse<UserDTO>.FailureResponse("الاسم الأخير غير صالح");
+            }
+
+            // Length validation
+            if (request._dto.FirstName.Length > 100 || request._dto.LastName.Length > 100)
+            {
+                return BaseResponse<UserDTO>.FailureResponse("الاسم طويل جداً");
+            }
+
+            // Password validation
+            if (string.IsNullOrWhiteSpace(request._dto.Password) || request._dto.Password.Length < 8)
+            {
+                return BaseResponse<UserDTO>.FailureResponse("كلمة المرور يجب ألا تقل عن 8 أحرف");
+            }
+
+            var passwordRegex = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).+$");
+            if (!passwordRegex.IsMatch(request._dto.Password))
+            {
+                return BaseResponse<UserDTO>.FailureResponse("كلمة المرور يجب أن تحتوي على حرف كبير وصغير ورقم ورمز");
+            }
+
+            // Confirm password
+            if (request._dto.Password != request._dto.ConfirmPassword)
+            {
+                return BaseResponse<UserDTO>.FailureResponse("كلمتا المرور غير متطابقتين");
+            }
+
+            // Phone validation
+            if (string.IsNullOrWhiteSpace(request._dto.PhoneNumber))
+            {
+                return BaseResponse<UserDTO>.FailureResponse("رقم الهاتف مطلوب");
+            }
+
+            var phoneRegex = new Regex(@"^\+?[0-9]\d{3,14}$");
+            if (!phoneRegex.IsMatch(request._dto.PhoneNumber))
+            {
+                return BaseResponse<UserDTO>.FailureResponse("رقم الهاتف غير صحيح");
+            }
+
+            // WhatsApp validation (optional)
+            if (!string.IsNullOrWhiteSpace(request._dto.WhatsappNumber) &&
+                !phoneRegex.IsMatch(request._dto.WhatsappNumber))
+            {
+                return BaseResponse<UserDTO>.FailureResponse("رقم الواتساب غير صحيح");
+            }
             var userPhone= await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == request._dto.PhoneNumber);
             if (userPhone != null)
             {

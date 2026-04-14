@@ -16,6 +16,7 @@ namespace Application.Features.Session.Commands.Update
         public string Topic { get; set; }
         public int RoomId { get; set; }
         public int CourseId { get; set; }
+         
         public List<Guid> LecturersIds { get; set; }
     }
 }

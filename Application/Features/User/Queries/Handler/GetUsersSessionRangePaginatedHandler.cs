@@ -43,7 +43,7 @@ namespace Application.Features.User.Queries.Handler
                     .NotFoundResponse("No users assigned to this training.");
 
             var query = _userManager.Users
-                .Where(u => userIds.Contains(u.Id)&&!u.IsDeleted);
+                .Where(u => userIds.Contains(u.Id)&&!u.IsDeleted).OrderByDescending(u => u.CreatingDate);
 
 
 

@@ -20,7 +20,7 @@ namespace Application.Features.User.Queries.Handler
         }
         public async Task<BaseResponse<List<UserDTO>>> Handle(GetUsersInRoleQuery request, CancellationToken cancellationToken)
         {
-            if (request == null || !Enum.IsDefined(typeof(UsersRolesEnum), request.Role))
+            if (!Enum.IsDefined(typeof(UsersRolesEnum), request.Role)||request.Role==0)
             {
                 BaseResponse<List<UserDTO>>.FailureResponse("Invalid request: Role is required and must be a valid UsersRolesEnum value.");
             }
@@ -28,7 +28,7 @@ namespace Application.Features.User.Queries.Handler
             var roleName = request.Role.GetDescription();
             var usersInRole = await _userManager.GetUsersInRoleAsync(roleName);
 
-             var result=usersInRole.Where(u=>!u.IsDeleted).Adapt<List<UserDTO>>();
+             var result=usersInRole.Where(u=>!u.IsDeleted && u.IsActive).OrderByDescending(u => u.CreatingDate).Adapt<List<UserDTO>>();
 
             return  BaseResponse<List<UserDTO>>.SuccessResponse(result, $"Users in role {request.Role} retrieved successfully.");
 

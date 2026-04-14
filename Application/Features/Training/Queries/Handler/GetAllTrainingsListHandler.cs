@@ -45,7 +45,7 @@ namespace Application.Features.Training.Queries.Handler
                 }
             }
 
-            var data = response.Where(r => !r.IsDeleted).Select( t => new TrainingListDTO
+            var data = response.OrderByDescending(c => c.CreatedDate).Where(r => !r.IsDeleted).Select( t => new TrainingListDTO
             {
                 Id = t.Id,
                 CreatedBy = t.CreatedBy,

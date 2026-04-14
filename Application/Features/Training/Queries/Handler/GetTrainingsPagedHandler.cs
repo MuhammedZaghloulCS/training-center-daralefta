@@ -49,7 +49,8 @@ namespace Application.Features.Training.Queries.Handler
             var paged = await _unitOfWork.ITraining.GetTrainingsWithAllCoursesAndSessionsAndLecturersAndStudentsPagedAsync(
                 request.PageNumber,
                 request.PageSize,
-                searchPredicate);
+                searchPredicate,
+                t=>t.CreatedDate,false);
 
     
             var items = paged.Item1;
@@ -87,7 +88,7 @@ namespace Application.Features.Training.Queries.Handler
             }
 
             return BaseResponse<List<TrainingDto>>.SuccessResponse(
-                data,
+                data.OrderByDescending(c => c.CreatedDate).ToList(),
                 request.PageNumber,
                 request.PageSize,
                 totalCount,

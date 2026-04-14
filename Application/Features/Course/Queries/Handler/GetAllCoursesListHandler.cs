@@ -31,7 +31,7 @@ namespace Application.Features.Course.Queries.Handler
                 );
             }
 
-            var data = response.Where(r=>!r.IsDeleted).Select(c => new CourseListDTO
+            var data = response.OrderByDescending(c=>c.CreatedDate).Where(r=>!r.IsDeleted).Select(c => new CourseListDTO
             {
                 Id = c.Id,
                 CreatedBy = c.CreatedBy,

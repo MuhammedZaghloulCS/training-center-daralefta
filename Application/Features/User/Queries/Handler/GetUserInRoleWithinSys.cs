@@ -37,7 +37,7 @@ namespace Application.Features.User.Queries.Handler {
             var invalidPins = new List<string?> { "", "0", null," " };
 
             var result = usersInRole
-                .Where(u => !u.IsDeleted && !invalidPins.Contains(u.pin))
+                .Where(u => !u.IsDeleted && !invalidPins.Contains(u.pin)).OrderByDescending(u => u.CreatingDate)
                 .Adapt<List<UserDTO>>();
 
             return BaseResponse<List<UserDTO>>.SuccessResponse(result, $"Users in role {request.Role} retrieved successfully.");

@@ -22,7 +22,7 @@ namespace Application.Features.Training.Commands.Update
 
         public async Task<BaseResponse<TrainingDto>> Handle(UpdateTrainingCommand request, CancellationToken cancellationToken)
         {
-            var training = await _unitOfWork.ITraining.GetByPkAsync(request.Id);
+            var training = await _unitOfWork.ITraining.GetTrainingWithSessionsById(request.Id,t=>t.Sessions);
             if (training == null||training.IsDeleted)
             {
                 return BaseResponse<TrainingDto>.NotFoundResponse("التدريب غير موجود");
@@ -40,12 +40,33 @@ namespace Application.Features.Training.Commands.Update
                 errors.Add("تاريخ الانتهاء مطل");
 
             if (request.EndDate < request.StartDate)
-                errors.Add("EndDate must be greater than or equal to StartDate");
+                errors.Add("يجب أن يكون تاريخ الانتهاء أكبر من أو يساوي تاريخ البدء");
 
+            
+            var today = DateTime.UtcNow.Date;
+
+            if (training.StartDate.Date <= today
+                && request.StartDate.Date < training.StartDate.Date)
+            {
+                errors.Add(
+                   "لا يمكن تعديل تاريخ بدء تدريب قد بدأ بالفعل إلى الماضي"
+                );
+            }
+            var datesOfSessions= training.Sessions.Select(s => s.SessionDate.Date).ToList();
+            if (datesOfSessions.Any() && request.StartDate.Date > datesOfSessions.Min())
+            {
+                errors.Add(
+                   "لا يمكن تعديل تاريخ بدء التدريب إلى تاريخ بعد مواعيد جلسات التدريب المحددة"
+                );
+            }
+            if (datesOfSessions.Any() && request.EndDate.Date < datesOfSessions.Max())
+            {
+                errors.Add(
+                    "لا يمكن تعديل تاريخ بدء التدريب إلى تاريخ قبل مواعيد جلسات التدريب المحددة"
+                );
+            }
             if (errors.Any())
-                return BaseResponse<TrainingDto>.FailureResponse("Validation failed", errors);
-
-
+                return BaseResponse<TrainingDto>.FailureResponse("خطأ في البيانات المعدلة", errors);
             training.Title = request.Title;
             training.StartDate = request.StartDate;
             training.EndDate = request.EndDate;

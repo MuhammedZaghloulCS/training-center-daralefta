@@ -39,7 +39,7 @@ namespace API.Controllers
             if (request == null)
                 throw new Exception("Request is null");
             var user = await _userManager.FindByEmailAsync(request.Email);
-            if (user == null||user.IsDeleted)
+            if (user == null||user.IsDeleted||user.IsActive==false)
                 return Unauthorized(new { message = "الإيميل او كلمة السر خاطئة" });
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, lockoutOnFailure: true);
@@ -64,7 +64,8 @@ namespace API.Controllers
                 AccessToken = accessToken,
                 RefreshToken = refreshToken,
                 Email = user.Email,
-                UserName = user.UserName
+                UserName = user.UserName,
+                FullName = user.FullName
             });
         }
 
@@ -109,7 +110,8 @@ namespace API.Controllers
                 AccessToken = newAccessToken,
                 RefreshToken = newRefreshToken,
                 Email = user.Email,
-                UserName = user.UserName
+                UserName = user.UserName,
+                FullName = user.FullName
             });
         }
 

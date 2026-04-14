@@ -1,7 +1,9 @@
-﻿using Infrastructure.Abstractions.IRepositories;
+﻿using Domain.Entities;
+using Infrastructure.Abstractions.IRepositories;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace Infrastructure.Implementations.Repository
@@ -23,13 +25,22 @@ namespace Infrastructure.Implementations.Repository
             var usersIds = session?.Training?.UsersTrainings
                 .Select(ut => ut.UserId)
                 .ToList();
-            
+
             if (usersIds == null)
                 return new List<Guid>();
-      
+
             return usersIds;
         }
 
+        public async Task<Session?> GetSessionById(int sessionId,params Expression<Func<Session,object>>[] includes )
+        {
+            var query = _context.Session.AsQueryable();
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
 
+            return await query.FirstOrDefaultAsync(s => s.Id == sessionId);
+        }
     }
 }

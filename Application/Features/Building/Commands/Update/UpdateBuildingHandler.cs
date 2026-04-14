@@ -36,7 +36,7 @@ namespace Application.Features.Building.Commands.Update
                 errors.Add("الوصف مطلوب");
 
             if (errors.Any())
-                return BaseResponse<BuildingDto>.FailureResponse("Validation failed", errors);
+                return BaseResponse<BuildingDto>.FailureResponse("حدث خطأ", errors);
 
             building.Name = request.Name;
             building.Description = request.Description;

@@ -46,7 +46,7 @@ namespace Application.Features.Session.Commands.Update
         public async Task<BaseResponse<SessionDto>> Handle(UpdateSessionCommand request, CancellationToken cancellationToken)
         {
             // ==================== Fetch Session ====================
-            var session = await _unitOfWork.ISession.GetByPkAsync(request.Id);
+            var session = await _unitOfWork.ISession.GetSessionById(request.Id,s=>s.LecturerersSessions);
             if (session == null || session.IsDeleted)
                 return BaseResponse<SessionDto>.NotFoundResponse("Session not found");
 
@@ -80,10 +80,34 @@ namespace Application.Features.Session.Commands.Update
             session.Topic = request.Topic;
             session.RoomId = request.RoomId;
             session.CourseId = request.CourseId;
-            session.LecturerersSessions = request.LecturersIds.Select(l=>new UserSession { SessionId=session.Id,UserId=l}).ToList();
             session.UpdatedBy = request.UpdatedBy;
             session.UpdatedAt = DateTime.UtcNow;
 
+            var existingUserIds = session.LecturerersSessions
+    .Select(x => x.UserId)
+    .ToList();
+
+            // to add
+            var toAdd = request.LecturersIds.Except(existingUserIds);
+
+            // to remove
+            var toRemove = session.LecturerersSessions
+                .Where(x => !request.LecturersIds.Contains(x.UserId))
+                .ToList();
+
+            // remove
+            foreach (var item in toRemove)
+                session.LecturerersSessions.Remove(item);
+
+            // add
+            foreach (var userId in toAdd)
+            {
+                session.LecturerersSessions.Add(new UserSession
+                {
+                    UserId = userId,
+                    SessionId = session.Id
+                });
+            }
             _unitOfWork.ISession.Update(session);
 
             await _unitOfWork.Complete();

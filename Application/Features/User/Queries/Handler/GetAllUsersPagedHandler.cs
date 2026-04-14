@@ -126,7 +126,7 @@ namespace Application.Features.User.Queries.Handler
                         request.PageNumber,
                         pageSize,
                         usersDTO.Count,
-                        "Users retrieved successfully"
+                        "تم استلام المستخدمين بنجاح"
                     );
                 }
 
@@ -168,7 +168,7 @@ namespace Application.Features.User.Queries.Handler
             var totalCount = await usersQuery.CountAsync(cancellationToken);
 
             // ✅ Sorting (مهم جداً)
-            usersQuery = usersQuery.OrderBy(u => u.UserName);
+            usersQuery = usersQuery.OrderByDescending(u=>u.CreatingDate);
 
             // ✅ Pagination
             var users = await usersQuery
@@ -217,7 +217,6 @@ namespace Application.Features.User.Queries.Handler
                     roles = roles.ToList()
                 });
             }
-
             // ✅ Return with pagination
             return BaseResponse<List<UserDTO>>.SuccessResponse(
                 userDTOs,

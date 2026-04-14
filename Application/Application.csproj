@@ -27,6 +27,7 @@
     <Folder Include="Common\Mapper\" />
     <Folder Include="Features\Building\Commands\" />
     <Folder Include="Features\Building\Validators\" />
+    <Folder Include="Features\User\Validators\" />
   </ItemGroup>
 
 </Project>

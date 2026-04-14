@@ -27,7 +27,7 @@ namespace Application.Features.User.Queries.Handler
         public async Task<BaseResponse<List<UserDTO>>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
         {
 
-            var users = await _userManager.Users.Where(u => !u.IsDeleted).AsNoTracking().ToListAsync();
+            var users = await _userManager.Users.Where(u => !u.IsDeleted).AsNoTracking().OrderByDescending(u => u.CreatingDate).ToListAsync();
             if (users == null)
             {
                 return BaseResponse<List<UserDTO>>.FailureResponse("No users found");

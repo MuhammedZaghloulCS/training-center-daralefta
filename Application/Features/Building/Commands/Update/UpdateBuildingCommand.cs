@@ -10,5 +10,7 @@ namespace Application.Features.Building.Commands.Update
         public string? UpdatedBy { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+
+        
     }
 }

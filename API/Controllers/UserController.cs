@@ -128,6 +128,38 @@ namespace API.Controllers
 
             return Ok(response);
         }
+
+        [HttpPost("with-image")]
+        public async Task<IActionResult> CreateUserWithImage([FromForm] CreateUserDTO user, IFormFile? imageFile)
+        {
+            var user1 = await _userManager.GetUserAsync(User);
+            user.CreatedBy = user1?.FullName;
+
+            // Handle image upload
+            if (imageFile != null && imageFile.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "users");
+                Directory.CreateDirectory(uploadsFolder);
+
+                var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await imageFile.CopyToAsync(fileStream);
+                }
+
+                user.ImagePath = $"/images/users/{uniqueFileName}";
+            }
+
+            var response = await _mediator.Send(new CreateUserCommand { _dto = user });
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
         [HttpGet("paged")]
         public async Task<IActionResult> GetUsersPaged(int pageNumber = 1, int pageSize = 10, string search = "")
         {
@@ -186,6 +218,38 @@ namespace API.Controllers
             var user1 = await _userManager.GetUserAsync(User);
             user.UpdatedBy = user1?.FullName;
             user.UserName = userName; // Ensure the username in the URL is used
+
+            var response = await _mediator.Send(new Application.Features.User.Commands.Update.UpdateUserCommand { UpdateUser = user });
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+
+        [HttpPatch("{userName}/with-image")]
+        public async Task<IActionResult> UpdateUserWithImage([FromRoute] string userName, [FromForm] UpdateUserDTO user, IFormFile? imageFile)
+        {
+            var user1 = await _userManager.GetUserAsync(User);
+            user.UpdatedBy = user1?.FullName;
+            user.UserName = userName;
+
+            // Handle image upload
+            if (imageFile != null && imageFile.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "users");
+                Directory.CreateDirectory(uploadsFolder);
+
+                var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await imageFile.CopyToAsync(fileStream);
+                }
+
+                user.ImagePath = $"/images/users/{uniqueFileName}";
+            }
 
             var response = await _mediator.Send(new Application.Features.User.Commands.Update.UpdateUserCommand { UpdateUser = user });
             if (!response.Success)
@@ -338,7 +402,7 @@ namespace API.Controllers
         [HttpGet("userinroleV2")]
         public async Task<IActionResult> GetUsersInRole(UsersRolesEnum role)
         {
-            var response = await _mediator.Send(new GetUserInRoleWithinSysQuery { Role = role });
+            var response = await _mediator.Send(new GetUsersInRoleQuery { Role = role });
             if (!response.Success)
             {
                 return BadRequest(response);

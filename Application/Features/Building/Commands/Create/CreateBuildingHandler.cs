@@ -42,7 +42,7 @@ namespace Application.Features.Building.Commands.Create
 
 
             if (errors.Any())
-                return BaseResponse<BuildingDto>.FailureResponse("Validation failed", errors);
+                return BaseResponse<BuildingDto>.FailureResponse("حدث خطأ", errors);
 
 
 

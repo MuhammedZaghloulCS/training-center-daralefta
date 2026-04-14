@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Json;
+using System.Runtime.InteropServices.Marshalling;
 using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
@@ -85,8 +86,16 @@ namespace Application.Features.Session.Commands.Create
                     errors.Add("وقت البدء لا يمكن أن يكون في الماضي");
                 }
             }
+            var training = await _unitOfWork.ITraining.GetByPkAsync(request.TrainingId);
+            if (training == null)
+                errors.Add("التدريب غير موجود");
+            if (training != null)
+            {
+                if (request.SessionDate.Date < training.StartDate.Date || request.SessionDate.Date > training.EndDate.Date)
+                    errors.Add("تاريخ الجلسة يجب أن يكون ضمن فترة التدريب");
+            }
             if (errors.Any())
-                return BaseResponse<SessionDto>.FailureResponse("Validation failed", errors);
+                return BaseResponse<SessionDto>.FailureResponse("خطأ في البيانات", errors);
             //give lecturer the same privilages of rest of users
             
 

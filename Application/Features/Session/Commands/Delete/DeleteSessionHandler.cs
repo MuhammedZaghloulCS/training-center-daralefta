@@ -23,7 +23,7 @@ namespace Application.Features.Session.Commands.Delete
                 return BaseResponse<bool>.NotFoundResponse("Session not found");
             }
             session.IsDeleted = true;
-            _unitOfWork.ISession.Update(session);
+            _unitOfWork.ISession.Delete(session);
             var userSession = await _unitOfWork.IUserSessionRepository.FindRowAsync(us => us.SessionId == request.Id);
              _unitOfWork.IUserSessionRepository.DeleteRange(userSession);
             await _unitOfWork.Complete();
