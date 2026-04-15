@@ -13,7 +13,7 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
+    [Authorize]
 
     public class TrainingController : ControllerBase
     {
@@ -26,6 +26,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAsync()
         {
             var response = await _mediator.Send(new GetAllTrainingsListQuery());
@@ -33,6 +34,7 @@ namespace API.Controllers
         }
 
         [HttpGet("paged")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetPagedAsync([FromQuery] GetTrainingsPagedQuery query)
         {
             var response = await _mediator.Send(query);
@@ -40,6 +42,8 @@ namespace API.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             var response = await _mediator.Send(new GetTrainingWithCoursesQuery { TrainingId = id });
@@ -47,6 +51,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateAsync([FromBody] CreateTrainingCommand command)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -56,6 +61,7 @@ namespace API.Controllers
         }
 
         [HttpPatch("{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateAsync(int id, [FromBody] UpdateTrainingCommand command)
         {
             command.Id = id;
@@ -65,17 +71,33 @@ namespace API.Controllers
             return response.Success ? Ok(response) : BadRequest(response);
         }
         [HttpPatch("updatetrainees")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateAsync([FromBody] UpdateTrainingTraineesCommand command)
         {
-           
+
             var response = await _mediator.Send(command);
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
             var response = await _mediator.Send(new DeleteTrainingCommand { Id = id });
+            return response.Success ? Ok(response) : BadRequest(response);
+        }
+        [HttpGet("schedule/{id}")]
+        [Authorize(Roles = "Student")]
+        public async Task<IActionResult> GetScheduleAsync(Guid id)
+        {
+            var response = await _mediator.Send(new GetUserScheduleQuery { Id = id });
+            return response.Success ? Ok(response) : BadRequest(response);
+        }
+        [HttpGet("schedule/instructor/{id}")]
+        [Authorize(Roles = "Instructor")]
+        public async Task<IActionResult> GetScheduleInstructorAsync(Guid id)
+        {
+            var response = await _mediator.Send(new GetInstructorScheduleQuery { Id = id });
             return response.Success ? Ok(response) : BadRequest(response);
         }
     }

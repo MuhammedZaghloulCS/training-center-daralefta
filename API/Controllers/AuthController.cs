@@ -65,7 +65,9 @@ namespace API.Controllers
                 RefreshToken = refreshToken,
                 Email = user.Email,
                 UserName = user.UserName,
-                FullName = user.FullName
+                FullName = user.FullName,
+                UserId = user.Id.ToString(),
+                Roles = roles.ToList()
             });
         }
 
@@ -111,7 +113,9 @@ namespace API.Controllers
                 RefreshToken = newRefreshToken,
                 Email = user.Email,
                 UserName = user.UserName,
-                FullName = user.FullName
+                FullName = user.FullName,
+                UserId = user.Id.ToString(),
+                Roles = roles.ToList()
             });
         }
 
