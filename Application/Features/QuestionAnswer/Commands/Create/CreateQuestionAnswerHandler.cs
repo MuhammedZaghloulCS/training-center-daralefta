@@ -37,7 +37,7 @@ namespace Application.Features.QuestionAnswer.Commands.Create
 
             if (!errors.Any())
             {
-                var existing = await _unitOfWork.ISurveyAnswer.FindRowAsync(a => a.SurveyResponseId == request.SurveyResponseId && a.SurveyQuestionId == request.SurveyQuestionId);
+                var existing = await _unitOfWork.ISurveyAnswer.FindRowAsync(a => a.SurveyResponseId == request.SurveyResponseId && a.questionId == request.SurveyQuestionId);
                 if (existing.Any())
                 {
                     errors.Add("Answer already exists for this question and response");
@@ -52,7 +52,7 @@ namespace Application.Features.QuestionAnswer.Commands.Create
                 CreatedBy = request.CreatedBy,
                 CreatedDate = DateTime.UtcNow,
                 Answer = request.Answer,
-                SurveyQuestionId = request.SurveyQuestionId,
+                questionId = request.SurveyQuestionId,
                 SurveyResponseId = request.SurveyResponseId
             };
 
@@ -67,7 +67,7 @@ namespace Application.Features.QuestionAnswer.Commands.Create
                 UpdatedBy = answer.UpdatedBy,
                 UpdatedAt = answer.UpdatedAt,
                 Answer = answer.Answer,
-                SurveyQuestionId = answer.SurveyQuestionId,
+                SurveyQuestionId = answer.questionId,
                 SurveyResponseId = answer.SurveyResponseId
             };
 

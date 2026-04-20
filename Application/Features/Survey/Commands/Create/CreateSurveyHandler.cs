@@ -1,6 +1,9 @@
 using Application.Common;
 using Application.Features.Survey.DTOs;
+using Domain.Entities.Models;
+using Domain.Enums;
 using Infrastructure.Abstractions.IUnitOfWork;
+using Mapster;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -23,54 +26,75 @@ namespace Application.Features.Survey.Commands.Create
         {
             var errors = new List<string>();
 
-            if (string.IsNullOrWhiteSpace(request.CreatedBy))
-                errors.Add("CreatedBy is required");
-
-            if (string.IsNullOrWhiteSpace(request.Title))
-                errors.Add("Title is required");
-
-            if (string.IsNullOrWhiteSpace(request.Description))
-                errors.Add("Description is required");
-
-            if (request.CreatedByUserId == Guid.Empty)
-                errors.Add("CreatedByUserId is required");
-
-            if (request.TrainingId < 1)
-                errors.Add("TrainingId is invalid");
-
-            if (request.SurveyCategoryId < 1)
-                errors.Add("SurveyCategoryId is invalid");
+            if (string.IsNullOrWhiteSpace(request.Name))
+                errors.Add("الأسم مطلوب");
+            if (request.Name?.Length > 200)
+                errors.Add("يجب ألا يتجاوز الأسم 200 حرف");
 
             if (errors.Any())
-                return BaseResponse<SurveyDto>.FailureResponse("Validation failed", errors);
+                return BaseResponse<SurveyDto>.FailureResponse("فشل إنشاء استبيان", errors);
 
+            if (request.Description != null && request.Description.Length > 500)
+                errors.Add("يجب ألا يتجاوز الوصف 500 حرف");
+            if (request.Questions != null && request.Questions.Any())
+            {
+                if (request.Questions.Count > 50)
+                { errors.Add("يجب ألا يتجاوز عدد الأسئلة 50 سؤال");
+                    if (errors.Any())
+                        return BaseResponse<SurveyDto>.FailureResponse("فشل إضافة الأسئلة", errors);
+                }
+                foreach (var question in request.Questions)
+                {
+                    if (string.IsNullOrWhiteSpace(question.QuestionText))
+                        errors.Add("نص السؤال مطلوب");
+                    if (question.QuestionText?.Length > 500)
+                        errors.Add("يجب ألا يتجاوز نص السؤال 500 حرف");
+                    if (question.QuestionType == QuestionTypeEnum.MultipleChoice &&
+    string.IsNullOrWhiteSpace(question.Options))
+                    {
+                        errors.Add("يجب أن يحتوي السؤال على خيارات");
+                    }
+
+                }
+                if (errors.Any())
+                    return BaseResponse<SurveyDto>.FailureResponse("فشل إضافة الأسئلة", errors);
+            }
+
+            if (errors.Any())
+                return BaseResponse<SurveyDto>.FailureResponse("فشل إنشاء استبيان", errors);
             var survey = new Domain.Entities.Survey
             {
-                CreatedBy = request.CreatedBy,
-                CreatedDate = DateTime.UtcNow,
-                Title = request.Title,
+                Name = request.Name,
                 Description = request.Description,
-                CreatedByUserId = request.CreatedByUserId,
-                TrainingId = request.TrainingId,
-                SurveyCategoryId = request.SurveyCategoryId
+                IsActive = request.IsActive,
+                CreatedAt = DateTime.UtcNow,
+                
             };
+
+            if (request.Questions != null && request.Questions.Any())
+            {
+                foreach (var question in request.Questions)
+                {
+                    var newQuestion= new Domain.Entities.Question
+                    {
+                        QuestionText = question.QuestionText,
+                        IsRequired = question.IsRequired,
+                        Options = question.QuestionType == QuestionTypeEnum.MultipleChoice
+                        ? question.Options
+                        : null,
+                        QuestionType =question.QuestionType,
+                        SortOrder = question.SortOrder,
+                        Survey = survey
+                    };
+
+                    survey.Questions.Add(newQuestion);
+                }
+            }
 
             await _unitOfWork.ISurvey.AddAsync(survey);
             await _unitOfWork.Complete();
 
-            var dto = new SurveyDto
-            {
-                Id = survey.Id,
-                CreatedBy = survey.CreatedBy,
-                CreatedDate = survey.CreatedDate,
-                UpdatedBy = survey.UpdatedBy,
-                UpdatedAt = survey.UpdatedAt,
-                Title = survey.Title,
-                Description = survey.Description,
-                CreatedByUserId = survey.CreatedByUserId,
-                TrainingId = survey.TrainingId,
-                SurveyCategoryId = survey.SurveyCategoryId
-            };
+            var dto = survey.Adapt<SurveyDto>();
 
             return BaseResponse<SurveyDto>.SuccessResponse(dto, "Survey created successfully");
         }

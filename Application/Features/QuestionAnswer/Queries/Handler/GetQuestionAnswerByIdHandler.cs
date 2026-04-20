@@ -20,7 +20,7 @@ namespace Application.Features.QuestionAnswer.Queries.Handler
 
         public async Task<BaseResponse<QuestionAnswerDto>> Handle(GetQuestionAnswerByIdQuery request, CancellationToken cancellationToken)
         {
-            var answers = await _unitOfWork.ISurveyAnswer.FindRowAsync(a => a.Id == request.Id, a => a.SurveyQuestion, a => a.SurveyResponse);
+            var answers = await _unitOfWork.ISurveyAnswer.FindRowAsync(a => a.Id == request.Id, a => a.Question, a => a.SurveyResponse);
             var answer = answers.FirstOrDefault();
 
             if (answer == null || answer.IsDeleted)
@@ -36,7 +36,7 @@ namespace Application.Features.QuestionAnswer.Queries.Handler
                 UpdatedBy = answer.UpdatedBy,
                 UpdatedAt = answer.UpdatedAt,
                 Answer = answer.Answer,
-                SurveyQuestionId = answer.SurveyQuestionId,
+                SurveyQuestionId = answer.questionId,
                 SurveyResponseId = answer.SurveyResponseId
             };
 

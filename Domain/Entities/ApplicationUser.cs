@@ -68,8 +68,7 @@ namespace Domain.Entities
         public ICollection<UserSession> LecturerersSessions { get; set; }
         public ICollection<UsersTrainings> UsersTrainings { get; set; }
         public ICollection<UsersCourse> UsersCourse { get; set; }
-        [InverseProperty(nameof(Survey.CreatedByUser))]
-        public ICollection<Survey> CreatedSurveys { get; set; } = new List<Survey>();
+
         public ICollection<SurveyResponse> SurveyResponses { get; set; } = new List<SurveyResponse>();
 
     

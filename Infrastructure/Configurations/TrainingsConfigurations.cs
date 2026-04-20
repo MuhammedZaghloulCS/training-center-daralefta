@@ -14,6 +14,10 @@ namespace Infrastructure.Configurations
                  .WithOne(s => s.Training)
                  .HasForeignKey(s => s.TrainingId)
                  .OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(t => t.TrainingsSurveys)
+                 .WithOne(ct => ct.Training)
+                 .HasForeignKey(ct => ct.trainingId)
+                 .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

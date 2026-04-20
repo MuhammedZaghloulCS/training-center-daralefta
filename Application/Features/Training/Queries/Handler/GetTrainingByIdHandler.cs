@@ -20,7 +20,7 @@ namespace Application.Features.Training.Queries.Handler
 
         public async Task<BaseResponse<TrainingDto>> Handle(GetTrainingByIdQuery request, CancellationToken cancellationToken)
         {
-            var trainings = await _unitOfWork.ITraining.FindRowAsync(t => t.Id == request.Id, t => t.UsersTrainings, t => t.Surveys);
+            var trainings = await _unitOfWork.ITraining.FindRowAsync(t => t.Id == request.Id, t => t.UsersTrainings);
             var training = trainings.FirstOrDefault();
 
             if (training == null||training.IsDeleted)

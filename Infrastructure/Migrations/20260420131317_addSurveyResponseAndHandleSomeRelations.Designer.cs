@@ -4,6 +4,7 @@ using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20260420131317_addSurveyResponseAndHandleSomeRelations")]
+    partial class addSurveyResponseAndHandleSomeRelations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -636,9 +639,6 @@ namespace Infrastructure.Migrations
                     b.Property<int>("SurveyId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TrainingId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -651,8 +651,6 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("SurveyId");
-
-                    b.HasIndex("TrainingId");
 
                     b.HasIndex("UserId");
 
@@ -1001,11 +999,6 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.Training", "Training")
-                        .WithMany("SurveyResponses")
-                        .HasForeignKey("TrainingId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
                     b.HasOne("Domain.Entities.ApplicationUser", "User")
                         .WithMany("SurveyResponses")
                         .HasForeignKey("UserId")
@@ -1013,8 +1006,6 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Survey");
-
-                    b.Navigation("Training");
 
                     b.Navigation("User");
                 });
@@ -1210,8 +1201,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("CoursesTrainings");
 
                     b.Navigation("Sessions");
-
-                    b.Navigation("SurveyResponses");
 
                     b.Navigation("TrainingsSurveys");
 

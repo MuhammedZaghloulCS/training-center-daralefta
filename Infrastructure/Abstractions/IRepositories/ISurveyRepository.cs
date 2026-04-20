@@ -5,7 +5,8 @@ using System.Text;
 
 namespace Infrastructure.Abstractions.IRepositories
 {
-    public interface ISurveyRepository:IGenericRepository<Survey,int>
+    public interface ISurveyRepository : IGenericRepository<Survey, int>
     {
+        public Task<Survey> GetSurveyWithQuestion(int id);
     }
 }

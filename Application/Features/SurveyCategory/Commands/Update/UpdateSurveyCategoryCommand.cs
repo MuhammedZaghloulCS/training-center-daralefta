@@ -10,5 +10,6 @@ namespace Application.Features.SurveyCategory.Commands.Update
         public string? UpdatedBy { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+
     }
 }

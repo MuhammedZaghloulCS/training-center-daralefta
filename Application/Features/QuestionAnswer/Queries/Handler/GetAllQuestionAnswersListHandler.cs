@@ -21,7 +21,7 @@ namespace Application.Features.QuestionAnswer.Queries.Handler
 
         public async Task<BaseResponse<List<QuestionAnswerListDTO>>> Handle(GetAllQuestionAnswersListQuery request, CancellationToken cancellationToken)
         {
-            var response = await _unitOfWork.ISurveyAnswer.GetAllAsync(a => a.SurveyQuestion, a => a.SurveyResponse);
+            var response = await _unitOfWork.ISurveyAnswer.GetAllAsync(a => a.Question, a => a.SurveyResponse);
 
             if (response == null || !response.Any()||response.All(r=>r.IsDeleted))
             {
@@ -39,7 +39,7 @@ namespace Application.Features.QuestionAnswer.Queries.Handler
                 UpdatedBy = a.UpdatedBy,
                 UpdatedAt = a.UpdatedAt,
                 Answer = a.Answer,
-                SurveyQuestionId = a.SurveyQuestionId,
+                SurveyQuestionId = a.questionId,
                 SurveyResponseId = a.SurveyResponseId
             }).ToList();
 

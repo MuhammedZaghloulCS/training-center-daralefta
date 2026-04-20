@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Survey.Queries.Handler
 {
-    public class GetSurveysPagedHandler : IRequestHandler<GetSurveysPagedQuery, BaseResponse<List<SurveyListDTO>>>
+    public class GetSurveysPagedHandler : IRequestHandler<GetSurveysPagedQuery, BaseResponse<List<SurveyDto>>>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -20,69 +20,55 @@ namespace Application.Features.Survey.Queries.Handler
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<BaseResponse<List<SurveyListDTO>>> Handle(GetSurveysPagedQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<SurveyDto>>> Handle(GetSurveysPagedQuery request, CancellationToken cancellationToken)
         {
+
 
             if (request.PageNumber < 1 || request.PageSize < 1)
             {
-                return BaseResponse<List<SurveyListDTO>>.BadRequestResponse("Invalid pagination parameters");
+                return BaseResponse<List<SurveyDto>>.BadRequestResponse("معلمات ترقيم الصفحات غير صالحة");
             }
+            Expression<Func<Domain.Entities.Survey, bool>> filter = null;
 
-            Expression<Func<Domain.Entities.Survey, bool>>? trainingPredicate = null;
-            if (request.TrainingId.HasValue) { 
-                trainingPredicate = s => s.TrainingId == request.TrainingId.Value;
-            }
-
-            Expression<System.Func<Domain.Entities.Survey, bool>>? searchPredicate = null;
-            if(!string.IsNullOrEmpty(request.Search))
+            if (!string.IsNullOrEmpty(request.Search))
             {
-                searchPredicate = s => s.Title.Contains(request.Search) || s.Description.Contains(request.Search) ;
+                var result = bool.TryParse(request.Search, out var isActive);
+
+                filter = s => s.Name.Contains(request.Search) || s.Description.Contains(request.Search);
+                if (result)
+                {
+                    filter = s => s.Name.Contains(request.Search) || s.Description.Contains(request.Search) || s.IsActive == isActive;
+                }
             }
 
-
-
-            var (items, totalCount) = await _unitOfWork.ISurvey.GetPaginatedAsync(
-                request.PageNumber,
-                request.PageSize,
-                trainingPredicate,
-                s => s.Id,
-                true,
-                s => s.CreatedByUser,
-                s => s.Training,
-                s => s.SurveyCategory,
-                s => s.SurveyQuestions,
-                s => s.SurveyResponses);
-
-            if (items == null || !items.Any()||items.All(i=>i.IsDeleted))
-            {
-                return BaseResponse<List<SurveyListDTO>>.SuccessResponse(
-                    new List<SurveyListDTO>(),
-                    request.PageNumber,
-                    request.PageSize,
-                    totalCount,
-                    "No survey found");
-            }
-
-            var data = items.Where(r => !r.IsDeleted).Select(s => new SurveyListDTO
+            var pagedSurveys = await _unitOfWork.ISurvey.GetPaginatedAsync(request.PageNumber, request.PageSize, filter, includeProperties: s => s.Questions);
+            
+            var surveyDTOs = pagedSurveys.items.Select(s => new SurveyDto
             {
                 Id = s.Id,
-                CreatedBy = s.CreatedBy,
-                CreatedDate = s.CreatedDate,
-                UpdatedBy = s.UpdatedBy,
-                UpdatedAt = s.UpdatedAt,
-                Title = s.Title,
+                Name = s.Name,
                 Description = s.Description,
-                CreatedByUserId = s.CreatedByUserId,
-                TrainingId = s.TrainingId,
-                SurveyCategoryId = s.SurveyCategoryId
+                IsActive = s.IsActive,
+                Questions = s.Questions.Select(q => new QuestionDto
+                {
+                    Id = q.Id,
+                    QuestionText = q.QuestionText,
+                    QuestionType = q.QuestionType,
+                    Options = q.Options,
+                    IsRequired = q.IsRequired,
+                    SortOrder = q.SortOrder
+
+                }).ToList()
             }).ToList();
 
-            return BaseResponse<List<SurveyListDTO>>.SuccessResponse(
-                data,
+
+            return BaseResponse<List<SurveyDto>>.SuccessResponse(
+                surveyDTOs,
                 request.PageNumber,
                 request.PageSize,
-                totalCount,
-                "Surveys retrieved successfully");
+                pagedSurveys.totalCount,
+                "تم تحميل البيانات بنجاح"
+            );
         }
     }
 }

@@ -40,7 +40,7 @@ namespace Application.Features.QuestionAnswer.Commands.Update
 
             if (!errors.Any())
             {
-                var existing = await _unitOfWork.ISurveyAnswer.FindRowAsync(a => a.SurveyResponseId == request.SurveyResponseId && a.SurveyQuestionId == request.SurveyQuestionId && a.Id != request.Id);
+                var existing = await _unitOfWork.ISurveyAnswer.FindRowAsync(a => a.SurveyResponseId == request.SurveyResponseId && a.questionId == request.SurveyQuestionId && a.Id != request.Id);
                 if (existing.Any())
                 {
                     errors.Add("Answer already exists for this question and response");
@@ -51,7 +51,7 @@ namespace Application.Features.QuestionAnswer.Commands.Update
                 return BaseResponse<QuestionAnswerDto>.FailureResponse("Validation failed", errors);
 
             answer.Answer = request.Answer;
-            answer.SurveyQuestionId = request.SurveyQuestionId;
+            answer.questionId = request.SurveyQuestionId;
             answer.SurveyResponseId = request.SurveyResponseId;
             answer.UpdatedBy = request.UpdatedBy;
             answer.UpdatedAt = DateTime.UtcNow;
@@ -67,7 +67,7 @@ namespace Application.Features.QuestionAnswer.Commands.Update
                 UpdatedBy = answer.UpdatedBy,
                 UpdatedAt = answer.UpdatedAt,
                 Answer = answer.Answer,
-                SurveyQuestionId = answer.SurveyQuestionId,
+                SurveyQuestionId = answer.questionId,
                 SurveyResponseId = answer.SurveyResponseId
             };
 

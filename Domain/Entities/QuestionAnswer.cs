@@ -9,10 +9,10 @@ namespace Domain.Entities
     {
         public string Answer { get; set; }
 
-        public int SurveyQuestionId { get; set; }
+        public int questionId { get; set; }
 
-        [ForeignKey(nameof(SurveyQuestionId))]
-        public SurveyQuestion SurveyQuestion { get; set; }
+        [ForeignKey(nameof(questionId))]
+        public Question Question { get; set; }
 
         public int SurveyResponseId { get; set; }
        

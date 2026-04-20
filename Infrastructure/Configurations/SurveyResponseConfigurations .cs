@@ -14,13 +14,15 @@ namespace Infrastructure.Configurations
                 .HasOne(r => r.User)
                 .WithMany(u => u.SurveyResponses)
                 .HasForeignKey(r => r.UserId)
-                .OnDelete(DeleteBehavior.NoAction); 
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder
-                .HasOne(r => r.Survey)
-                .WithMany(s => s.SurveyResponses)
-                .HasForeignKey(r => r.SurveyId)
-                .OnDelete(DeleteBehavior.Cascade); 
+                .HasOne(r => r.Training)
+                .WithMany(t => t.SurveyResponses)
+                .HasForeignKey(r => r.TrainingId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            
         }
     }
 }

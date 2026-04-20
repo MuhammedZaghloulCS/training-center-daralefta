@@ -17,9 +17,14 @@ namespace Domain.Entities
         [ForeignKey(nameof(SurveyId))]
         public Survey Survey { get; set; }
 
+        public int? TrainingId { get; set; }
+
+        [ForeignKey(nameof(TrainingId))]
+        public Training? Training { get; set; }
+
         public DateTime SubmittedAt { get; set; }
 
-        public ICollection<QuestionAnswer> Answers { get; set; }
+        public ICollection<QuestionAnswer> Answers { get; set; } = new List<QuestionAnswer>();
     }
 
 }

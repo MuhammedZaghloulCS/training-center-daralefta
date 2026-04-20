@@ -8,24 +8,26 @@ namespace Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<QuestionAnswer> builder)
         {
-            builder.ToTable("SurveyAnswers");
+
 
             builder.HasKey(a => a.Id);
 
-            builder.HasIndex(a => new { a.SurveyResponseId, a.SurveyQuestionId })
+            builder.HasIndex(a => new { a.SurveyResponseId, a.questionId })
                    .IsUnique();
 
             builder
                 .HasOne(a => a.SurveyResponse)
                 .WithMany(r => r.Answers)
                 .HasForeignKey(a => a.SurveyResponseId)
-                .OnDelete(DeleteBehavior.Cascade); 
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder
-                .HasOne(a => a.SurveyQuestion)
-                .WithMany(q => q.Answers)
-                .HasForeignKey(a => a.SurveyQuestionId)
-                .OnDelete(DeleteBehavior.NoAction); 
+                .HasOne(a => a.Question)
+                .WithMany()
+                .HasForeignKey(a => a.questionId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+
         }
     }
 }

@@ -32,7 +32,7 @@ namespace Application.Features.QuestionAnswer.Queries.Handler
                 null,
                 a => a.Id,
                 true,
-                a => a.SurveyQuestion,
+                a => a.Question,
                 a => a.SurveyResponse);
 
             if (items == null || !items.Any()||items.All(r=>r.IsDeleted))
@@ -53,7 +53,7 @@ namespace Application.Features.QuestionAnswer.Queries.Handler
                 UpdatedBy = a.UpdatedBy,
                 UpdatedAt = a.UpdatedAt,
                 Answer = a.Answer,
-                SurveyQuestionId = a.SurveyQuestionId,
+                SurveyQuestionId = a.questionId,
                 SurveyResponseId = a.SurveyResponseId
             }).ToList();
 

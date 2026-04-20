@@ -1,38 +1,22 @@
-﻿
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 
 namespace Domain.Entities
 {
-    public class Survey : BaseClass
+    public class Survey
     {
-        [Required]
-        [MaxLength(200)]
-        public string Title { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string? Description { get; set; }
+        public bool IsActive { get; set; }
 
-        [MaxLength(1000)]
-        public string Description { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
 
-        // Creator
-        public Guid? CreatedByUserId { get; set; }
-
-        [ForeignKey(nameof(CreatedByUserId))]
-        public ApplicationUser CreatedByUser { get; set; }
-
-        public int TrainingId { get; set; }
-        [ForeignKey(nameof(TrainingId))]
-        public Training Training { get; set; }
-
-
-        public int? SurveyCategoryId { get; set; }
-        [ForeignKey(nameof(SurveyCategoryId))]
-
-        public SurveyCategory SurveyCategory { get; set; }
-
-        public ICollection<SurveyQuestion> SurveyQuestions { get; set; }
+        public ICollection<Question> Questions { get; set; } = new List<Question>();
         public ICollection<SurveyResponse> SurveyResponses { get; set; }
-
+        public ICollection<TrainingsSurveys> TrainingsSurveys { get; set; }
 
 
     }

@@ -15,6 +15,7 @@ namespace Domain.Entities
         public ICollection<Session> Sessions { get; set; }
         public ICollection<CoursesTrainings> CoursesTrainings { get; set; }
         public ICollection<UsersTrainings> UsersTrainings { get; set; }
-        public ICollection<Survey> Surveys { get; set; }
+        public ICollection<TrainingsSurveys> TrainingsSurveys { get; set; }
+        public ICollection<SurveyResponse> SurveyResponses { get; set; }
     }
 }

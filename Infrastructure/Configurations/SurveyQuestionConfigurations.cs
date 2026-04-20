@@ -10,11 +10,7 @@ namespace Infrastructure.Configurations
         {
             builder.HasKey(q => q.Id);
 
-            builder
-                .HasOne(q => q.Survey)
-                .WithMany(s => s.SurveyQuestions)
-                .HasForeignKey(q => q.SurveyId)
-                .OnDelete(DeleteBehavior.NoAction); 
+           
         }
     }
 }

@@ -1,5 +1,7 @@
 using Application.Common;
 using Application.Features.Survey.DTOs;
+using Domain.Entities;
+using Domain.Enums;
 using Infrastructure.Abstractions.IUnitOfWork;
 using MediatR;
 using System;
@@ -21,58 +23,128 @@ namespace Application.Features.Survey.Commands.Update
 
         public async Task<BaseResponse<SurveyDto>> Handle(UpdateSurveyCommand request, CancellationToken cancellationToken)
         {
-            var survey = await _unitOfWork.ISurvey.GetByPkAsync(request.Id);
-            if (survey == null || survey.IsDeleted)
-            {
-                return BaseResponse<SurveyDto>.NotFoundResponse("Survey not found");
-            }
-
             var errors = new List<string>();
 
-            if (string.IsNullOrWhiteSpace(request.Title))
-                errors.Add("Title is required");
+            // =========================
+            // Validation
+            // =========================
+            if (string.IsNullOrWhiteSpace(request.Name))
+                errors.Add("الأسم مطلوب");
 
-            if (string.IsNullOrWhiteSpace(request.Description))
-                errors.Add("Description is required");
+            if (request.Name?.Length > 200)
+                errors.Add("يجب ألا يتجاوز الأسم 200 حرف");
 
-            if (request.CreatedByUserId == Guid.Empty)
-                errors.Add("CreatedByUserId is required");
+            if (request.Description != null && request.Description.Length > 500)
+                errors.Add("يجب ألا يتجاوز الوصف 500 حرف");
 
-            if (request.TrainingId < 1)
-                errors.Add("TrainingId is invalid");
+            if (request.Questions != null)
+            {
+                if (request.Questions.Count > 50)
+                    errors.Add("يجب ألا يتجاوز عدد الأسئلة 50 سؤال");
 
-            if (request.SurveyCategoryId < 1)
-                errors.Add("SurveyCategoryId is invalid");
+                foreach (var question in request.Questions)
+                {
+                    if (string.IsNullOrWhiteSpace(question.QuestionText))
+                        errors.Add("نص السؤال مطلوب");
+
+                    if (question.QuestionText?.Length > 500)
+                        errors.Add("يجب ألا يتجاوز نص السؤال 500 حرف");
+
+                    if (question.QuestionType == QuestionTypeEnum.MultipleChoice &&
+                        string.IsNullOrWhiteSpace(question.Options))
+                    {
+                        errors.Add("يجب أن يحتوي السؤال على خيارات");
+                    }
+                }
+            }
 
             if (errors.Any())
-                return BaseResponse<SurveyDto>.FailureResponse("Validation failed", errors);
+                return BaseResponse<SurveyDto>.FailureResponse("فشل تعديل الإستبيان", errors);
 
-            survey.Title = request.Title;
+            // =========================
+            // Get Survey with Questions
+            // =========================
+            var survey = await _unitOfWork.ISurvey.GetSurveyWithQuestion(request.Id);
+
+            if (survey == null)
+                return BaseResponse<SurveyDto>.FailureResponse("الاستبيان غير موجود");
+
+            // =========================
+            // Update Parent
+            // =========================
+            survey.Name = request.Name;
             survey.Description = request.Description;
-            survey.CreatedByUserId = request.CreatedByUserId;
-            survey.TrainingId = request.TrainingId;
-            survey.SurveyCategoryId = request.SurveyCategoryId;
-            survey.UpdatedBy = request.UpdatedBy;
-            survey.UpdatedAt = DateTime.UtcNow;
+            survey.IsActive = request.IsActive;
 
-            _unitOfWork.ISurvey.Update(survey);
+            // =========================
+            // Sync Questions (Update / Delete)
+            // =========================
+            var requestQuestions = request.Questions ?? new List<QuestionDto>();
+
+            foreach (var existing in survey.Questions.ToList())
+            {
+                var updated = requestQuestions.FirstOrDefault(q => q.Id == existing.Id);
+
+                if (updated == null)
+                {
+                    // Delete
+                    survey.Questions.Remove(existing);
+                }
+                else
+                {
+                    // Update
+                    existing.QuestionText = updated.QuestionText;
+                    existing.QuestionType = updated.QuestionType;
+                    existing.Options = updated.Options;
+                    existing.IsRequired = updated.IsRequired;
+                    existing.SortOrder = updated.SortOrder;
+                }
+            }
+
+            // =========================
+            // Add New Questions
+            // =========================
+            var newQuestions = requestQuestions
+                .Where(q => q.Id == 0)
+                .Select(q => new Question
+                {
+                    QuestionText = q.QuestionText,
+                    QuestionType = q.QuestionType,
+                    Options = q.Options,
+                    IsRequired = q.IsRequired,
+                    SortOrder = q.SortOrder
+                });
+
+            foreach (var q in newQuestions)
+            {
+                survey.Questions.Add(q);
+            }
+            // =========================
+            // Save Changes
+            // =========================
             await _unitOfWork.Complete();
 
+            // =========================
+            // Map to DTO
+            // =========================
             var dto = new SurveyDto
             {
                 Id = survey.Id,
-                CreatedBy = survey.CreatedBy,
-                CreatedDate = survey.CreatedDate,
-                UpdatedBy = survey.UpdatedBy,
-                UpdatedAt = survey.UpdatedAt,
-                Title = survey.Title,
+                Name = survey.Name,
                 Description = survey.Description,
-                CreatedByUserId = survey.CreatedByUserId,
-                TrainingId = survey.TrainingId,
-                SurveyCategoryId = survey.SurveyCategoryId
+                IsActive = survey.IsActive,
+                Questions = survey.Questions.Select(q => new QuestionDto
+                {
+                    Id = q.Id,
+                    QuestionText = q.QuestionText,
+                    QuestionType = q.QuestionType,
+                    Options = q.Options,
+                    IsRequired = q.IsRequired,
+                    SortOrder = q.SortOrder
+                }).ToList()
             };
 
-            return BaseResponse<SurveyDto>.SuccessResponse(dto, "Survey updated successfully");
+            return BaseResponse<SurveyDto>.SuccessResponse(dto);
         }
     }
 }

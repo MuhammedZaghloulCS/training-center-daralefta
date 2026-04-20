@@ -50,7 +50,7 @@ namespace API.Controllers
         public async Task<IActionResult> CreateAsync([FromBody] CreateSurveyCommand command)
         {
             var user = await _userManager.GetUserAsync(User);
-            command.CreatedBy = user?.FullName;
+            
             var response = await _mediator.Send(command);
             return response.Success ? Ok(response) : BadRequest(response);
         }
@@ -60,7 +60,7 @@ namespace API.Controllers
         {
             command.Id = id;
             var user = await _userManager.GetUserAsync(User);
-            command.UpdatedBy = user?.FullName;
+            //command.UpdatedBy = user?.FullName;
             var response = await _mediator.Send(command);
             return response.Success ? Ok(response) : BadRequest(response);
         }
