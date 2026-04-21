@@ -5,8 +5,8 @@ using System.Collections.Generic;
 
 namespace Application.Features.Survey.Queries.Model
 {
-    public class GetAllSurveysListQuery : IRequest<BaseResponse<List<SurveyDto>>>
+    public class GetStudentSurveysQuery : IRequest<BaseResponse<List<StudentSurveyDto>>>
     {
-        public string Search { get; set; } = string.Empty;
+        public Guid UserId { get; set; }
     }
 }

@@ -2,15 +2,17 @@ using Application.Common;
 using Application.Features.Survey.DTOs;
 using Application.Features.Survey.Queries.Model;
 using Infrastructure.Abstractions.IUnitOfWork;
+using Mapster;
 using MediatR;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Application.Features.Survey.Queries.Handler
 {
-    public class GetAllSurveysListHandler : IRequestHandler<GetAllSurveysListQuery, BaseResponse<List<SurveyListDTO>>>
+    public class GetAllSurveysListHandler : IRequestHandler<GetAllSurveysListQuery, BaseResponse<List<SurveyDto>>>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -19,42 +21,18 @@ namespace Application.Features.Survey.Queries.Handler
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<BaseResponse<List<SurveyListDTO>>> Handle(GetAllSurveysListQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<SurveyDto>>> Handle(GetAllSurveysListQuery request, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
-            //var response = await _unitOfWork.ISurvey.GetAllAsync(
-            //    s => s.CreatedByUser,
-            //    s => s.Training,
-            //    s => s.SurveyCategory,
-            //    s => s.SurveyQuestions,
-            //    s => s.SurveyResponses);
+            Expression<Func<Domain.Entities.Survey, bool>> filter = s => s.IsActive;
 
-            //if (response == null || !response.Any()||response.All(r=>r.IsDeleted))
-            //{
-            //    return BaseResponse<List<SurveyListDTO>>.SuccessResponse(
-            //        new List<SurveyListDTO>(),
-            //        "No survey found"
-            //    );
-            //}
+            if (!string.IsNullOrEmpty(request.Search))
+            {
+                filter = s => (s.Name.Contains(request.Search) || s.Description.Contains(request.Search)) && s.IsActive;
+            }
+            var surveys = await _unitOfWork.ISurvey.FindRowAsync(filter, s => s.Questions);
+            var surveysDto = surveys.Adapt<List<SurveyDto>>();
 
-            //var data = response.Where(r => !r.IsDeleted).Select(s => new SurveyListDTO
-            //{
-            //    Id = s.Id,
-            //    CreatedBy = s.CreatedBy,
-            //    CreatedDate = s.CreatedDate,
-            //    UpdatedBy = s.UpdatedBy,
-            //    UpdatedAt = s.UpdatedAt,
-            //    Title = s.Title,
-            //    Description = s.Description,
-            //    CreatedByUserId = s.CreatedByUserId,
-            //    TrainingId = s.TrainingId,
-            //    SurveyCategoryId = s.SurveyCategoryId
-            //}).ToList();
-
-            //return BaseResponse<List<SurveyListDTO>>.SuccessResponse(
-            //    data,
-            //    "Surveys retrieved successfully"
-            //);
+            return BaseResponse<List<SurveyDto>>.SuccessResponse(surveysDto);
         }
     }
 }

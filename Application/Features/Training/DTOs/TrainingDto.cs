@@ -18,6 +18,7 @@ namespace Application.Features.Training.DTOs
         public ICollection<CoursesTrainings>? CoursesTrainings { get; set; }
 
         public List<Domain.Entities.UsersTrainings>? UsersTrainings { get; set; }
+        public ICollection<TrainingsSurveys>? TrainingsSurveys { get; set; }
 
     }
 }

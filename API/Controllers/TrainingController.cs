@@ -2,6 +2,7 @@ using Application.Features.Training.Commands.Create;
 using Application.Features.Training.Commands.Delete;
 using Application.Features.Training.Commands.Update;
 using Application.Features.Training.Commands.Update.Trainees;
+using Application.Features.Training.Commands.Update.Surveys;
 using Application.Features.Training.Queries.Model;
 using Domain.Entities;
 using MediatR;
@@ -75,6 +76,14 @@ namespace API.Controllers
         public async Task<IActionResult> UpdateAsync([FromBody] UpdateTrainingTraineesCommand command)
         {
 
+            var response = await _mediator.Send(command);
+            return response.Success ? Ok(response) : BadRequest(response);
+        }
+
+        [HttpPatch("updatesurveys")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateSurveysAsync([FromBody] UpdateTrainingSurveysCommand command)
+        {
             var response = await _mediator.Send(command);
             return response.Success ? Ok(response) : BadRequest(response);
         }

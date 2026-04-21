@@ -29,6 +29,9 @@ namespace Infrastructure.Implementations.UnitOfWork
         private UserSessionRepository userSessionRepository;
         private UserCourseRepository userCourseRepository;
         private UserTrainingRepository userTrainingRepository;
+        private TrainingsSurveysRepository trainingsSurveysRepository;
+        private QuestionAnswerRepository questionAnswerRepository;
+        private QuestionRepository questionRepository;
         private readonly ApplicationContext context;
         #endregion
         //CTOR
@@ -236,6 +239,42 @@ namespace Infrastructure.Implementations.UnitOfWork
                     userTrainingRepository = new UserTrainingRepository(context);
                 }
                 return userTrainingRepository;
+            }
+        }
+
+        public ITrainingsSurveysRepository ITrainingsSurveys
+        {
+            get
+            {
+                if (trainingsSurveysRepository == null)
+                {
+                    trainingsSurveysRepository = new TrainingsSurveysRepository(context);
+                }
+                return trainingsSurveysRepository;
+            }
+        }
+
+        public IQuestionAnswerRepository IQuestionAnswer
+        {
+            get
+            {
+                if (questionAnswerRepository == null)
+                {
+                    questionAnswerRepository = new QuestionAnswerRepository(context);
+                }
+                return questionAnswerRepository;
+            }
+        }
+
+        public IQuestionRepository IQuestion
+        {
+            get
+            {
+                if (questionRepository == null)
+                {
+                    questionRepository = new QuestionRepository(context);
+                }
+                return questionRepository;
             }
         }
      

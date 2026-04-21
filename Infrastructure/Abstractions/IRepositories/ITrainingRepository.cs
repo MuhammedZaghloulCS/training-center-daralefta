@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Infrastructure.Implementations.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -17,6 +18,10 @@ namespace Infrastructure.Abstractions.IRepositories
         public Task<Training> GetTrainingWithUsersTrainingsById(int id);
 
         public Task<Training?> GetTrainingWithSessionsById(int trainingId, params Expression<Func<Training, object>>[] includes);
+        public Task<(List<TrainingPagedDto>, int totalNumber)> GetTrainingsPagedProjectedAsync(
+    int pageNumber = 1,
+    int pageSize = 10,
+    Expression<Func<Training, bool>> filter = null);
 
     }
 }
