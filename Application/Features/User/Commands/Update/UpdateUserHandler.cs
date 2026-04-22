@@ -10,6 +10,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net.Http.Json;
 using System.Text;
@@ -40,7 +41,21 @@ namespace Application.Features.User.Commands.Update
             if (existingUser == null || existingUser.IsDeleted)
                 return BaseResponse<UserDTO>.FailureResponse("User not found",
                     new List<string> { $"No user found with Username: {request.UpdateUser.UserName}" });
-
+            var userWithSameEmail = await _userManager.FindByEmailAsync(request.UpdateUser.Email);
+            if (userWithSameEmail != null && userWithSameEmail.Id != existingUser.Id)
+            {
+                return BaseResponse<UserDTO>.FailureResponse("البريد الإلكتروني مستخدم بالفعل");
+            }
+            var userWithSamePhone = await Task.Run(() => _userManager.Users.FirstOrDefault(u => u.PhoneNumber == request.UpdateUser.PhoneNumber));
+            if (userWithSamePhone != null && userWithSamePhone.Id != existingUser.Id)
+            {
+                return BaseResponse<UserDTO>.FailureResponse("رقم الهاتف مستخدم بالفعل");
+            }
+            var userWithSamePin = await Task.Run(() => _userManager.Users.FirstOrDefault(u => u.pin == request.UpdateUser.pin));
+            if (userWithSamePin != null && userWithSamePin.Id != existingUser.Id)
+            {
+                return BaseResponse<UserDTO>.FailureResponse("كود البصمة مستخدم بالفعل");
+            }
             // Update properties
             existingUser.Email = request.UpdateUser.Email ?? existingUser.Email;
             existingUser.PhoneNumber = request.UpdateUser.PhoneNumber ?? existingUser.PhoneNumber;
@@ -64,6 +79,7 @@ namespace Application.Features.User.Commands.Update
             existingUser.AcademicQualification = request.UpdateUser.AcademicQualification ?? existingUser.AcademicQualification;
             existingUser.Appreciation = request.UpdateUser.Appreciation ?? existingUser.Appreciation;
             existingUser.ImagePath = request.UpdateUser.ImagePath ?? existingUser.ImagePath;
+            existingUser.pin = request.UpdateUser.pin == "0" ? null : request.UpdateUser.pin;
 
             // ✅ Update roles دايماً
             var oldRoles = await _userManager.GetRolesAsync(existingUser);
@@ -99,17 +115,13 @@ namespace Application.Features.User.Commands.Update
                     userInSys.mobile_phone = existingUser.PhoneNumber;
                     userInSys.email = existingUser.Email;
                     userInSys.birthday = existingUser.BirthDate;
-
+                   
                     var newSysUser = new
                     {
                         Pin = request.UpdateUser.pin.ToString(),
                         Name = existingUser.FirstName,
                         LastName = existingUser.LastName,
-                        Email = existingUser.Email,
-                        Gender = existingUser.Gender != Gender.male && existingUser.Gender != Gender.female
-                                        ? "M" : existingUser.Gender.GetDescription(),
-                        MobilePhone = existingUser.PhoneNumber,
-                        personPwd = request.UpdateUser.personPwd
+                        CardNo = "",
                     };
 
                     // ✅ PostAsJsonAsync مش PostAsync
