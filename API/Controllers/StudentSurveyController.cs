@@ -37,6 +37,42 @@ namespace API.Controllers
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
+        [HttpGet("pending")]
+        public async Task<IActionResult> GetPendingSurveys([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, [FromQuery] string? search = null)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return Unauthorized();
+
+            var query = new GetPendingStudentSurveysQuery 
+            { 
+                UserId = user.Id,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                Search = search
+            };
+            var response = await _mediator.Send(query);
+            return response.Success ? Ok(response) : BadRequest(response);
+        }
+
+        [HttpGet("completed")]
+        public async Task<IActionResult> GetCompletedSurveys([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, [FromQuery] string? search = null)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return Unauthorized();
+
+            var query = new GetCompletedStudentSurveysQuery 
+            { 
+                UserId = user.Id,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                Search = search
+            };
+            var response = await _mediator.Send(query);
+            return response.Success ? Ok(response) : BadRequest(response);
+        }
+
         [HttpGet("{surveyId:int}")]
         public async Task<IActionResult> GetSurveyForResponse(int surveyId)
         {

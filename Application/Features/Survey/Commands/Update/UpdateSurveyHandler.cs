@@ -55,6 +55,28 @@ namespace Application.Features.Survey.Commands.Update
                     {
                         errors.Add("يجب أن يحتوي السؤال على خيارات");
                     }
+
+                    // Check for duplicate options in MultipleChoice questions
+                    if (question.QuestionType == QuestionTypeEnum.MultipleChoice && !string.IsNullOrWhiteSpace(question.Options))
+                    {
+                        try
+                        {
+                            var optionsList = System.Text.Json.JsonSerializer.Deserialize<List<string>>(question.Options);
+                            if (optionsList != null && optionsList.Count > 0)
+                            {
+                                var normalizedOptions = optionsList.Select(o => o.Trim().ToLower()).ToList();
+                                var distinctOptions = normalizedOptions.Distinct().ToList();
+                                if (distinctOptions.Count < normalizedOptions.Count)
+                                {
+                                    errors.Add($"السؤال '{question.QuestionText}' يحتوي على خيارات مكررة");
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            // If JSON parsing fails, ignore this validation
+                        }
+                    }
                 }
             }
 

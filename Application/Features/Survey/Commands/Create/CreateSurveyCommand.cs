@@ -10,7 +10,7 @@ namespace Application.Features.Survey.Commands.Create
     {
         public string Name { get; set; }
         public string? Description { get; set; }
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
         public List<QuestionDto>? Questions { get; set; }
 
     }
