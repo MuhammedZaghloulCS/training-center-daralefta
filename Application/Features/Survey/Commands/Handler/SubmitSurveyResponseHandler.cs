@@ -10,6 +10,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+// Alias for clarity
+using CairoTime = Application.Common.DateTimeHelper;
+
 namespace Application.Features.Survey.Commands.Handler
 {
     public class SubmitSurveyResponseHandler : IRequestHandler<SubmitSurveyResponseCommand, BaseResponse<SurveyResponseDto>>
@@ -57,8 +60,8 @@ namespace Application.Features.Survey.Commands.Handler
                 UserId = userId,
                 SurveyId = request.SurveyId,
                 TrainingId = request.TrainingId,
-                SubmittedAt = DateTime.UtcNow,
-                CreatedDate = DateTime.UtcNow,
+                SubmittedAt = CairoTime.Now,
+                CreatedDate = CairoTime.Now,
                 CreatedBy = createdBy
             };
 
@@ -71,7 +74,7 @@ namespace Application.Features.Survey.Commands.Handler
                 SurveyResponseId = surveyResponse.Id,
                 questionId = a.QuestionId,
                 Answer = a.Answer,
-                CreatedDate = DateTime.UtcNow,
+                CreatedDate = CairoTime.Now,
                 CreatedBy = createdBy
             }).ToList();
 

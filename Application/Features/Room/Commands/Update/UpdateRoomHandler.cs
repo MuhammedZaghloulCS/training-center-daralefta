@@ -8,6 +8,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+// Alias for clarity
+using CairoTime = Application.Common.DateTimeHelper;
+
 namespace Application.Features.Room.Commands.Update
 {
     public class UpdateRoomHandler : IRequestHandler<UpdateRoomCommand, BaseResponse<RoomDto>>
@@ -54,7 +57,7 @@ namespace Application.Features.Room.Commands.Update
             room.AttRoomIdOutSide = request.AttRoomIdOutSide;
             room.AttRoomIdinside = request.AttRoomIdinside;
             room.UpdatedBy = request.UpdatedBy;
-            room.UpdatedAt = DateTime.UtcNow;
+            room.UpdatedAt = CairoTime.Now;
 
             _unitOfWork.IRooms.Update(room);
             await _unitOfWork.Complete();

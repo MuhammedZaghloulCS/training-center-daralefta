@@ -29,7 +29,7 @@ namespace Application.Features.Survey.Queries.Handler
             {
                 filter = s => (s.Name.Contains(request.Search) || s.Description.Contains(request.Search)) && s.IsActive;
             }
-            var surveys = await _unitOfWork.ISurvey.FindRowAsync(filter, s => s.Questions);
+            var surveys = await _unitOfWork.ISurvey.NewFindRowAsync(filter, orderBy: s => s.CreatedAt, acsending: false, s => s.Questions);
             var surveysDto = surveys.Adapt<List<SurveyDto>>();
 
             return BaseResponse<List<SurveyDto>>.SuccessResponse(surveysDto);

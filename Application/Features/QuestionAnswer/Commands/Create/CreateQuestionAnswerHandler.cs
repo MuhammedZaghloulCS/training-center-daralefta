@@ -8,6 +8,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+// Alias for clarity
+using CairoTime = Application.Common.DateTimeHelper;
+
 namespace Application.Features.QuestionAnswer.Commands.Create
 {
     public class CreateQuestionAnswerHandler : IRequestHandler<CreateQuestionAnswerCommand, BaseResponse<QuestionAnswerDto>>
@@ -50,7 +53,7 @@ namespace Application.Features.QuestionAnswer.Commands.Create
             var answer = new Domain.Entities.QuestionAnswer
             {
                 CreatedBy = request.CreatedBy,
-                CreatedDate = DateTime.UtcNow,
+                CreatedDate = CairoTime.Now,
                 Answer = request.Answer,
                 questionId = request.SurveyQuestionId,
                 SurveyResponseId = request.SurveyResponseId

@@ -8,6 +8,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+// Alias for clarity
+using CairoTime = Application.Common.DateTimeHelper;
+
 namespace Application.Features.SurveyResponse.Commands.Create
 {
     public class CreateSurveyResponseHandler : IRequestHandler<CreateSurveyResponseCommand, BaseResponse<SurveyResponseDto>>
@@ -41,10 +44,10 @@ namespace Application.Features.SurveyResponse.Commands.Create
             var surveyResponse = new Domain.Entities.SurveyResponse
             {
                 CreatedBy = request.CreatedBy,
-                CreatedDate = DateTime.UtcNow,
+                CreatedDate = CairoTime.Now,
                 UserId = request.UserId,
                 SurveyId = request.SurveyId,
-                SubmittedAt = request.SubmittedAt
+                SubmittedAt = CairoTime.Now
             };
 
             await _unitOfWork.ISurveyResponse.AddAsync(surveyResponse);

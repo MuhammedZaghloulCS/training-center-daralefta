@@ -9,6 +9,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+// Alias for clarity
+using CairoTime = Application.Common.DateTimeHelper;
+
 namespace Application.Features.Building.Commands.Create
 {
     public class CreateBuildingHandler : IRequestHandler<CreateBuildingCommand, BaseResponse<BuildingDto>>
@@ -49,7 +52,7 @@ namespace Application.Features.Building.Commands.Create
             var building = new Domain.Entities.Building
             {
                 CreatedBy = request.CreatedBy,
-                CreatedDate = DateTime.UtcNow,
+                CreatedDate = CairoTime.Now,
                 Name = request.Name,
                 Description = request.Description,
                 SysBuildingId=request.SysBuildingId,

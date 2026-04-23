@@ -67,6 +67,7 @@ namespace Application.Features.Survey.DTOs
         public int QuestionCount { get; set; }
         public int ResponseCount { get; set; }
         public DateTime? CreatedAt { get; set; }
+        public DateTime? LatestResponseAt { get; set; }
     }
 
     // Survey response details

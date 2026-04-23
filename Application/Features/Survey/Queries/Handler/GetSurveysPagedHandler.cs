@@ -41,7 +41,7 @@ namespace Application.Features.Survey.Queries.Handler
                 }
             }
 
-            var pagedSurveys = await _unitOfWork.ISurvey.GetPaginatedAsync(request.PageNumber, request.PageSize, filter, includeProperties: s => s.Questions);
+            var pagedSurveys = await _unitOfWork.ISurvey.GetPaginatedAsync(request.PageNumber, request.PageSize, filter,orderBy:s=>s.CreatedAt,ascending:false, includeProperties: s => s.Questions);
             
             var surveyDTOs = pagedSurveys.items.Select(s => new SurveyDto
             {

@@ -48,8 +48,10 @@ namespace Application.Features.Survey.Queries.Handler
             );
 
             // Get user's existing responses
-            var existingResponses = await _unitOfWork.ISurveyResponse.FindRowAsync(
-                sr => sr.UserId == userId
+            var existingResponses = await _unitOfWork.ISurveyResponse.NewFindRowAsync(
+                sr => sr.UserId == userId,
+                                orderBy: s => s.CreatedDate, acsending: false
+
             );
             var respondedSurveyIds = existingResponses.Select(sr => sr.SurveyId).ToHashSet();
 

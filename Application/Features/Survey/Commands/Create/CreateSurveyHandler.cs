@@ -11,6 +11,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+// Alias for clarity
+using CairoTime = Application.Common.DateTimeHelper;
+
 namespace Application.Features.Survey.Commands.Create
 {
     public class CreateSurveyHandler : IRequestHandler<CreateSurveyCommand, BaseResponse<SurveyDto>>
@@ -89,7 +92,7 @@ namespace Application.Features.Survey.Commands.Create
                 Name = request.Name,
                 Description = request.Description,
                 IsActive = request.IsActive,
-                CreatedAt = DateTime.UtcNow,
+                CreatedAt = CairoTime.Now,
                 
             };
 

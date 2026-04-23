@@ -18,6 +18,9 @@ using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
+// Alias for clarity
+using CairoTime = Application.Common.DateTimeHelper;
+
 namespace Application.Features.Session.Commands.Update
 {
     public class UpdateSessionHandler : IRequestHandler<UpdateSessionCommand, BaseResponse<SessionDto>>
@@ -81,7 +84,7 @@ namespace Application.Features.Session.Commands.Update
             session.RoomId = request.RoomId;
             session.CourseId = request.CourseId;
             session.UpdatedBy = request.UpdatedBy;
-            session.UpdatedAt = DateTime.UtcNow;
+            session.UpdatedAt = CairoTime.Now;
 
             var existingUserIds = session.LecturerersSessions
     .Select(x => x.UserId)

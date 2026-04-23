@@ -11,6 +11,7 @@ namespace Infrastructure.Implementations.Repository
     public class UserTrainingRepository : GenericRepository<Domain.Entities.UsersTrainings, int>, Abstractions.IRepositories.IUserTrainingRepository
     {
         private readonly ApplicationContext _context;
+
         public UserTrainingRepository(ApplicationContext context) : base(context)
         {
             _context = context;
@@ -18,10 +19,11 @@ namespace Infrastructure.Implementations.Repository
 
         public async Task<List<Schedule>> GetScheduleAsync(Expression<Func<UsersTrainings, bool>> predicate)
         {
-            
+            var today = DateTime.Today;
             var sessions = await _context.UsersTrainings
                  .Where(predicate)
                  .SelectMany(ut => ut.Training.Sessions)
+                 .Where(s => s.SessionDate >= today)
                  .Select(s => new
                  {
                      Time = $"{s.StartTime.ToArabic12Hour()} - {s.EndTime.ToArabic12Hour()}",
@@ -61,9 +63,10 @@ namespace Infrastructure.Implementations.Repository
         }
         public async Task<List<Schedule>> GetLecturerScheduleAsync(Expression<Func<UserSession, bool>> predicate)
         {
+            var today = DateTime.Today;
             var sessions = await _context.UserSessions
                  .Where(predicate)
-                 
+                 .Where(s => s.Session.SessionDate >= today)
                  .Select(s => new
                  {
                      Training = s.Session.Training.Title,

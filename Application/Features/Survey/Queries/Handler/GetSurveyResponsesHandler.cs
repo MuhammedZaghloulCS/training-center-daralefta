@@ -34,8 +34,9 @@ namespace Application.Features.Survey.Queries.Handler
             }
 
             // Get survey with questions
-            var survey = await _unitOfWork.ISurvey.FindRowAsync(
+            var survey = await _unitOfWork.ISurvey.NewFindRowAsync(
                 s => s.Id == request.SurveyId,
+                                orderBy: s => s.CreatedAt, acsending: false,
                 s => s.Questions
             );
 
@@ -46,8 +47,10 @@ namespace Application.Features.Survey.Queries.Handler
             }
 
             // Get responses with answers
-            var responses = await _unitOfWork.ISurveyResponse.FindRowAsync(
+            var responses = await _unitOfWork.ISurveyResponse.NewFindRowAsync(
                 sr => sr.SurveyId == request.SurveyId,
+                
+                                orderBy: s => s.CreatedDate, acsending: false,
                 sr => sr.Answers
             );
 

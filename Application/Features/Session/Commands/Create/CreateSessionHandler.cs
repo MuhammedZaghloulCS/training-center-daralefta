@@ -22,6 +22,9 @@ using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 
+// Alias for clarity
+using CairoTime = Application.Common.DateTimeHelper;
+
 namespace Application.Features.Session.Commands.Create
 {
     public class CreateSessionHandler : IRequestHandler<CreateSessionCommand, BaseResponse<SessionDto>>
@@ -102,7 +105,7 @@ namespace Application.Features.Session.Commands.Create
             var session = new Domain.Entities.Session
             {
                 CreatedBy = "System",
-                CreatedDate = DateTime.UtcNow,
+                CreatedDate = CairoTime.Now,
                 SessionDate = request.SessionDate,
                 StartTime = request.StartTime,
                 EndTime = request.EndTime,

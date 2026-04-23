@@ -8,6 +8,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+// Alias for clarity
+using CairoTime = Application.Common.DateTimeHelper;
+
 namespace Application.Features.Building.Commands.Update
 {
     public class UpdateBuildingHandler : IRequestHandler<UpdateBuildingCommand, BaseResponse<BuildingDto>>
@@ -41,7 +44,7 @@ namespace Application.Features.Building.Commands.Update
             building.Name = request.Name;
             building.Description = request.Description;
             building.UpdatedBy = request.UpdatedBy;
-            building.UpdatedAt = DateTime.UtcNow;
+            building.UpdatedAt = CairoTime.Now;
 
             _unitOfWork.IBuildings.Update(building);
             await _unitOfWork.Complete();

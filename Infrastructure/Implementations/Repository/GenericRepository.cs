@@ -42,6 +42,21 @@ namespace Infrastructure.Implementations.Repository
 
             return await query.ToListAsync();
         }
+        public async Task<List<T>> NewFindRowAsync(Expression<Func<T, bool>> predicate = null, Expression<Func<T, object>> orderBy = null, bool acsending = true, params Expression<Func<T, object>>[] includeProperties)
+        {
+            var query = dbSet.AsQueryable();
+            foreach (var includeProperty in includeProperties)
+            {
+                query = query.Include(includeProperty);
+            }
+            if (predicate != null)
+                query = query.Where(predicate);
+            if (orderBy != null)
+            {
+                query = acsending ? query.OrderBy(orderBy) : query.OrderByDescending(orderBy);
+            }
+            return await query.ToListAsync();
+        }
 
         public async Task<List<T>> GetAllAsync(params Expression<Func<T, object>>[] includeProperties)
         {

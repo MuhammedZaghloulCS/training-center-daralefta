@@ -8,6 +8,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+// Alias for clarity
+using CairoTime = Application.Common.DateTimeHelper;
+
 namespace Application.Features.SurveyResponse.Commands.Update
 {
     public class UpdateSurveyResponseHandler : IRequestHandler<UpdateSurveyResponseCommand, BaseResponse<SurveyResponseDto>>
@@ -45,7 +48,7 @@ namespace Application.Features.SurveyResponse.Commands.Update
             surveyResponse.SurveyId = request.SurveyId;
             surveyResponse.SubmittedAt = request.SubmittedAt;
             surveyResponse.UpdatedBy = request.UpdatedBy;
-            surveyResponse.UpdatedAt = DateTime.UtcNow;
+            surveyResponse.UpdatedAt = CairoTime.Now;
 
             _unitOfWork.ISurveyResponse.Update(surveyResponse);
             await _unitOfWork.Complete();

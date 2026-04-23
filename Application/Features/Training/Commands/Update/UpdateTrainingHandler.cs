@@ -9,6 +9,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+// Alias for clarity
+using CairoTime = Application.Common.DateTimeHelper;
+
 namespace Application.Features.Training.Commands.Update
 {
     public class UpdateTrainingHandler : IRequestHandler<UpdateTrainingCommand, BaseResponse<TrainingDto>>
@@ -43,7 +46,7 @@ namespace Application.Features.Training.Commands.Update
                 errors.Add("يجب أن يكون تاريخ الانتهاء أكبر من أو يساوي تاريخ البدء");
 
             
-            var today = DateTime.UtcNow.Date;
+            var today = CairoTime.Now.Date;
 
             if (training.StartDate.Date <= today
                 && request.StartDate.Date < training.StartDate.Date)
@@ -71,7 +74,7 @@ namespace Application.Features.Training.Commands.Update
             training.StartDate = request.StartDate;
             training.EndDate = request.EndDate;
             training.UpdatedBy = request.UpdatedBy;
-            training.UpdatedAt = DateTime.UtcNow;
+            training.UpdatedAt = CairoTime.Now;
             _unitOfWork.ITraining.Update(training);
             await _unitOfWork.Complete();
 

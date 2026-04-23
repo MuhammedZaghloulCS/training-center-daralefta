@@ -8,6 +8,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+// Alias for clarity
+using CairoTime = Application.Common.DateTimeHelper;
+
 namespace Application.Features.Course.Commands.Update
 {
     public class UpdateCourseHandler : IRequestHandler<UpdateCourseCommand, BaseResponse<CourseDto>>
@@ -50,7 +53,7 @@ namespace Application.Features.Course.Commands.Update
             course.Prerequisites = request.Prerequisites;
             course.Duration = request.Duration;
             course.UpdatedBy = request.UpdatedBy;
-            course.UpdatedAt = DateTime.UtcNow;
+            course.UpdatedAt = CairoTime.Now;
 
             _unitOfWork.ICourse.Update(course);
             await _unitOfWork.Complete();

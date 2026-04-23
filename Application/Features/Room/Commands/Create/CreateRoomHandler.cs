@@ -9,6 +9,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+// Alias for clarity
+using CairoTime = Application.Common.DateTimeHelper;
+
 namespace Application.Features.Room.Commands.Create
 {
     public class CreateRoomHandler : IRequestHandler<CreateRoomCommand, BaseResponse<RoomDto>>
@@ -61,7 +64,7 @@ namespace Application.Features.Room.Commands.Create
             var room = new Domain.Entities.Room
             {
                 CreatedBy = request.CreatedBy,
-                CreatedDate = DateTime.UtcNow,
+                CreatedDate = CairoTime.Now,
                 Name = request.Name,
                 Capacity = request.Capacity,
                 Location = request.Location,

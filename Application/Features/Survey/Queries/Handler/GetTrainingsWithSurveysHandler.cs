@@ -37,8 +37,10 @@ namespace Application.Features.Survey.Queries.Handler
             var trainingIds = trainingSurveys.Select(ts => ts.trainingId.Value).Distinct().ToList();
 
             // Get trainings
-            var trainings = await _unitOfWork.ITraining.FindRowAsync(
+            var trainings = await _unitOfWork.ITraining.NewFindRowAsync(
                 t => trainingIds.Contains(t.Id)
+                ,
+                                orderBy: s => s.CreatedDate, acsending: false
             );
 
             // Apply search filter if provided
@@ -50,8 +52,8 @@ namespace Application.Features.Survey.Queries.Handler
 
             // Get response counts per training
             var trainingIdsFiltered = trainings.Select(t => t.Id).ToList();
-            var responses = await _unitOfWork.ISurveyResponse.FindRowAsync(
-                sr => sr.TrainingId.HasValue && trainingIdsFiltered.Contains(sr.TrainingId.Value)
+            var responses = await _unitOfWork.ISurveyResponse.NewFindRowAsync(
+                sr => sr.TrainingId.HasValue && trainingIdsFiltered.Contains(sr.TrainingId.Value),orderBy:t=>t.CreatedDate,acsending: false
             );
 
             // Build result

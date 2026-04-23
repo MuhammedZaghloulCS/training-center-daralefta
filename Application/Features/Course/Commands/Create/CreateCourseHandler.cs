@@ -8,6 +8,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+// Alias for clarity
+using CairoTime = Application.Common.DateTimeHelper;
+
 namespace Application.Features.Course.Commands.Create
 {
     public class CreateCourseHandler : IRequestHandler<CreateCourseCommand, BaseResponse<CourseDto>>
@@ -43,7 +46,7 @@ namespace Application.Features.Course.Commands.Create
             var course = new Domain.Entities.Course
             {
                 CreatedBy="system",
-                CreatedDate = DateTime.UtcNow,
+                CreatedDate = CairoTime.Now,
                 Name = request.Name,
                 Description = request.Description,
                 Prerequisites = request.Prerequisites,

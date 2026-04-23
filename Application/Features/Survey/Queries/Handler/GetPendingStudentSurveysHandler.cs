@@ -53,8 +53,10 @@ namespace Application.Features.Survey.Queries.Handler
             );
 
             // Get user's existing responses
-            var existingResponses = await _unitOfWork.ISurveyResponse.FindRowAsync(
-                sr => sr.UserId == userId
+            var existingResponses = await _unitOfWork.ISurveyResponse.NewFindRowAsync(
+                sr => sr.UserId == userId,
+                                orderBy: s => s.CreatedDate, acsending: false
+
             );
             var respondedSurveyIds = existingResponses.Select(sr => sr.SurveyId).ToHashSet();
 
@@ -109,7 +111,7 @@ namespace Application.Features.Survey.Queries.Handler
                 request.PageNumber,
                 request.PageSize,
                 totalCount,
-                "ØªÙ  ØªØ Ø Ù Ù Ø§ÙØ§Ø³ØªØ¨ÙØ§ÙØ§Øª Ø§ÙÙ ÙØªØ¸Ø±Ø© Ø¨Ù Ø§Ù Ø§Ø­"
+                "تم تحميل الاستبيانات المنتظرة بنجاح"
             );
         }
     }

@@ -47,14 +47,18 @@ namespace Application.Features.Survey.Queries.Handler
             var surveyIds = trainingSurveys.Select(ts => ts.surveyId.Value).Distinct().ToList();
 
             // Get surveys with questions
-            var surveys = await _unitOfWork.ISurvey.FindRowAsync(
+            var surveys = await _unitOfWork.ISurvey.NewFindRowAsync(
                 s => surveyIds.Contains(s.Id) && s.IsActive,
+                orderBy: s => s.CreatedAt, acsending: false,
+
                 s => s.Questions
             );
 
             // Get user's existing responses
-            var existingResponses = await _unitOfWork.ISurveyResponse.FindRowAsync(
-                sr => sr.UserId == userId
+            var existingResponses = await _unitOfWork.ISurveyResponse.NewFindRowAsync(
+                sr => sr.UserId == userId,
+                                orderBy: s => s.CreatedDate, acsending: false
+
             );
             var respondedSurveyIds = existingResponses.Select(sr => sr.SurveyId).ToHashSet();
 
