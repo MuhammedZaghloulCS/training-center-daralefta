@@ -189,6 +189,7 @@ using (var scope = app.Services.CreateScope())
     Cron.Daily
     );
 }
+
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -202,6 +203,7 @@ using (var scope = app.Services.CreateScope())
         logger.LogError(ex, "An error occurred while seeding the admin user.");
     }
 }
+
 app.UseHangfireDashboard("/dashboard");
 app.UseAuthentication();
 app.UseAuthorization();
