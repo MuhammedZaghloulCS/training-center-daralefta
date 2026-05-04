@@ -11,8 +11,10 @@ using Infrastructure.Abstractions.IUnitOfWork;
 using Infrastructure.Abstractions.IUnitOfWork.ISysUnitOfWork;
 using Infrastructure.Implementations.UnitOfWork.SysUnitOfWork;
 using MediatR;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +23,8 @@ using System.Runtime.InteropServices.Marshalling;
 using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
+
 
 // Alias for clarity
 using CairoTime = Application.Common.DateTimeHelper;
@@ -34,22 +38,33 @@ namespace Application.Features.Session.Commands.Create
         private readonly HttpClient _httpClientFactory;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IFacePrintService _facePrintService;
+        private readonly ILogger<CreateSessionHandler> _logger;
+        private readonly IWebHostEnvironment _env;
+
         public CreateSessionHandler(IUnitOfWork unitOfWork,
             ISysUnitOfWork sysUnitOfWork,
             IHttpClientFactory httpClientFactory,
             UserManager<ApplicationUser> userManager,
-            IFacePrintService facePrintService)
+            IFacePrintService facePrintService,
+            ILogger<CreateSessionHandler> logger,
+            IWebHostEnvironment env)
         {
             _unitOfWork = unitOfWork;
             _SysunitOfWork = sysUnitOfWork;
             _httpClientFactory = httpClientFactory.CreateClient("ExternalApi");
             this.userManager = userManager;
             this._facePrintService = facePrintService;
+            _logger = logger;
+            _env = env;
         }
 
         public async Task<BaseResponse<SessionDto>> Handle(CreateSessionCommand request, CancellationToken cancellationToken)
         {
-            var errors = new List<string>();
+            try
+            {
+                _logger.LogInformation("Creating session with topic: {Topic}", request.Topic);
+                
+                var errors = new List<string>();
             if(request.Topic.Length>100)
                 errors.Add("الموضوع لا يجب ان يتعدى 100 حرف");
             if (string.IsNullOrWhiteSpace(request.Topic))
@@ -99,10 +114,42 @@ namespace Application.Features.Session.Commands.Create
             }
             if (errors.Any())
                 return BaseResponse<SessionDto>.FailureResponse("خطأ في البيانات", errors);
-            //give lecturer the same privilages of rest of users
             
+            var filesPaths = new List<string>();
+                if (request.formFiles != null && request.formFiles.Count > 0)
+                {  
+                    foreach (var file in request.formFiles)
+                    {
+                        try
+                        {
+                            var uploads = Path.Combine(_env.WebRootPath, "sessiondata");
+                            if (!Directory.Exists(uploads))
+                            {
+                                Directory.CreateDirectory(uploads);
+                            }
 
-            var session = new Domain.Entities.Session
+                            var extension = Path.GetExtension(file.FileName);
+                            var originalName = Path.GetFileNameWithoutExtension(file.FileName);
+                            var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+                            var fileName = $"{originalName}_{timestamp}{extension}";
+                            var filePath = Path.Combine(uploads, fileName);
+                            filesPaths.Add(filePath);
+                            using (var stream = new FileStream(filePath, FileMode.Create))
+                            {
+                                await file.CopyToAsync(stream);
+                            }
+
+                        }
+                        catch (Exception ex)
+                        {
+                            // Log error but continue without image
+                            Console.WriteLine($"Error saving image: {ex.Message}");
+                        }
+                    }
+
+                }
+                
+                var session = new Domain.Entities.Session
             {
                 CreatedBy = "System",
                 CreatedDate = CairoTime.Now,
@@ -113,6 +160,7 @@ namespace Application.Features.Session.Commands.Create
                 RoomId = request.RoomId,
                 CourseId = request.CourseId,
                 TrainingId = request.TrainingId,
+                filesPaths=filesPaths,
                 LecturerersSessions = request.LecturersIds.Select(s => new UserSession { UserId = s }).ToList()
             };
 
@@ -121,8 +169,11 @@ namespace Application.Features.Session.Commands.Create
             await _unitOfWork.ISession.AddAsync(session);
             await _unitOfWork.Complete();
 
+            _logger.LogInformation("Session {SessionId} created successfully", session.Id);
+
             if (session.SessionDate.Date == DateTime.Today)
             {
+                _logger.LogInformation("Session {SessionId} is today, triggering AssignUsersToSession", session.Id);
                 await _facePrintService.AssignUsersToSession();
             }
                 var dto = new SessionDto
@@ -138,10 +189,17 @@ namespace Application.Features.Session.Commands.Create
                 Topic = session.Topic,
                 RoomId = session.RoomId,
                 CourseId = session?.CourseId,
+                
            
             };
 
             return BaseResponse<SessionDto>.SuccessResponse(dto, "Session created successfully");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creating session with topic: {Topic}", request.Topic);
+                throw;
+            }
         }
     }
 }

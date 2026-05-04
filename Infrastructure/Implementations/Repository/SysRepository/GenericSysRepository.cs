@@ -36,12 +36,12 @@ namespace Infrastructure.Implementations.Repository.SysRepository
             return await query.ToListAsync();
         }
 
-        public async Task<T> GetByIdAsync(string id)
+        public async Task<T?> GetByIdAsync(string id)
         {
             return await _dbSet.FindAsync(id);
         }
 
-        public async Task<T> GetFirstOrderedByAsync<TKey>(Expression<Func<T, TKey>> order = null, bool descending = true)
+        public async Task<T?> GetFirstOrderedByAsync<TKey>(Expression<Func<T, TKey>> order = null, bool descending = true)
         {
             var query = _dbSet.AsQueryable();
             if (order != null)
@@ -66,7 +66,7 @@ namespace Infrastructure.Implementations.Repository.SysRepository
         {
             _dbSet.Update(entity);
         }
-        public async Task<T> GetByPropAsync(Expression<Func<T, bool>> predicate)
+        public async Task<T?> GetByPropAsync(Expression<Func<T, bool>> predicate)
         {
             return await _dbSet.FirstOrDefaultAsync(predicate);
         }

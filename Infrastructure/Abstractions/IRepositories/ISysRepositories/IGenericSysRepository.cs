@@ -13,15 +13,12 @@ namespace Infrastructure.Abstractions.IRepositories.ISysRepositories
         public void Delete(T entity);
         public void Update(T entity);
         public Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> predicate = null);
-        public Task<T> GetFirstOrderedByAsync<TKey>(Expression<Func<T, TKey>> order = null,bool descending=true);
+        public Task<T?> GetFirstOrderedByAsync<TKey>(Expression<Func<T, TKey>> order = null, bool descending = true);
         public Task<List<T>> GetPaginatedAsync<TKey>(int pageNumber, int pageSize, Expression<Func<T, TKey>> order, bool descending = true);
-        public Task<T> GetByIdAsync(string id);
+        public Task<T?> GetByIdAsync(string id);
         public Task<List<T>> GetAllByPropAsync(Expression<Func<T, bool>> predicate);
         public Task<T?> GetByPropAsync(Expression<Func<T, bool>> predicate);
         public Task AddRangeAsync(List<T> users);
-
         public void RemoveRange(List<T> entities);
-
-
     }
 }

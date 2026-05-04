@@ -10,8 +10,8 @@ namespace Infrastructure.Implementations.Repository
 {
     public class GenericRepository<T, TKey> : IGenericRepository<T, TKey> where T : class
     {
-        ApplicationContext context;
-        DbSet<T> dbSet;
+        protected ApplicationContext context;
+        protected DbSet<T> dbSet;
         public GenericRepository(ApplicationContext context )
         
         {
@@ -120,7 +120,23 @@ namespace Infrastructure.Implementations.Repository
 
         public void Update(T entity)
         {
-            dbSet.Update(entity);
+            // Check if entity is already tracked to avoid double-tracking
+            var entry = context.ChangeTracker.Entries<T>().FirstOrDefault(e => e.Entity.Equals(entity));
+            if (entry != null)
+            {
+                // Entity is already tracked, just mark as modified
+                entry.State = EntityState.Modified;
+            }
+            else
+            {
+                // Entity is not tracked, attach and mark as modified
+                dbSet.Update(entity);
+            }
+        }
+        
+        public void UpdateIfTracked(T entity)
+        {
+            Update(entity);
         }
         public async Task<T> GetFirstByPropAsync(Expression<Func<T, bool>> predicate)
         {

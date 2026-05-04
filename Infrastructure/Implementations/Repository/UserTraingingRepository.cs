@@ -33,7 +33,8 @@ namespace Infrastructure.Implementations.Repository
                                      .ToList(),
                      Building = s.Room.Building.Name,
                      Room = s.Room.Name,
-                     Date = s.SessionDate
+                     Date = s.SessionDate,
+                     SessionId = s.Id
                  }).GroupBy(s => s.Date)
                  .ToListAsync();
             List<Schedule> schedules = new List<Schedule>();
@@ -49,7 +50,8 @@ namespace Infrastructure.Implementations.Repository
                         Course = s.Course,
                         Lecturers = s.Lecturers,
                         Building = s.Building,
-                        Room = s.Room
+                        Room = s.Room,
+                        SessionId = s.SessionId
                     }).ToList()
                 });
 
@@ -74,7 +76,8 @@ namespace Infrastructure.Implementations.Repository
                      Course = s.Session.Course.Name,
                      Building = s.Session.Room.Building.Name,
                      Room = s.Session.Room.Name,
-                     Date = s.Session.SessionDate
+                     Date = s.Session.SessionDate,
+                     SessionId = s.Session.Id
                  }).GroupBy(s => new { s.Date ,s.Training})
                  .ToListAsync();
 
@@ -90,11 +93,12 @@ namespace Infrastructure.Implementations.Repository
                     Date = session.Key.Date.ToString("yyyy-MM-dd"),
                     Lectures = session.Select(s => new Lecture
                     {
-                        Lecturers = [session.Key.Training],
+                        Lecturers = new List<string> { session.Key.Training },
                         Time = s.Time,
                         Course = s.Course,
                         Building = s.Building,
-                        Room = s.Room
+                        Room = s.Room,
+                        SessionId = s.SessionId
                     }).ToList()
                 });
 

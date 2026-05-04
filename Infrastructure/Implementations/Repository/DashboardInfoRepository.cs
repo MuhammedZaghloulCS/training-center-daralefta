@@ -26,6 +26,7 @@ namespace Infrastructure.Implementations.Repository
             var coursesCounts = await _context.Course.CountAsync();
             var trainingsCounts = await _context.Training.CountAsync();
             var usersCounts = await _userManager.Users.CountAsync();
+            var surveysCounts = await _context.Survey.CountAsync();
             return new
             {
                 buildingCounts,
@@ -33,7 +34,8 @@ namespace Infrastructure.Implementations.Repository
                 sessionsCounts,
                 coursesCounts,
                 trainingsCounts,
-                usersCounts
+                usersCounts,
+                surveysCounts   
             };
         }
     }

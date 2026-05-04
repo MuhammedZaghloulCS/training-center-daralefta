@@ -32,6 +32,7 @@ namespace Infrastructure.Implementations.UnitOfWork
         private TrainingsSurveysRepository trainingsSurveysRepository;
         private QuestionAnswerRepository questionAnswerRepository;
         private QuestionRepository questionRepository;
+        private AttendanceRepository attendanceRepository;
         private readonly ApplicationContext context;
         #endregion
         //CTOR
@@ -275,6 +276,18 @@ namespace Infrastructure.Implementations.UnitOfWork
                     questionRepository = new QuestionRepository(context);
                 }
                 return questionRepository;
+            }
+        }
+
+        public IAttendanceRepository IAttendance
+        {
+            get
+            {
+                if (attendanceRepository == null)
+                {
+                    attendanceRepository = new AttendanceRepository(context);
+                }
+                return attendanceRepository;
             }
         }
      

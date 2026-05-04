@@ -3,6 +3,7 @@ using Infrastructure.Implementations.Repository.SysRepository;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Infrastructure.Abstractions.IUnitOfWork.ISysUnitOfWork
 {
@@ -16,6 +17,7 @@ namespace Infrastructure.Abstractions.IUnitOfWork.ISysUnitOfWork
         ISysAccessLevelDoorRepository ISysAccessLevelDoorRepository { get; }
         ISysAccessLevelPersonRepository ISysAccessLevelPersonRepository { get; }
         ISysAuthAreaRepository ISysAuthAreaRepository { get; }
+        ISysAccTransactionRepository ISysAccTransactionRepository { get; }
 
 
         #endregion

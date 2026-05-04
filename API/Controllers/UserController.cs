@@ -35,12 +35,14 @@ namespace API.Controllers
         UserManager<ApplicationUser> _userManager;
         MediatR.IMediator _mediator;
         private readonly HttpClient _httpClientFactory;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public UserController(UserManager<ApplicationUser> userManager, IMediator mediator, IHttpClientFactory httpClientFactory)
+        public UserController(UserManager<ApplicationUser> userManager, IMediator mediator, IHttpClientFactory httpClientFactory, IWebHostEnvironment webHostEnvironment)
         {
             _userManager = userManager;
             _mediator = mediator;
             _httpClientFactory = httpClientFactory.CreateClient("ExternalApi");
+            _webHostEnvironment = webHostEnvironment;
         }
 
         [HttpGet("test-image")]
@@ -130,26 +132,38 @@ namespace API.Controllers
         }
 
         [HttpPost("with-image")]
-        public async Task<IActionResult> CreateUserWithImage([FromForm] CreateUserDTO user, IFormFile? imageFile)
+        public async Task<IActionResult> CreateUserWithImage([FromForm] CreateUserDTO user)
         {
             var user1 = await _userManager.GetUserAsync(User);
             user.CreatedBy = user1?.FullName;
 
+            Console.WriteLine($"CreateUserWithImage called. ImageFile: {(user.ImageFile != null ? user.ImageFile.FileName : "null")}");
+
             // Handle image upload
-            if (imageFile != null && imageFile.Length > 0)
+            if (user.ImageFile != null && user.ImageFile.Length > 0)
             {
-                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "users");
-                Directory.CreateDirectory(uploadsFolder);
-
-                var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
-                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                try
                 {
-                    await imageFile.CopyToAsync(fileStream);
-                }
+                    var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images", "users");
+                    Directory.CreateDirectory(uploadsFolder);
 
-                user.ImagePath = $"/images/users/{uniqueFileName}";
+                    // Always save as .jpg to avoid PNG permission issues
+                    var uniqueFileName = Guid.NewGuid().ToString() + ".jpg";
+                    var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await user.ImageFile.CopyToAsync(fileStream);
+                    }
+
+                    user.ImagePath = $"/images/users/{uniqueFileName}";
+                    Console.WriteLine($"Image saved. user.ImagePath: {user.ImagePath}");
+                }
+                catch (Exception ex)
+                {
+                    // Log error but continue without image
+                    Console.WriteLine($"Error saving image: {ex.Message}");
+                }
             }
 
             var response = await _mediator.Send(new CreateUserCommand { _dto = user });
@@ -228,30 +242,77 @@ namespace API.Controllers
         }
 
         [HttpPatch("{userName}/with-image")]
-        public async Task<IActionResult> UpdateUserWithImage([FromRoute] string userName, [FromForm] UpdateUserDTO user, IFormFile? imageFile)
+        public async Task<IActionResult> UpdateUserWithImage([FromRoute] string userName, [FromForm] UpdateUserDTO user)
         {
             var user1 = await _userManager.GetUserAsync(User);
             user.UpdatedBy = user1?.FullName;
             user.UserName = userName;
 
+            Console.WriteLine($"UpdateUserWithImage called. ImageFile: {(user.ImageFile != null ? user.ImageFile.FileName : "null")}, ImagePath: '{user.ImagePath}', RemoveImage: {user.RemoveImage}");
+
+            // Get existing user to check for old image
+            var existingUser = await _userManager.FindByNameAsync(userName);
+            Console.WriteLine($"Existing user ImagePath: '{existingUser?.ImagePath}'");
+
             // Handle image upload
-            if (imageFile != null && imageFile.Length > 0)
+            if (user.ImageFile != null && user.ImageFile.Length > 0)
             {
-                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "users");
-                Directory.CreateDirectory(uploadsFolder);
-
-                var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
-                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                try
                 {
-                    await imageFile.CopyToAsync(fileStream);
-                }
+                    // Delete old image if exists
+                    if (existingUser != null && !string.IsNullOrEmpty(existingUser.ImagePath))
+                    {
+                        var oldFilePath = Path.Combine(_webHostEnvironment.WebRootPath, existingUser.ImagePath.TrimStart('/'));
+                        if (System.IO.File.Exists(oldFilePath))
+                        {
+                            System.IO.File.Delete(oldFilePath);
+                        }
+                    }
 
-                user.ImagePath = $"/images/users/{uniqueFileName}";
+                    var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images", "users");
+                    Directory.CreateDirectory(uploadsFolder);
+
+                    // Always save as .jpg to avoid PNG permission issues
+                    var uniqueFileName = Guid.NewGuid().ToString() + ".jpg";
+                    var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await user.ImageFile.CopyToAsync(fileStream);
+                    }
+
+                    user.ImagePath = $"/images/users/{uniqueFileName}";
+                    Console.WriteLine($"Image saved. user.ImagePath: {user.ImagePath}");
+                }
+                catch (Exception ex)
+                {
+                    // Log error but continue without image
+                    Console.WriteLine($"Error saving image: {ex.Message}");
+                }
+            }
+            else if (user.RemoveImage && existingUser != null && !string.IsNullOrEmpty(existingUser.ImagePath))
+            {
+                // User wants to delete image - remove file from wwwroot
+                Console.WriteLine($"Removing image. Old path: {existingUser.ImagePath}");
+                try
+                {
+                    var oldFilePath = Path.Combine(_webHostEnvironment.WebRootPath, existingUser.ImagePath.TrimStart('/'));
+                    if (System.IO.File.Exists(oldFilePath))
+                    {
+                        System.IO.File.Delete(oldFilePath);
+                        Console.WriteLine($"Image file deleted: {oldFilePath}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error deleting image file: {ex.Message}");
+                }
+                user.ImagePath = "";  // Signal to handler to clear ImagePath in DB
             }
 
+            Console.WriteLine($"Before mediator. user.ImagePath: {user.ImagePath}");
             var response = await _mediator.Send(new Application.Features.User.Commands.Update.UpdateUserCommand { UpdateUser = user });
+            Console.WriteLine($"After mediator. response.data.imagePath: {response.Data?.ImagePath}");
             if (!response.Success)
             {
                 return BadRequest(response);

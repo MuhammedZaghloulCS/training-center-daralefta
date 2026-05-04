@@ -28,6 +28,7 @@ namespace Infrastructure.Abstractions.IUnitOfWork
         ITrainingsSurveysRepository ITrainingsSurveys { get; }
         IQuestionAnswerRepository IQuestionAnswer { get; }
         IQuestionRepository IQuestion { get; }
+        IAttendanceRepository IAttendance { get; }
 
         #endregion
         Task<int> Complete();

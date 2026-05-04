@@ -29,6 +29,7 @@ namespace Infrastructure.Context
         public DbSet<UserSession> UserSessions { get; set; }
         public DbSet<UsersTrainings> UsersTrainings { get; set; }
         public DbSet<UsersCourse> UsersCourses { get; set; }
+        public DbSet<Attendance> Attendances { get; set; }
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

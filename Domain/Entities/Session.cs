@@ -1,5 +1,6 @@
 ﻿
 
+using Microsoft.AspNetCore.Http;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -16,6 +17,7 @@ namespace Domain.Entities
         [ForeignKey(nameof(RoomId))]
         public Room Room { get; set; }
 
+        public List<string>? filesPaths { get; set; }
         public int? CourseId { get; set; }
         [ForeignKey(nameof(CourseId))]
         public Course Course { get; set; }

@@ -11,6 +11,7 @@ namespace Domain.Entities
         public List<string> Lecturers { get; set; }
         public string Room { get; set; }
         public string Building { get; set; }
+        public int SessionId { get; set; }
 
         
     }

@@ -47,15 +47,15 @@ namespace Application.Features.User.Commands.Update
                 return BaseResponse<UserDTO>.FailureResponse("البريد الإلكتروني مستخدم بالفعل");
             }
             var userWithSamePhone = await Task.Run(() => _userManager.Users.FirstOrDefault(u => u.PhoneNumber == request.UpdateUser.PhoneNumber));
+            var pinValid = new[] {"0",""," ",
+                null
+            };
+        
             if (userWithSamePhone != null && userWithSamePhone.Id != existingUser.Id)
             {
                 return BaseResponse<UserDTO>.FailureResponse("رقم الهاتف مستخدم بالفعل");
             }
-            var userWithSamePin = await Task.Run(() => _userManager.Users.FirstOrDefault(u => u.pin == request.UpdateUser.pin));
-            if (userWithSamePin != null && userWithSamePin.Id != existingUser.Id)
-            {
-                return BaseResponse<UserDTO>.FailureResponse("كود البصمة مستخدم بالفعل");
-            }
+
             // Update properties
             existingUser.Email = request.UpdateUser.Email ?? existingUser.Email;
             existingUser.PhoneNumber = request.UpdateUser.PhoneNumber ?? existingUser.PhoneNumber;
@@ -78,7 +78,17 @@ namespace Application.Features.User.Commands.Update
             existingUser.MaritalState = request.UpdateUser.MaritalState ?? existingUser.MaritalState;
             existingUser.AcademicQualification = request.UpdateUser.AcademicQualification ?? existingUser.AcademicQualification;
             existingUser.Appreciation = request.UpdateUser.Appreciation ?? existingUser.Appreciation;
-            existingUser.ImagePath = request.UpdateUser.ImagePath ?? existingUser.ImagePath;
+            
+            // Handle ImagePath: null = keep existing, empty string = delete image
+            if (request.UpdateUser.ImagePath == "")
+            {
+                existingUser.ImagePath = null;
+            }
+            else if (request.UpdateUser.ImagePath != null)
+            {
+                existingUser.ImagePath = request.UpdateUser.ImagePath;
+            }
+            
             existingUser.pin = request.UpdateUser.pin == "0" ? null : request.UpdateUser.pin;
 
             // ✅ Update roles دايماً

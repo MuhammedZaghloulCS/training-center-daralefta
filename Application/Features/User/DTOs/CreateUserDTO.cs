@@ -1,4 +1,5 @@
 ﻿using Domain.Enums;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,7 +10,7 @@ namespace Application.Features.User.DTOs
 {
     public class CreateUserDTO
     {
-        public string CreatedBy { get; set; }
+        public string CreatedBy { get; set; }= "Admin";
         public string pin { set; get; }
 
         public string Email { get; set; }
@@ -66,6 +67,7 @@ namespace Application.Features.User.DTOs
         public string? AcademicQualification { get; set; }
         public string ?Appreciation { get; set; }
         public string? ImagePath { get; set; }
+        public IFormFile? ImageFile { get; set; }
 
 
         public List<string> roles {get;set;}

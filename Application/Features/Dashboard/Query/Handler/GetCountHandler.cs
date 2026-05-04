@@ -61,6 +61,7 @@ namespace Application.Features.Dashboard.Query.Handler
             var trainingsCounts = await _context.Training.CountAsync(p => p.IsDeleted == false);
 
             var usersCounts = await _userManager.Users.CountAsync(p => p.IsDeleted == false);
+            var surveysCounts = await _context.Survey.CountAsync();
 
             var counts= new
 
@@ -76,7 +77,8 @@ namespace Application.Features.Dashboard.Query.Handler
 
                 trainingsCounts,
 
-                usersCounts
+                usersCounts,
+                surveysCounts
 
             };
 

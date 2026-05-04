@@ -20,7 +20,7 @@ namespace Domain.Entities
             public string SupplyCards { get; set; }
             public string PersonPhoto { get; set; }
             public string SelfPwd { get; set; }
-            public bool IsSendMail { get; set; }
+            public bool? IsSendMail { get; set; }
             public string MobilePhone { get; set; }
             public string PersonPwd { get; set; }
             public string CarPlate { get; set; }
@@ -33,7 +33,7 @@ namespace Domain.Entities
             public string CertNumber { get; set; }
             public string PhotoPath { get; set; }
             public DateTime? HireDate { get; set; }
-            public bool IsDisabled { get; set; }
+            public bool? IsDisabled { get; set; }
             public string VislightPhoto { get; set; }
             public string VislightPhotoPath { get; set; }
             public string LeaveId { get; set; }

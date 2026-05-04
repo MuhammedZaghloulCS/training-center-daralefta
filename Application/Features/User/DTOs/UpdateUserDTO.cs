@@ -1,4 +1,5 @@
 ﻿using Domain.Enums;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -51,6 +52,8 @@ namespace Application.Features.User.DTOs
         [RegularExpression(@"^[0-9]*$", ErrorMessage = "personPwd must contain only numbers.")]
         public string? personPwd { get; set; }
         public string? ImagePath { get; set; }
+        public IFormFile? ImageFile { get; set; }
+        public bool RemoveImage { get; set; } = false;
         public string? pin { get; set; }
         public List<string> roles { get; set; }
 

@@ -37,9 +37,21 @@ builder.Services.AddControllers()
     });
 
 builder.Services.AddHangfire(x =>
-    x.UseSqlServerStorage(builder.Configuration.GetConnectionString("HangfireConnection")));
+    x.UseSqlServerStorage(builder.Configuration.GetConnectionString("HangfireConnection"), 
+        new Hangfire.SqlServer.SqlServerStorageOptions
+        {
+            CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+            SlidingInvisibilityTimeout = TimeSpan.FromMinutes(30),
+            QueuePollInterval = TimeSpan.FromSeconds(30), // Reduce polling frequency from default 1s
+            UseRecommendedIsolationLevel = true,
+            DisableGlobalLocks = true
+        }));
 
-builder.Services.AddHangfireServer();
+builder.Services.AddHangfireServer(options =>
+{
+    options.WorkerCount = 2; // Limit concurrent workers
+    options.ServerTimeout = TimeSpan.FromMinutes(5);
+});
 
 // -----------------------
 // Swagger/OpenAPI
@@ -171,6 +183,9 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseRouting();
+
+// Serve static files from wwwroot (for user images)
+app.UseStaticFiles();
 
 app.UseCors("AllowAll");
 

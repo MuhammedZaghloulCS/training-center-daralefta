@@ -5,6 +5,7 @@ using Infrastructure.Implementations.Repository.SysRepository;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Infrastructure.Implementations.UnitOfWork.SysUnitOfWork
 {
@@ -18,12 +19,15 @@ namespace Infrastructure.Implementations.UnitOfWork.SysUnitOfWork
         private ISysAccessLevelDoorRepository _sysAccessLevelDoorRepository;
         private ISysAccessLevelPersonRepository _sysAccessLevelPersonRepository;
         private ISysAuthAreaRepository _sysAuthAreaRepository;
+        private ISysAccTransactionRepository _sysAccTransactionRepository;
         private readonly security_dbContext _context;
+        private readonly ApplicationContext _applicationContext;
         #endregion
 
-        public SysUnitOfWork(security_dbContext context)
+        public SysUnitOfWork(security_dbContext context, ApplicationContext applicationContext)
         {
             _context = context;
+            _applicationContext = applicationContext;
         }
 
 
@@ -87,6 +91,16 @@ namespace Infrastructure.Implementations.UnitOfWork.SysUnitOfWork
                 if( _sysAuthAreaRepository == null)
                     _sysAuthAreaRepository= new SysAuthAreaRepository(_context);
                 return ( _sysAuthAreaRepository);
+            }
+        }
+
+        public ISysAccTransactionRepository ISysAccTransactionRepository
+        {
+            get
+            {
+                if (_sysAccTransactionRepository == null)
+                    _sysAccTransactionRepository = new SysAccTransactionRepository(_context, _applicationContext);
+                return _sysAccTransactionRepository;
             }
         }
 

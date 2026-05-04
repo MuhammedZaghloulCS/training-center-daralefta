@@ -1,5 +1,6 @@
 using Application.Features.Session.Commands.Create;
 using Application.Features.Session.Commands.Delete;
+using Application.Features.Session.Commands.Files;
 using Application.Features.Session.Commands.Update;
 using Application.Features.Session.Queries.Model;
 using Domain.Entities;
@@ -12,7 +13,7 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
+    [Authorize]
 
     public class SessionController : ControllerBase
     {
@@ -25,6 +26,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAsync()
         {
             var response = await _mediator.Send(new GetAllSessionsListQuery());
@@ -32,6 +34,7 @@ namespace API.Controllers
         }
 
         [HttpGet("paged")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetPagedAsync([FromQuery] GetSessionsPagedQuery query)
         {
             var response = await _mediator.Send(query);
@@ -39,6 +42,7 @@ namespace API.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             var response = await _mediator.Send(new GetSessionByIdQuery { Id = id });
@@ -46,7 +50,8 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] CreateSessionCommand command)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> CreateAsync([FromForm] CreateSessionCommand command)
         {
             var user = await _userManager.GetUserAsync(User);
             command.CreatedBy = user?.FullName;
@@ -55,6 +60,7 @@ namespace API.Controllers
         }
 
         [HttpPatch("{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateAsync(int id, [FromBody] UpdateSessionCommand command)
         {
             command.Id = id;
@@ -65,10 +71,49 @@ namespace API.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
             var response = await _mediator.Send(new DeleteSessionCommand { Id = id });
             return response.Success ? Ok(response) : BadRequest(response);
         }
+
+        #region File Management
+
+        [HttpGet("{sessionId:int}/files")]
+        [Authorize(Roles = "Admin,Student,Instructor")]
+        public async Task<IActionResult> GetSessionFiles(int sessionId)
+        {
+            var response = await _mediator.Send(new GetSessionFilesQuery { SessionId = sessionId });
+            return response.Success ? Ok(response) : BadRequest(response);
+        }
+
+        [HttpPost("{sessionId:int}/files")]
+        [Authorize(Roles = "Admin,Instructor")]
+        public async Task<IActionResult> AddSessionFiles(int sessionId, List<IFormFile> files)
+        {
+            var command = new AddSessionFileCommand
+            {
+                SessionId = sessionId,
+                Files = files
+            };
+            var response = await _mediator.Send(command);
+            return response.Success ? Ok(response) : BadRequest(response);
+        }
+
+        [HttpDelete("{sessionId:int}/files")]
+        [Authorize(Roles = "Admin,Instructor")]
+        public async Task<IActionResult> DeleteSessionFile(int sessionId, [FromQuery] string filePath)
+        {
+            var command = new DeleteSessionFileCommand
+            {
+                SessionId = sessionId,
+                FilePath = filePath
+            };
+            var response = await _mediator.Send(command);
+            return response.Success ? Ok(response) : BadRequest(response);
+        }
+
+        #endregion
     }
 }
