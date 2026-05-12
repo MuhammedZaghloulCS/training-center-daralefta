@@ -111,8 +111,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
         };
     });
 
@@ -186,6 +185,19 @@ app.UseRouting();
 
 // Serve static files from wwwroot (for user images)
 app.UseStaticFiles();
+
+// Serve static files from external storage folder (two levels up from ContentRootPath - outside wwwroot)
+var externalStoragePath = Path.GetFullPath(Path.Combine(builder.Environment.ContentRootPath, "..", "..", "TrainingCenterStorage"));
+if (!Directory.Exists(externalStoragePath))
+{
+    Directory.CreateDirectory(externalStoragePath);
+}
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(externalStoragePath),
+    RequestPath = "/storage"
+});
+Console.WriteLine($"External storage: {externalStoragePath}");
 
 app.UseCors("AllowAll");
 

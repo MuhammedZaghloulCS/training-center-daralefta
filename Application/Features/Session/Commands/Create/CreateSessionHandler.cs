@@ -122,7 +122,9 @@ namespace Application.Features.Session.Commands.Create
                     {
                         try
                         {
-                            var uploads = Path.Combine(_env.WebRootPath, "sessiondata");
+                            // Save to external storage folder (two levels up - outside project)
+                            var storagePath = Path.GetFullPath(Path.Combine(_env.ContentRootPath, "..", "..", "TrainingCenterStorage"));
+                            var uploads = Path.Combine(storagePath, "sessiondata");
                             if (!Directory.Exists(uploads))
                             {
                                 Directory.CreateDirectory(uploads);
@@ -133,12 +135,14 @@ namespace Application.Features.Session.Commands.Create
                             var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
                             var fileName = $"{originalName}_{timestamp}{extension}";
                             var filePath = Path.Combine(uploads, fileName);
-                            filesPaths.Add(filePath);
+                            
                             using (var stream = new FileStream(filePath, FileMode.Create))
                             {
                                 await file.CopyToAsync(stream);
                             }
 
+                            // Store relative URL path
+                            filesPaths.Add($"/storage/sessiondata/{fileName}");
                         }
                         catch (Exception ex)
                         {

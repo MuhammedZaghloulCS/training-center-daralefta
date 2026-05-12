@@ -20,10 +20,32 @@ namespace Infrastructure.Implementations.Repository
         public async Task<List<Schedule>> GetScheduleAsync(Expression<Func<UsersTrainings, bool>> predicate)
         {
             var today = DateTime.Today;
+
+            // Get user's trainings
+            var userTrainings = await _context.UsersTrainings
+                .Where(predicate)
+                .Select(ut => new { ut.UserId, ut.TrainingId })
+                .ToListAsync();
+
+            if (!userTrainings.Any())
+                return new List<Schedule>();
+
+            var userId = userTrainings.First().UserId;
+            var trainingIds = userTrainings.Select(ut => ut.TrainingId).ToList();
+
+            // Get sessions where user is an instructor in their trainings
+            var instructorSessionIds = await _context.UserSessions
+                .Where(us => us.UserId == userId)
+                .Where(us => trainingIds.Contains(us.Session.TrainingId.Value))
+                .Where(us => us.Session.SessionDate >= today)
+                .Select(us => us.SessionId)
+                .ToListAsync();
+
             var sessions = await _context.UsersTrainings
                  .Where(predicate)
                  .SelectMany(ut => ut.Training.Sessions)
                  .Where(s => s.SessionDate >= today)
+                 .Where(s => !instructorSessionIds.Contains(s.Id)) // Exclude sessions where user is instructor
                  .Select(s => new
                  {
                      Time = $"{s.StartTime.ToArabic12Hour()} - {s.EndTime.ToArabic12Hour()}",

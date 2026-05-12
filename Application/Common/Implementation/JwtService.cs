@@ -27,6 +27,7 @@ namespace Application.Common.Services
 
             var claims = new List<Claim>
             {
+           
                 new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
                 new Claim(ClaimTypes.Name, userName),
                 new Claim(ClaimTypes.Email, email),

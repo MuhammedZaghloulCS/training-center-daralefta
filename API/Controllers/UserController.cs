@@ -144,7 +144,9 @@ namespace API.Controllers
             {
                 try
                 {
-                    var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images", "users");
+                    // Save to external storage folder (two levels up - outside project)
+                    var storagePath = Path.GetFullPath(Path.Combine(_webHostEnvironment.ContentRootPath, "..", "..", "TrainingCenterStorage"));
+                    var uploadsFolder = Path.Combine(storagePath, "images", "users");
                     Directory.CreateDirectory(uploadsFolder);
 
                     // Always save as .jpg to avoid PNG permission issues
@@ -156,7 +158,7 @@ namespace API.Controllers
                         await user.ImageFile.CopyToAsync(fileStream);
                     }
 
-                    user.ImagePath = $"/images/users/{uniqueFileName}";
+                    user.ImagePath = $"/storage/images/users/{uniqueFileName}";
                     Console.WriteLine($"Image saved. user.ImagePath: {user.ImagePath}");
                 }
                 catch (Exception ex)
@@ -259,17 +261,19 @@ namespace API.Controllers
             {
                 try
                 {
+                    var storagePath = Path.GetFullPath(Path.Combine(_webHostEnvironment.ContentRootPath, "..", "..", "TrainingCenterStorage"));
+                    
                     // Delete old image if exists
                     if (existingUser != null && !string.IsNullOrEmpty(existingUser.ImagePath))
                     {
-                        var oldFilePath = Path.Combine(_webHostEnvironment.WebRootPath, existingUser.ImagePath.TrimStart('/'));
+                        var oldFilePath = Path.Combine(storagePath, existingUser.ImagePath.Replace("/storage/", "").Replace("/", Path.DirectorySeparatorChar.ToString()));
                         if (System.IO.File.Exists(oldFilePath))
                         {
                             System.IO.File.Delete(oldFilePath);
                         }
                     }
 
-                    var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images", "users");
+                    var uploadsFolder = Path.Combine(storagePath, "images", "users");
                     Directory.CreateDirectory(uploadsFolder);
 
                     // Always save as .jpg to avoid PNG permission issues
@@ -281,7 +285,7 @@ namespace API.Controllers
                         await user.ImageFile.CopyToAsync(fileStream);
                     }
 
-                    user.ImagePath = $"/images/users/{uniqueFileName}";
+                    user.ImagePath = $"/storage/images/users/{uniqueFileName}";
                     Console.WriteLine($"Image saved. user.ImagePath: {user.ImagePath}");
                 }
                 catch (Exception ex)
@@ -296,7 +300,8 @@ namespace API.Controllers
                 Console.WriteLine($"Removing image. Old path: {existingUser.ImagePath}");
                 try
                 {
-                    var oldFilePath = Path.Combine(_webHostEnvironment.WebRootPath, existingUser.ImagePath.TrimStart('/'));
+                    var storagePath = Path.GetFullPath(Path.Combine(_webHostEnvironment.ContentRootPath, "..", "..", "TrainingCenterStorage"));
+                    var oldFilePath = Path.Combine(storagePath, existingUser.ImagePath.Replace("/storage/", "").Replace("/", Path.DirectorySeparatorChar.ToString()));
                     if (System.IO.File.Exists(oldFilePath))
                     {
                         System.IO.File.Delete(oldFilePath);
