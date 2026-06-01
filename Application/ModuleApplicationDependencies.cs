@@ -15,6 +15,7 @@ namespace Infrastructure.Dependencies
 {
     public static class ModuleApplicationDependencies
     {
+
         public static IServiceCollection AddedModuleApplicationDependencies(this IServiceCollection services)
         {
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
