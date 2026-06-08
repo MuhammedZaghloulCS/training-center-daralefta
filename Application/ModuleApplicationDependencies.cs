@@ -28,6 +28,7 @@ namespace Infrastructure.Dependencies
             //JWT Authentication and Authorization can be added here
             // تسجيل الـ JWT Service
             services.AddScoped<IJwtService, JwtService>();
+
             return services;
         }
     }

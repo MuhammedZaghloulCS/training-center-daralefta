@@ -1,5 +1,6 @@
 using Application.Common;
 using Application.Features.Survey.DTOs;
+using Domain.Entities;
 using Domain.Entities.Models;
 using Domain.Enums;
 using Infrastructure.Abstractions.IUnitOfWork;
@@ -53,9 +54,14 @@ namespace Application.Features.Survey.Commands.Create
                     if (question.QuestionText?.Length > 500)
                         errors.Add("يجب ألا يتجاوز نص السؤال 500 حرف");
                     if (question.QuestionType == QuestionTypeEnum.MultipleChoice &&
-    string.IsNullOrWhiteSpace(question.Options))
+                         string.IsNullOrWhiteSpace(question.Options))
                     {
                         errors.Add("يجب أن يحتوي السؤال على خيارات");
+                    }
+                    if (request.isForSpecificUsers &&
+    (request.UserIds == null || !request.UserIds.Any()))
+                    {
+                        errors.Add("يجب أن يحتوي الاستبيان الموجه للأشخاص علي الأشخاص المراد استبيانهم");
                     }
 
                     // Check for duplicate options in MultipleChoice questions
@@ -109,16 +115,26 @@ namespace Application.Features.Survey.Commands.Create
                         : null,
                         QuestionType =question.QuestionType,
                         SortOrder = question.SortOrder,
-                        Survey = survey
+                             
                     };
 
                     survey.Questions.Add(newQuestion);
                 }
             }
-
+            if (request.isForSpecificUsers && request.UserIds.Any())
+            {
+                survey.IsForSpecificUsers = true;
+                foreach (var userId in request.UserIds)
+                {
+                    survey.SurveyUsers.Add(new SurveyUsers
+                    {
+                        UserId = userId
+                    });
+                }
+            }
             await _unitOfWork.ISurvey.AddAsync(survey);
             await _unitOfWork.Complete();
-
+          
             var dto = survey.Adapt<SurveyDto>();
 
             return BaseResponse<SurveyDto>.SuccessResponse(dto, "Survey created successfully");

@@ -13,11 +13,18 @@ namespace Domain.Entities
 
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        public bool IsForSpecificUsers { get; set; } = false;
+        public ICollection<SurveyUsers> SurveyUsers { get; set; }
+            = new List<SurveyUsers>();
 
-        public ICollection<Question> Questions { get; set; } = new List<Question>();
+        public ICollection<Question> Questions { get; set; }
+            = new List<Question>();
+
         public ICollection<SurveyResponse> SurveyResponses { get; set; }
-        public ICollection<TrainingsSurveys> TrainingsSurveys { get; set; }
+            = new List<SurveyResponse>();
 
+        public ICollection<TrainingsSurveys> TrainingsSurveys { get; set; }
+            = new List<TrainingsSurveys>();
 
     }
 }

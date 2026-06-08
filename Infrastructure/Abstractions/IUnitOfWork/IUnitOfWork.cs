@@ -1,4 +1,5 @@
 ﻿using Infrastructure.Abstractions.IRepositories;
+using Infrastructure.Abstractions.IRepositories.ISysRepositories;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -29,6 +30,7 @@ namespace Infrastructure.Abstractions.IUnitOfWork
         IQuestionAnswerRepository IQuestionAnswer { get; }
         IQuestionRepository IQuestion { get; }
         IAttendanceRepository IAttendance { get; }
+        ISurveyUsersRepository ISurveyUsers { get; }
 
         #endregion
         Task<int> Complete();

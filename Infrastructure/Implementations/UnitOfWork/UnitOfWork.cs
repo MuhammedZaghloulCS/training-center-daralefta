@@ -1,5 +1,6 @@
 ﻿using Azure;
 using Infrastructure.Abstractions.IRepositories;
+using Infrastructure.Abstractions.IRepositories.ISysRepositories;
 using Infrastructure.Abstractions.IUnitOfWork;
 using Infrastructure.Context;
 using Infrastructure.Implementations.Repository;
@@ -33,6 +34,7 @@ namespace Infrastructure.Implementations.UnitOfWork
         private QuestionAnswerRepository questionAnswerRepository;
         private QuestionRepository questionRepository;
         private AttendanceRepository attendanceRepository;
+        private SurveyUsersRepository surveyUsersRepository;    
         private readonly ApplicationContext context;
         #endregion
         //CTOR
@@ -290,7 +292,18 @@ namespace Infrastructure.Implementations.UnitOfWork
                 return attendanceRepository;
             }
         }
-     
+
+        public ISurveyUsersRepository ISurveyUsers
+        {
+            get
+            {
+                if (surveyUsersRepository == null)
+                {
+                    surveyUsersRepository = new SurveyUsersRepository(context);
+                }
+                return surveyUsersRepository;
+            }
+        }
         public async Task<int> Complete()
         {
             return await context.SaveChangesAsync();

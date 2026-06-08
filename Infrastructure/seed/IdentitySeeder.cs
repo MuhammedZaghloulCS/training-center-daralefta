@@ -68,6 +68,7 @@ public static class AdminSeeder
                 WhatsappNumber = " ",
                 pin = "1",
                 MaritalState = null,
+                CreatingDate = DateTime.Now,
 
             };
 

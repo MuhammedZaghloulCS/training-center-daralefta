@@ -3,6 +3,7 @@ using Infrastructure.Abstractions.IUnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace Infrastructure.Implementations.Repository
@@ -21,6 +22,7 @@ namespace Infrastructure.Implementations.Repository
             return result;
 
         }
+
 
 
     }

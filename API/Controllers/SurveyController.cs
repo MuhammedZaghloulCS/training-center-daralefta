@@ -71,5 +71,32 @@ namespace API.Controllers
             var response = await _mediator.Send(new DeleteSurveyCommand { Id = id });
             return response.Success ? Ok(response) : BadRequest(response);
         }
+
+
+
+        [HttpGet("user/{userId}")]
+        public async Task<IActionResult> GetAllSurveysForUser(
+           Guid userId,
+           [FromQuery] bool isCompleted = false,
+           [FromQuery] string search = "")
+        {
+            var result = await _mediator.Send(
+                new GetAllSurveysForUserByIdQuery
+                {
+                    UserId = userId,
+                    IsCompleted = isCompleted,
+                    Search = search
+                });
+
+            return Ok(result);
+        }
+        [HttpGet("specified")]
+        public async Task<IActionResult> GetAllSpecifiedSurveys()
+        {
+            var result = await _mediator.Send(
+                new GetAllSpecifiedSurveysQuery());
+
+            return Ok(result);
+        }
     }
 }

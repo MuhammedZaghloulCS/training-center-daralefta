@@ -13,5 +13,8 @@ namespace Application.Features.Survey.Commands.Create
         public bool IsActive { get; set; } = true;
         public List<QuestionDto>? Questions { get; set; }
 
+        public bool isForSpecificUsers { get; set; } = false;
+        public List<Guid>? UserIds { get; set; }
+
     }
 }

@@ -13,6 +13,7 @@ using Infrastructure.Implementations.UnitOfWork.SysUnitOfWork;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -40,7 +41,7 @@ namespace Application.Features.Session.Commands.Create
         private readonly IFacePrintService _facePrintService;
         private readonly ILogger<CreateSessionHandler> _logger;
         private readonly IWebHostEnvironment _env;
-
+       
         public CreateSessionHandler(IUnitOfWork unitOfWork,
             ISysUnitOfWork sysUnitOfWork,
             IHttpClientFactory httpClientFactory,
@@ -196,6 +197,8 @@ namespace Application.Features.Session.Commands.Create
                 
            
             };
+
+
 
             return BaseResponse<SessionDto>.SuccessResponse(dto, "Session created successfully");
             }

@@ -23,11 +23,11 @@ namespace Application.Features.Survey.Queries.Handler
 
         public async Task<BaseResponse<List<SurveyDto>>> Handle(GetAllSurveysListQuery request, CancellationToken cancellationToken)
         {
-            Expression<Func<Domain.Entities.Survey, bool>> filter = s => s.IsActive;
+            Expression<Func<Domain.Entities.Survey, bool>> filter = s => s.IsActive&&!!s.IsForSpecificUsers;
 
             if (!string.IsNullOrEmpty(request.Search))
             {
-                filter = s => (s.Name.Contains(request.Search) || s.Description.Contains(request.Search)) && s.IsActive;
+                filter = s => (s.Name.Contains(request.Search) || s.Description.Contains(request.Search)) && s.IsActive&&!s.IsForSpecificUsers ;
             }
             var surveys = await _unitOfWork.ISurvey.NewFindRowAsync(filter, orderBy: s => s.CreatedAt, acsending: false, s => s.Questions);
             var surveysDto = surveys.Adapt<List<SurveyDto>>();

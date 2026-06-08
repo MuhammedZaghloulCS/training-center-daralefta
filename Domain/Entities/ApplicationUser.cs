@@ -69,8 +69,9 @@ namespace Domain.Entities
         public ICollection<UsersTrainings> UsersTrainings { get; set; }
         public ICollection<UsersCourse> UsersCourse { get; set; }
 
+        public ICollection<UserNotification>UserNotifications { get; set; }
         public ICollection<SurveyResponse> SurveyResponses { get; set; } = new List<SurveyResponse>();
+        public ICollection<SurveyUsers> SurveyUsers { get; set; }
 
-    
     }
 }

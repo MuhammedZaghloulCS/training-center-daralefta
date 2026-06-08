@@ -30,6 +30,10 @@ namespace Infrastructure.Context
         public DbSet<UsersTrainings> UsersTrainings { get; set; }
         public DbSet<UsersCourse> UsersCourses { get; set; }
         public DbSet<Attendance> Attendances { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
+        public DbSet<UserNotification> UserNotifications { get; set; }
+        public DbSet<SurveyUsers> SurveysUsers { get; set; }
+
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

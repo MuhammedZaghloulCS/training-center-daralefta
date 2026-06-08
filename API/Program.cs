@@ -1,5 +1,7 @@
+using API.Hubs.Notifications;
 using Application.Common.Abstraction;
 using Application.Common.Implementation;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using Domain.Entities;
 using Hangfire;
 using Infrastructure.Context;
@@ -96,6 +98,7 @@ builder.Services.AddDbContext<security_dbContext>(options =>
 
 builder.Services.AddScoped<IFacePrintService, FacePrintService>();
 builder.Services.AddScoped<HangfireJob>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 // -----------------------
 // JWT Authentication
@@ -165,6 +168,7 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddSignalR();
 // -----------------------
 // Mapster
 // -----------------------
@@ -230,6 +234,7 @@ using (var scope = app.Services.CreateScope())
         logger.LogError(ex, "An error occurred while seeding the admin user.");
     }
 }
+app.MapHub<NotificationHub>("/notificationHub");
 
 app.UseHangfireDashboard("/dashboard");
 app.UseAuthentication();
