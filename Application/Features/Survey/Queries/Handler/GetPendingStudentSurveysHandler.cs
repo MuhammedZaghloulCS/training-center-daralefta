@@ -1,11 +1,8 @@
 using Application.Common;
 using Application.Features.Survey.DTOs;
 using Application.Features.Survey.Queries.Model;
-using Domain.Entities;
 using Infrastructure.Abstractions.IUnitOfWork;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -26,73 +23,116 @@ namespace Application.Features.Survey.Queries.Handler
         {
             if (request.PageNumber < 1 || request.PageSize < 1)
             {
-                return BaseResponse<List<StudentSurveyDto>>.BadRequestResponse("Ù Ø¹Ù Ù Ø§Øª ØªØ±Ù Ù Ù Ø§ÙØµÙ Ø­Ø§Øª ØºÙ Ø± ØµØ§Ù ØØ©");
+                return BaseResponse<List<StudentSurveyDto>>
+                    .BadRequestResponse("بيانات ترقيم الصفحات غير صالحة");
             }
 
             var userId = request.UserId;
-            
-            // Get all trainings the student is enrolled in
+
+            // Trainings assigned to student
             var userTrainings = await _unitOfWork.IUserTrainingRepository.FindRowAsync(
                 ut => ut.UserId == userId,
                 ut => ut.Training
             );
 
-            var trainingIds = userTrainings.Select(ut => ut.TrainingId).ToList();
+            var trainingIds = userTrainings
+                .Select(ut => ut.TrainingId)
+                .ToList();
 
-            // Get all surveys for these trainings
+            // Surveys assigned through trainings
             var trainingSurveys = await _unitOfWork.ITrainingsSurveys.FindAsync(
                 ts => trainingIds.Contains(ts.trainingId.Value)
             );
 
-            var surveyIds = trainingSurveys.Select(ts => ts.surveyId.Value).Distinct().ToList();
+            var surveyIds = trainingSurveys
+                .Select(ts => ts.surveyId.Value)
+                .Distinct()
+                .ToList();
 
-            // Get surveys with questions
             var surveys = await _unitOfWork.ISurvey.FindRowAsync(
                 s => surveyIds.Contains(s.Id) && s.IsActive,
                 s => s.Questions
             );
 
-            // Get user's existing responses
+            // User responses
             var existingResponses = await _unitOfWork.ISurveyResponse.NewFindRowAsync(
                 sr => sr.UserId == userId,
-                                orderBy: s => s.CreatedDate, acsending: false
-
+                orderBy: s => s.CreatedDate,
+                acsending: false
             );
-            var respondedSurveyIds = existingResponses.Select(sr => sr.SurveyId).ToHashSet();
 
-            // Filter to only pending surveys (not responded)
-            var pendingSurveys = surveys.Where(s => !respondedSurveyIds.Contains(s.Id)).ToList();
+            var respondedSurveyIds = existingResponses
+                .Select(sr => sr.SurveyId)
+                .ToHashSet();
 
-            // Apply search filter if provided
+            // Pending surveys from trainings
+            var pendingSurveys = surveys
+                .Where(s => !respondedSurveyIds.Contains(s.Id))
+                .ToList();
+
+            // Surveys assigned directly to user
+            var specifiedSurveyUsers = await _unitOfWork.ISurveyUsers
+                .GetAllSurveysForUserAsync(
+                    userId,
+                    false
+                );
+
+            var specifiedSurveyIds = specifiedSurveyUsers
+                .Select(x => x.SurveyId)
+                .Where(id => id!=null)
+                .Select(id => id)
+                .Distinct()
+                .ToList();
+
+            // Load specified surveys with questions
+            var specifiedSurveyEntities = await _unitOfWork.ISurvey.FindRowAsync(
+                s => specifiedSurveyIds.Contains(s.Id)
+                     && s.IsActive
+                     && !respondedSurveyIds.Contains(s.Id),
+                s => s.Questions
+            );
+
+            // Merge specified surveys + training surveys
+            var allSurveys = specifiedSurveyEntities
+                .Concat(pendingSurveys)
+                .GroupBy(s => s.Id)
+                .Select(g => g.First())
+                .ToList();
+
+            // Search
             if (!string.IsNullOrWhiteSpace(request.Search))
             {
                 var searchLower = request.Search.ToLower();
-                pendingSurveys = pendingSurveys.Where(s =>
+
+                allSurveys = allSurveys.Where(s =>
                 {
                     var ts = trainingSurveys.FirstOrDefault(t => t.surveyId == s.Id);
-                    var training = userTrainings.FirstOrDefault(ut => ut.TrainingId == ts?.trainingId)?.Training;
-                    
-                    var nameMatch = s.Name.ToLower().Contains(searchLower);
+
+                    var training = userTrainings
+                        .FirstOrDefault(ut => ut.TrainingId == ts?.trainingId)
+                        ?.Training;
+
+                    var nameMatch = s.Name?.ToLower().Contains(searchLower) ?? false;
                     var trainingMatch = training?.Title?.ToLower().Contains(searchLower) ?? false;
-                    
+
                     return nameMatch || trainingMatch;
                 }).ToList();
             }
 
-            // Get total count for pagination
-            var totalCount = pendingSurveys.Count;
+            var totalCount = allSurveys.Count;
 
-            // Apply pagination
-            var pagedSurveys = pendingSurveys
+            var pagedSurveys = allSurveys
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)
                 .ToList();
 
-            // Build result
             var result = pagedSurveys.Select(s =>
             {
                 var ts = trainingSurveys.FirstOrDefault(t => t.surveyId == s.Id);
-                var training = userTrainings.FirstOrDefault(ut => ut.TrainingId == ts?.trainingId)?.Training;
+
+                var training = userTrainings
+                    .FirstOrDefault(ut => ut.TrainingId == ts?.trainingId)
+                    ?.Training;
 
                 return new StudentSurveyDto
                 {
@@ -100,9 +140,9 @@ namespace Application.Features.Survey.Queries.Handler
                     Name = s.Name,
                     Description = s.Description,
                     QuestionCount = s.Questions?.Count ?? 0,
-                    HasResponded = false,
+                    HasResponded = respondedSurveyIds.Contains(s.Id),
                     TrainingId = ts?.trainingId,
-                    TrainingName = training?.Title
+                    TrainingName = training?.Title ?? "محتوى غير مرتبط بتدريب"
                 };
             }).ToList();
 

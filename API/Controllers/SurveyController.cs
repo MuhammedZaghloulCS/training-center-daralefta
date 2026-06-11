@@ -1,6 +1,7 @@
 using Application.Features.Survey.Commands.Create;
 using Application.Features.Survey.Commands.Delete;
 using Application.Features.Survey.Commands.Update;
+using Application.Features.Survey.Commands.Update.updatequestions;
 using Application.Features.Survey.Queries.Model;
 using Domain.Entities;
 using MediatR;
@@ -61,6 +62,14 @@ namespace API.Controllers
             command.Id = id;
             var user = await _userManager.GetUserAsync(User);
             //command.UpdatedBy = user?.FullName;
+            var response = await _mediator.Send(command);
+            return response.Success ? Ok(response) : BadRequest(response);
+        }
+        [HttpPatch("updateQuestions/{id:int}")]
+        public async Task<IActionResult> UpdateQuestionsAsync(int id, [FromBody] UpdateSurveyQuestionsCommandtwo command)
+        {
+            command.Id = id;
+            
             var response = await _mediator.Send(command);
             return response.Success ? Ok(response) : BadRequest(response);
         }

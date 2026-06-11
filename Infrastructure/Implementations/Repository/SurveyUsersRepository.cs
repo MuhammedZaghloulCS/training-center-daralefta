@@ -26,9 +26,13 @@ namespace Infrastructure.Implementations.Repository
             
         }
 
-        public Task<List<SurveyUsers>> GetAllSpecifiedSurveysAsync(params Expression<Func<SurveyUsers, object>>[] includeProperties)
+        public Task<List<SurveyUsers>> GetAllSpecifiedSurveysAsync(Expression<Func<SurveyUsers,bool>>filter=null, params Expression<Func<SurveyUsers, object>>[] includeProperties)
         {
             var query = _context.SurveysUsers.AsQueryable();
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
             if (includeProperties != null)
             {
                 foreach (var includeProperty in includeProperties)
@@ -38,6 +42,8 @@ namespace Infrastructure.Implementations.Repository
             }
             return query.ToListAsync();
         }
+
+
 
         public Task<List<SurveyUsers>> GetAllSurveysForUserAsync(Guid userId, bool isCompleted=false, params Expression<Func<SurveyUsers, object>>[] includeProperties)
         {

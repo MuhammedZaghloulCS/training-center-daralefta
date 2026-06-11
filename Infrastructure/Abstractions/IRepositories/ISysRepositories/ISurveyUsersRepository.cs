@@ -12,7 +12,6 @@ namespace Infrastructure.Abstractions.IRepositories.ISysRepositories
         public Task MarkSurveyAsCompletedAsync(Guid userId, int surveyId);
         public Task<List<SurveyUsers>> GetAllSurveysForUserAsync(Guid userId, bool isCompleted, params Expression<Func<SurveyUsers, object>>[] includeProperties);
         public Task<List<SurveyUsers>> GetAllUsersForSurveyAsync(int surveyId, bool isCompleted, params Expression<Func<SurveyUsers, object>>[] includeProperties);
-        public Task<List<SurveyUsers>> GetAllSpecifiedSurveysAsync(params Expression<Func<SurveyUsers, object>>[] includeProperties);
-
+        public Task<List<SurveyUsers>> GetAllSpecifiedSurveysAsync(Expression<Func<SurveyUsers, bool>> filter = null, params Expression<Func<SurveyUsers, object>>[] includeProperties);
     }
 }

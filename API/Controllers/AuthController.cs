@@ -40,11 +40,11 @@ namespace API.Controllers
                 throw new Exception("Request is null");
             var user = await _userManager.FindByEmailAsync(request.Email);
             if (user == null||user.IsDeleted||user.IsActive==false)
-                return Unauthorized(new { message = "الإيميل او كلمة السر خاطئة" });
+                return BadRequest(new { message = "الإيميل او كلمة السر خاطئة" });
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, lockoutOnFailure: true);
             if (!result.Succeeded)
-                return Unauthorized(new { message = "الإيميل او كلمة السر خاطئة" });
+                return BadRequest(new { message = "الإيميل او كلمة السر خاطئة" });
 
             var roles = await _userManager.GetRolesAsync(user);
 
@@ -56,7 +56,7 @@ namespace API.Controllers
             user.RefreshToken = refreshToken;
             // إذا كان Remember Me = true، اجعل الـ Refresh Token صالح لمدة شهر، وإلا 7 أيام
             var expiryDays = request.RememberMe ? 30 : 7;
-            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(expiryDays);
+            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(expiryDays);
             await _userManager.UpdateAsync(user);
 
             return Ok(new LoginResponse
@@ -93,8 +93,8 @@ namespace API.Controllers
             if (user.RefreshToken != request.RefreshToken)
                 return BadRequest(new { message = $"Token mismatch. DB: {(user.RefreshToken ?? "NULL")}, Request: {(request.RefreshToken ?? "NULL")}" });
             
-            if (user.RefreshTokenExpiryTime <= DateTime.UtcNow)
-                return BadRequest(new { message = $"Token expired. Expiry: {user.RefreshTokenExpiryTime}, Now: {DateTime.UtcNow}" });
+            if (user.RefreshTokenExpiryTime <= DateTime.Now)
+                return BadRequest(new { message = $"Token expired. Expiry: {user.RefreshTokenExpiryTime}, Now: {DateTime.Now}" });
 
             var roles = await _userManager.GetRolesAsync(user);
 
@@ -104,7 +104,7 @@ namespace API.Controllers
 
             // تحديث Refresh Token
             user.RefreshToken = newRefreshToken;
-            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
             await _userManager.UpdateAsync(user);
 
             return Ok(new LoginResponse

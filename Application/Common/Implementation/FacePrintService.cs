@@ -50,7 +50,7 @@ namespace Application.Common.Implementation
         {
             try
             {
-                _logger.LogInformation("Starting AssignUsersToSession at {Time}", DateTime.UtcNow);
+                _logger.LogInformation("Starting AssignUsersToSession at {Time}", DateTime.Now);
                 
                 //retrieve the session for the current day - optimized with explicit date range
                 var today = DateTime.Today;
@@ -228,7 +228,7 @@ namespace Application.Common.Implementation
 
             #endregion
 
-                _logger.LogInformation("Completed AssignUsersToSession successfully at {Time}", DateTime.UtcNow);
+                _logger.LogInformation("Completed AssignUsersToSession successfully at {Time}", DateTime.Now);
             }
             catch (Exception ex)
             {

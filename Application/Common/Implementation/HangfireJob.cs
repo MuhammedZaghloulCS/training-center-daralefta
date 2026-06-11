@@ -24,7 +24,7 @@ namespace Application.Common.Implementation
         [AutomaticRetry(Attempts = 3, DelaysInSeconds = new[] { 60, 300, 900 })]
         public async Task ProcessSessions()
         {
-            _logger.LogInformation("HangfireJob ProcessSessions started at {Time}", DateTime.UtcNow);
+            _logger.LogInformation("HangfireJob ProcessSessions started at {Time}", DateTime.Now);
             
             try
             {
@@ -34,11 +34,11 @@ namespace Application.Common.Implementation
 
                 await faceService.AssignUsersToSession();
                 
-                _logger.LogInformation("HangfireJob ProcessSessions completed successfully at {Time}", DateTime.UtcNow);
+                _logger.LogInformation("HangfireJob ProcessSessions completed successfully at {Time}", DateTime.Now);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "HangfireJob ProcessSessions failed at {Time}", DateTime.UtcNow);
+                _logger.LogError(ex, "HangfireJob ProcessSessions failed at {Time}", DateTime.Now);
                 throw;
             }
         }

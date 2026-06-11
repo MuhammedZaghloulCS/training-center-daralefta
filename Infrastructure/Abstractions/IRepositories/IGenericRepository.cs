@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Query;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
@@ -16,7 +17,11 @@ namespace Infrastructure.Abstractions.IRepositories
         Task<List<T>> FindRowAsync(Expression<Func<T, bool>> predicate = null, params Expression<Func<T, object>>[] includeProperties);
         Task<(List<T> items, int totalCount)> GetPaginatedAsync(int pageNumber, int pageSize, Expression<Func<T, bool>>? predicate = null, Expression<Func<T, object>>? orderBy = null, bool ascending = true, params Expression<Func<T, object>>[] includeProperties);
         Task<List<T>> NewFindRowAsync(Expression<Func<T, bool>> predicate = null, Expression<Func<T,object>>orderBy=null,bool acsending=true,params Expression<Func<T, object>>[] includeProperties);
-
+        public  Task<List<T>> NewFindRowAsync2(
+    Expression<Func<T, bool>> predicate = null,
+    Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null,
+    Expression<Func<T, object>> orderBy = null,
+    bool acsending = true);
         Task<T> GetFirstByPropAsync(Expression<Func<T, bool>> predicate);
 
     }

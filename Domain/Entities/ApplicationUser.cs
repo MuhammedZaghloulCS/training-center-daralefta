@@ -58,7 +58,7 @@ namespace Domain.Entities
         public string? ImagePath { get; set; }
         public bool IsActive { get; set; } = true;
 
-        public DateTime CreatingDate{ get; set; } = DateTime.UtcNow;
+        public DateTime CreatingDate{ get; set; } = DateTime.Now;
 
         //refresh token
         public string? RefreshToken { get; set; }

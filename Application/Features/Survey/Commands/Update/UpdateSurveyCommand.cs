@@ -12,5 +12,7 @@ namespace Application.Features.Survey.Commands.Update
         public string? Description { get; set; }
         public bool IsActive { get; set; }
         public List<QuestionDto>? Questions { get; set; }
+        public bool isForSpecificUsers { get; set; } = false;
+        public List<Guid>? UserIds { get; set; }
     }
 }

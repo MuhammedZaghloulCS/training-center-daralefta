@@ -17,7 +17,7 @@ namespace Infrastructure.Implementations.Repository
         }
         public async Task<Survey> GetSurveyWithQuestion(int id) {
 
-            var result =await _context.Survey.Include(s => s.Questions).FirstOrDefaultAsync(s => s.Id == id);
+            var result =await _context.Survey.Include(s => s.Questions).Include(s=>s.SurveyUsers).ThenInclude(s=>s.User).FirstOrDefaultAsync(s => s.Id == id);
 
             return result;
 

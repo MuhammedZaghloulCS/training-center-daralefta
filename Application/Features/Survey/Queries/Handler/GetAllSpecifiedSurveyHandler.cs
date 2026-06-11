@@ -21,8 +21,7 @@ namespace Application.Features.Survey.Queries.Handler
         }
         public async Task<BaseResponse<List<SurveyDto>>> Handle(GetAllSpecifiedSurveysQuery request, CancellationToken cancellationToken)
         {
-            var surveyUser = await _unitOfWork.ISurveyUsers.GetAllSpecifiedSurveysAsync( includeProperties: su => su.Survey);
-            var surveys = surveyUser.Select(su => su.Survey).ToList();
+            var surveys = await _unitOfWork.ISurvey.FindRowAsync(predicate:s=>s.IsForSpecificUsers);
             var surveysDto = surveys.Adapt<List<SurveyDto>>();
 
             return BaseResponse<List<SurveyDto>>.SuccessResponse(surveysDto);

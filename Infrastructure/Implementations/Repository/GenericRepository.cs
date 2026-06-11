@@ -1,6 +1,7 @@
 ﻿using Infrastructure.Abstractions.IRepositories;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -55,6 +56,27 @@ namespace Infrastructure.Implementations.Repository
             {
                 query = acsending ? query.OrderBy(orderBy) : query.OrderByDescending(orderBy);
             }
+            return await query.ToListAsync();
+        }
+        public async Task<List<T>> NewFindRowAsync2(
+    Expression<Func<T, bool>> predicate = null,
+    Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null,
+    Expression<Func<T, object>> orderBy = null,
+    bool acsending = true)
+        {
+            IQueryable<T> query = dbSet;
+
+            if (include != null)
+                query = include(query);
+
+            if (predicate != null)
+                query = query.Where(predicate);
+
+            if (orderBy != null)
+                query = acsending
+                    ? query.OrderBy(orderBy)
+                    : query.OrderByDescending(orderBy);
+
             return await query.ToListAsync();
         }
 

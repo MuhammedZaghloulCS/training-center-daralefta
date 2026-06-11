@@ -33,6 +33,7 @@ namespace Infrastructure.Context
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<UserNotification> UserNotifications { get; set; }
         public DbSet<SurveyUsers> SurveysUsers { get; set; }
+        public DbSet<Feedback> Feedbacks { get; set; }
 
         #endregion
 

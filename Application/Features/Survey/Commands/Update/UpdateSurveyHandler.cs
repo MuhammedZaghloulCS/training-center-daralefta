@@ -1,5 +1,6 @@
 using Application.Common;
 using Application.Features.Survey.DTOs;
+using Application.Features.SurveyQuestion.Commands.Update;
 using Domain.Entities;
 using Domain.Enums;
 using Infrastructure.Abstractions.IUnitOfWork;
@@ -36,7 +37,8 @@ namespace Application.Features.Survey.Commands.Update
 
             if (request.Description != null && request.Description.Length > 500)
                 errors.Add("يجب ألا يتجاوز الوصف 500 حرف");
-
+            if (request.isForSpecificUsers && (request.UserIds == null || !request.UserIds.Any()))
+                errors.Add("يجب تحديد المستخدمين إذا كان الاستبيان مخصصًا لمستخدمين محددين");
             if (request.Questions != null)
             {
                 if (request.Questions.Count > 50)
@@ -55,7 +57,7 @@ namespace Application.Features.Survey.Commands.Update
                     {
                         errors.Add("يجب أن يحتوي السؤال على خيارات");
                     }
-
+        
                     // Check for duplicate options in MultipleChoice questions
                     if (question.QuestionType == QuestionTypeEnum.MultipleChoice && !string.IsNullOrWhiteSpace(question.Options))
                     {
@@ -97,6 +99,9 @@ namespace Application.Features.Survey.Commands.Update
             survey.Name = request.Name;
             survey.Description = request.Description;
             survey.IsActive = request.IsActive;
+            survey.IsForSpecificUsers = request.isForSpecificUsers;
+            survey.SurveyUsers.Clear();
+            survey.SurveyUsers = request.UserIds?.Select(userId => new SurveyUsers { UserId = userId }).ToList() ?? new List<SurveyUsers>();
 
             // =========================
             // Sync Questions (Update / Delete)

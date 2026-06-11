@@ -49,6 +49,7 @@ namespace Application.Features.Survey.Queries.Handler
                 Name = s.Name,
                 Description = s.Description,
                 IsActive = s.IsActive,
+                IsForSpecificUsers=s.IsForSpecificUsers,
                 Questions = s.Questions.Select(q => new QuestionDto
                 {
                     Id = q.Id,
@@ -56,7 +57,7 @@ namespace Application.Features.Survey.Queries.Handler
                     QuestionType = q.QuestionType,
                     Options = q.Options,
                     IsRequired = q.IsRequired,
-                    SortOrder = q.SortOrder
+                    SortOrder = q.SortOrder,
 
                 }).ToList()
             }).ToList();

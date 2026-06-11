@@ -11,7 +11,7 @@ using System.Text;
 
 namespace Infrastructure.Implementations.UnitOfWork
 {
-    public class UnitOfWork :IUnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
         #region Fields
         private BuildingRepository buildingRepository;
@@ -34,7 +34,8 @@ namespace Infrastructure.Implementations.UnitOfWork
         private QuestionAnswerRepository questionAnswerRepository;
         private QuestionRepository questionRepository;
         private AttendanceRepository attendanceRepository;
-        private SurveyUsersRepository surveyUsersRepository;    
+        private SurveyUsersRepository surveyUsersRepository;   
+        private FeedbackRepository feedbackRepository;
         private readonly ApplicationContext context;
         #endregion
         //CTOR
@@ -304,6 +305,20 @@ namespace Infrastructure.Implementations.UnitOfWork
                 return surveyUsersRepository;
             }
         }
+
+        public IFeedbackRepository IFeedback
+        {
+            get
+            {
+                if (feedbackRepository == null)
+                {
+                    feedbackRepository = new FeedbackRepository(context);
+                }
+                return feedbackRepository;
+            }
+        }
+
+
         public async Task<int> Complete()
         {
             return await context.SaveChangesAsync();

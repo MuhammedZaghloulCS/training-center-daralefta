@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Application.Features.Survey.Queries.Model
 {
-    public class GetSurveyByIdQuery : IRequest<BaseResponse<Domain.Entities.Survey>>
+    public class GetSurveyByIdQuery : IRequest<BaseResponse<SurveyDto>>
     {
         public int Id { get; set; }
     }

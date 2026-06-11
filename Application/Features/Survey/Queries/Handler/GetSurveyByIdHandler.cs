@@ -1,7 +1,11 @@
 using Application.Common;
 using Application.Features.Survey.DTOs;
 using Application.Features.Survey.Queries.Model;
+using Application.Features.User.DTOs;
+using Domain.Entities;
+using Hangfire.Storage.Monitoring;
 using Infrastructure.Abstractions.IUnitOfWork;
+using Mapster;
 using MediatR;
 using System.Linq;
 using System.Threading;
@@ -9,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Survey.Queries.Handler
 {
-    public class GetSurveyByIdHandler : IRequestHandler<GetSurveyByIdQuery, BaseResponse<Domain.Entities.Survey>>
+    public class GetSurveyByIdHandler : IRequestHandler<GetSurveyByIdQuery, BaseResponse<SurveyDto>>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -18,17 +22,37 @@ namespace Application.Features.Survey.Queries.Handler
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<BaseResponse<Domain.Entities.Survey>> Handle(GetSurveyByIdQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<SurveyDto>> Handle(GetSurveyByIdQuery request, CancellationToken cancellationToken)
         {
 
-            var survey = await _unitOfWork.ISurvey.GetSurveyWithQuestion(request.Id);
+            var s = await _unitOfWork.ISurvey.GetSurveyWithQuestion(request.Id);
 
-            if (survey == null)
+            if (s == null)
             {
-                return BaseResponse<Domain.Entities.Survey>.NotFoundResponse("Survey not found");
+                return BaseResponse<SurveyDto>.NotFoundResponse("Survey not found");
             }
- 
-            return BaseResponse<Domain.Entities.Survey>.SuccessResponse(survey, "loaded successfully");
+
+            var surveysDto = new SurveyDto
+            {
+                Id = s.Id,
+                Name = s.Name,
+                Description = s.Description,
+                IsActive = s.IsActive,
+                CreatedAt = s.CreatedAt,
+                IsForSpecificUsers = s.IsForSpecificUsers,
+
+                Questions = s.Questions.Adapt<List<QuestionDto>>(),
+
+                SpecificUsers = s.SurveyUsers
+    .Select(su => new SimpleUserDto
+    {
+        Id = su.User.Id,
+        FullName = su.User.FullName,
+        UserName = su.User.UserName
+    })
+    .ToList()
+            };
+            return BaseResponse<SurveyDto>.SuccessResponse(surveysDto, "loaded successfully");
         }
     }
 }

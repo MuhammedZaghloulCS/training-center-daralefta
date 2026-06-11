@@ -15,7 +15,6 @@ namespace Infrastructure.Abstractions.IUnitOfWork
         ICourseRepository ICourse { get; }
         ITrainingRepository ITraining { get; }
         ISurveyRepository ISurvey { get; }
-        ISessionRepository IServey { get; }
         ISurveyCategoryRepository ISurveyCategory { get; }
         ISurveyQuestionRepository ISurveyQuestion { get; }
         ISurveyAnswerRepository ISurveyAnswer { get; }
@@ -31,7 +30,7 @@ namespace Infrastructure.Abstractions.IUnitOfWork
         IQuestionRepository IQuestion { get; }
         IAttendanceRepository IAttendance { get; }
         ISurveyUsersRepository ISurveyUsers { get; }
-
+        IFeedbackRepository IFeedback { get; }
         #endregion
         Task<int> Complete();
         public new void Dispose();
