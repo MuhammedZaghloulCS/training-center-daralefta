@@ -3,6 +3,7 @@ using Application.Features.Survey.DTOs;
 using Application.Features.Survey.Queries.Model;
 using Domain.Entities;
 using Infrastructure.Abstractions.IUnitOfWork;
+using Infrastructure.Context;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -16,10 +17,12 @@ namespace Application.Features.Survey.Queries.Handler
     public class GetCompletedStudentSurveysHandler : IRequestHandler<GetCompletedStudentSurveysQuery, BaseResponse<List<StudentSurveyDto>>>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ApplicationContext _context;
 
-        public GetCompletedStudentSurveysHandler(IUnitOfWork unitOfWork)
+        public GetCompletedStudentSurveysHandler(IUnitOfWork unitOfWork, ApplicationContext context)
         {
             _unitOfWork = unitOfWork;
+            _context = context;
         }
 
         public async Task<BaseResponse<List<StudentSurveyDto>>> Handle(GetCompletedStudentSurveysQuery request, CancellationToken cancellationToken)
@@ -48,7 +51,7 @@ namespace Application.Features.Survey.Queries.Handler
 
             // Get surveys with questions
             var surveys = await _unitOfWork.ISurvey.NewFindRowAsync(
-                s => surveyIds.Contains(s.Id) && s.IsActive,
+                s =>  s.IsActive,
                 orderBy: s => s.CreatedAt, acsending: false,
 
                 s => s.Questions
@@ -61,7 +64,7 @@ namespace Application.Features.Survey.Queries.Handler
 
             );
             var respondedSurveyIds = existingResponses.Select(sr => sr.SurveyId).ToHashSet();
-
+            
             // Filter to only completed surveys (responded)
             var completedSurveys = surveys.Where(s => respondedSurveyIds.Contains(s.Id)).ToList();
 

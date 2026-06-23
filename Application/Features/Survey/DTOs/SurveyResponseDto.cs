@@ -23,11 +23,11 @@ namespace Application.Features.Survey.DTOs
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
+        public string? Description { get; set; }
         public int QuestionCount { get; set; }
         public bool HasResponded { get; set; }
         public int? TrainingId { get; set; }
-        public string TrainingName { get; set; }
+        public string? TrainingName { get; set; }
     }
 
     public class SurveyWithQuestionsDto

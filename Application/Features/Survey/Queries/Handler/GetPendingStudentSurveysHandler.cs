@@ -142,7 +142,7 @@ namespace Application.Features.Survey.Queries.Handler
                     QuestionCount = s.Questions?.Count ?? 0,
                     HasResponded = respondedSurveyIds.Contains(s.Id),
                     TrainingId = ts?.trainingId,
-                    TrainingName = training?.Title ?? "محتوى غير مرتبط بتدريب"
+                    TrainingName = training?.Title 
                 };
             }).ToList();
 

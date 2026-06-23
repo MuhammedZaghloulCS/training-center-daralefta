@@ -13,7 +13,7 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Student")]
+    [Authorize(Roles = "Student,Instructor")]
     public class StudentSurveyController : ControllerBase
     {
         private readonly IMediator _mediator;
